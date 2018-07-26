@@ -28,26 +28,29 @@ function players.update(dt)
 	players.checkForHits()
 end
 
-	function players.updateTimer(dt)
-		for i=1,2 do
-			p = players[i]
-			p.timer = p.timer - dt
-			p.invulnerability = p.invulnerability -dt*10
-			if p.timer < 0 then p.timer = 0 end
-			if p.invulnerability < 0 then p.invulnerability = 0 end
-		end
+function players.updateTimer(dt)
+	for i=1,2 do
+		p = players[i]
+		p.timer = p.timer - dt
+		p.invulnerability = p.invulnerability -dt*10
+		if p.timer < 0 then p.timer = 0 end
+		if p.invulnerability < 0 then p.invulnerability = 0 end
 	end
+end
 
-	function players.checkForHits()
-		for i=1,2 do
-			for j=1,#projectiles do
-				if projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 then
-					players[i].hp=players[i].hp-projectiles[j].damage
-					players[i].invulnerability = 10
-				end
+function players.checkForHits()
+	for i=1,2 do
+		for j=1,#projectiles do
+			if projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 and players[i].hp > 0 then
+				players[i].hp=players[i].hp-projectiles[j].damage
+				players[i].invulnerability = 10
 			end
 		end
+		if players[i].hp < 0 then
+			players[i].hp=0
+		end
 	end
+end
 
 function players.draw()
 	for i=1,2 do
