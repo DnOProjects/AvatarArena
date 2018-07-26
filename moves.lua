@@ -1,6 +1,7 @@
 require "logic"
 require "players"
 require "animate"
+require "sound"
 
 	moves = { --first moves must all be normal
 {{name="charge",type="normal"},{name="wall",type="earth"},{name="blink",type="air"}},--utility
@@ -61,6 +62,7 @@ function moves.draw()
 end
 
 function moves.cast(typeNum,num,pn)
+	moves.playMoveSound(moves[typeNum][num].type)
 	p=players[pn]
 	name = moves[typeNum][num].name
 	if name == "arrow" then
@@ -100,4 +102,10 @@ function moves.moveProj(p,num)
 	if p.d==2 then p.y=p.y+num end
 	if p.d==3 then p.x=p.x-num end
 	return p
+end
+
+function moves.playMoveSound(type)
+	if type=="water" or type=="air" or type=="earth" or type=="fire" then
+		sound.play(type.."Effect")
+	end
 end
