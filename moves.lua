@@ -21,6 +21,7 @@ end
 function moves.update(dt)
 	moves.moveProjectiles(dt)
 	moves.floorPositions()
+	--moves.onPlayerCollision()
 	moves.updateAnimations(dt)
 end
 
@@ -37,6 +38,19 @@ end
 		for i=1,#projectiles do
 			p=projectiles[i]
 			p=moves.moveProj(p,p.speed*dt)
+		end
+	end
+
+	function moves.onPlayerCollision()
+		for i=1,#projectiles do
+			p=projectiles[i]
+			for j=1,#players do
+				print(string.format("%s %i",p.rx,players[i].x))
+				print(string.format("%s %i",p.ry,players[i].y))
+				if(p.rx==players[i].x and p.ry==players[i].y)then
+					table.remove(projectiles,i)
+				end
+			end
 		end
 	end
 
