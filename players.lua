@@ -4,6 +4,7 @@ function players.load()
 
 	aangImg = love.graphics.newImage("aang.png")
 	kataraImg = love.graphics.newImage("katara.png")
+	irohImg = love.graphics.newImage("iroh.png")
 
 	aangPortrait = love.graphics.newImage("aangPortrait.png")
 	kataraPortrait = love.graphics.newImage("kataraPortrait.png")
@@ -12,7 +13,7 @@ function players.load()
 	characters = {
 {name="Aang",img=aangImg,portrait=aangPortrait,moveTimer=0.1,hp=100,bends={"air","earth","fire","water","energy","normal"}},
 {name="Katara",img=kataraImg,portrait=kataraPortrait,moveTimer=0.15,hp=120,bends={"water","normal"}},
-{name="Iroh",img=kataraImg,portrait=irohPortrait,moveTimer=0.15,hp=120,bends={"fire","normal"}}
+{name="Iroh",img=irohImg,portrait=irohPortrait,moveTimer=0.15,hp=120,bends={"fire","normal"}}
 }
 
 	players[1] = {char=1,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,utility=1,attack=1,power=1}
