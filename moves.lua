@@ -94,9 +94,10 @@ function moves.cast(typeNum,num,pn)
 		end
 		if name == "blast" then
 			for i=0,1 do
-				local d = p.d+(i*2)
+				local d = p.d+1+(i*2)
 				if d==4 then d=0 end
 				if d==5 then d=1 end
+				if d==6 then d=2 end
 				projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=0.7,name=name,damage=10,image=fireOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(projectiles[#projectiles],1)
 			end
