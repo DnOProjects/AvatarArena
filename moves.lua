@@ -4,7 +4,7 @@ require "animate"
 
 	moves = { --first moves must all be normal
 {{name="charge",type="normal"},{name="wall",type="earth"},{name="blink",type="air"}},--utility
-{{name="arrow",type="normal"},{name="spurt",type="water"},{name="gust",type="air"},{name="blast",type="fire"}},--attack
+{{name="arrow",type="normal"},{name="spurt",type="water"},{name="gust",type="air"},{name="blast",type="fire"},{name="boulder",type="earth"}},--attack
 {{name="block",type="normal"},{name="supernova",type="fire"},{name="heal",type="water"}}--power	
 }
 
@@ -89,6 +89,10 @@ function moves.cast(typeNum,num,pn)
 			projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=0.7,name=name,damage=10,image=fireOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
 			projectiles[#projectiles] = moves.moveProj(projectiles[#projectiles],1)
 		end
+	end
+	if name == "boulder" then
+		projectiles[#projectiles+1] = {name=name,damage=20,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 8,rx=0,ry=0}
+		projectiles[#projectiles] = moves.moveProj(projectiles[#projectiles],1)
 	end
 end
 
