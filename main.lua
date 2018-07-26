@@ -33,7 +33,7 @@ function love.draw()
 		moves.draw()
 		players.draw()
 	end
-		ui.draw()
+	ui.draw()
 
 	love.graphics.print(love.timer.getFPS())
 
