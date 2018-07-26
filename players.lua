@@ -19,39 +19,48 @@ function players.load()
 {name="Toph",img=tophImg,portrait=tophPortrait,moveTimer=0.15,hp=120,bends={"earth","normal"}}
 }
 
-	players[1] = {char=1,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,utility=1,attack=1,power=1}
-	players[2] = {char=1,x=16,y=8,d=0,timer=0,invulnerability=0,hp=100,utility=1,attack=1,power=1}
+	players[1] = {char=1,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=2,chi=0,maxChi=100,utility=1,attack=1,power=1}
+	players[2] = {char=1,x=16,y=8,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=2,chi=0,maxChi=100,utility=1,attack=1,power=1}
 end
 
 function players.update(dt)
 	players.updateTimer(dt)
 	players.checkForHits()
+	players.poolChi(dt)
 end
 
-function players.updateTimer(dt)
-	for i=1,2 do
-		p = players[i]
-		p.timer = p.timer - dt
-		p.invulnerability = p.invulnerability -dt*10
-		if p.timer < 0 then p.timer = 0 end
-		if p.invulnerability < 0 then p.invulnerability = 0 end
+	function players.poolChi(dt)
+		for i=1,2 do
+			p=players[i]
+			p.chi=p.chi+p.chiRegen*dt
+			if p.chi>p.maxChi then p.chi=p.maxChi end
+		end
 	end
-end
 
-function players.checkForHits()
-	for i=1,2 do
-		for j=1,#projectiles do
-			if projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 and players[i].hp > 0 then
-				players[i].hp=players[i].hp-projectiles[j].damage
-				players[i].invulnerability = 10
-				projectilesToRemove[#projectilesToRemove+1] = j
+	function players.updateTimer(dt)
+		for i=1,2 do
+			p = players[i]
+			p.timer = p.timer - dt
+			p.invulnerability = p.invulnerability -dt*10
+			if p.timer < 0 then p.timer = 0 end
+			if p.invulnerability < 0 then p.invulnerability = 0 end
+		end
+	end
+
+	function players.checkForHits()
+		for i=1,2 do
+			for j=1,#projectiles do
+				if projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 and players[i].hp > 0 then
+					players[i].hp=players[i].hp-projectiles[j].damage
+					players[i].invulnerability = 10
+					projectilesToRemove[#projectilesToRemove+1] = j
+				end
+			end
+			if players[i].hp < 0 then
+				players[i].hp=0
 			end
 		end
-		if players[i].hp < 0 then
-			players[i].hp=0
-		end
 	end
-end
 
 function players.draw()
 	for i=1,2 do

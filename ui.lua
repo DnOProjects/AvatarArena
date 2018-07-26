@@ -1,3 +1,4 @@
+require "logic"
 ui = {y=0}
 
 function ui.load()
@@ -88,9 +89,26 @@ function ui.draw()
 
 	if gameState == "game" then
 		love.graphics.rectangle("fill",0,0,love.graphics.getWidth(),120)
+
 		love.graphics.setColor(0,0,0)
-		love.graphics.print(players[1].hp,100,20)
-		love.graphics.print(players[2].hp,love.graphics.getWidth()-200,20)
+		love.graphics.print(players[1].hp,200,5)
+		love.graphics.print(players[2].hp,love.graphics.getWidth()-295,5)
+		love.graphics.printf(logic.round(players[1].chi,0),253,80,100,"right",0,0.4,0.4)
+		love.graphics.print(logic.round(players[2].chi,0),love.graphics.getWidth()-295,80,0,0.4,0.4)
+
+		love.graphics.setColor(143,145,147,100)
+		love.graphics.rectangle("fill",300,15,600,70)
+		love.graphics.rectangle("fill",300,95,600,10)
+		love.graphics.rectangle("fill",1620,15,-600,70)
+		love.graphics.rectangle("fill",1620,95,-600,10)
+
+		love.graphics.setColor(255,0,0)
+		love.graphics.rectangle("fill",300,15,600*(players[1].hp/players[1].maxHp),70)
+		love.graphics.rectangle("fill",1620,15,-600*(players[2].hp/players[2].maxHp),70)
+
+		love.graphics.setColor(163,198,255)
+		love.graphics.rectangle("fill",300,95,600*(players[1].chi/players[1].maxChi),10)
+		love.graphics.rectangle("fill",1620,95,-600*(players[2].chi/players[2].maxChi),10)
 	end
 
 end

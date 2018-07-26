@@ -64,6 +64,9 @@ function startGame()
 	players[1].hp = characters[players[1].char].hp
 	players[2].hp = characters[players[2].char].hp
 
+	players[1].maxHp = characters[players[1].char].hp
+	players[2].maxHp = characters[players[2].char].hp
+
 	sound.play("roundIntro")
 end
 
