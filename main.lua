@@ -2,6 +2,7 @@ require "map"
 require "players"
 require "moves"
 require "ui"
+require "sound"
 
 function love.load()
 
@@ -13,8 +14,11 @@ function love.load()
     moves.load()
     players.load()
     ui.load()
+    sound.load()
 
     gameState = "characterSelection"
+
+    projectilesToRemove = {}
 
 end
 
@@ -23,8 +27,19 @@ function love.update(dt)
 	players.update(dt)
 	moves.update(dt)
 	ui.update()
+	sound.update()
+
+	removeProjectiles()
 
 end
+
+	function removeProjectiles()
+		table.sort(projectilesToRemove)
+		for i=#projectilesToRemove,1,-1 do
+			table.remove(projectiles,projectilesToRemove[i])
+			table.remove(projectilesToRemove,i)
+		end
+	end
 
 function love.draw()
 

@@ -21,7 +21,6 @@ end
 function moves.update(dt)
 	moves.moveProjectiles(dt)
 	moves.floorPositions()
-	--moves.onPlayerCollision()
 	moves.updateAnimations(dt)
 end
 
@@ -41,19 +40,6 @@ end
 		end
 	end
 
-	function moves.onPlayerCollision()
-		for i=1,#projectiles do
-			p=projectiles[i]
-			for j=1,#players do
-				print(string.format("%s %i",p.rx,players[i].x))
-				print(string.format("%s %i",p.ry,players[i].y))
-				if(p.rx==players[i].x and p.ry==players[i].y)then
-					table.remove(projectiles,i)
-				end
-			end
-		end
-	end
-
 	function moves.floorPositions()
 		for i=1,#projectiles do
 			p=projectiles[i]
@@ -65,8 +51,6 @@ end
 function moves.draw()
 	for i=1,#projectiles do
 		p=projectiles[i]
-		--love.graphics.setColor(255,0,0,10)
-		--love.graphics.rectangle("fill",p.rx*120-120,p.ry*120,120,120)
 		love.graphics.setColor(255,255,255)
 		if p.percent then
 			animate.draw(p.image,p.rx*120-60,p.ry*120+60,p.percent,math.pi*p.d/2,p.spriteLength)
