@@ -34,14 +34,14 @@ function ui.switch(d)
 			startGame() 
 		end
 	else
-		canWeild=false
-		while not canWeild do
+		canWield=false
+		while not canWield do
 			ui[playerSelecting][ui.y]=ui[playerSelecting][ui.y]+d
 			if ui[playerSelecting][ui.y]==0 then ui[playerSelecting][ui.y] = #moves[ui.y] end
 			if ui[playerSelecting][ui.y]>#moves[ui.y] then ui[playerSelecting][ui.y] = 1 end
 			char=characters[players[playerSelecting].char]
 			for i=1,#char.bends do
-				if char.bends[i]==moves[ui.y][ui[playerSelecting][ui.y]].type then canWeild= true end
+				if char.bends[i]==moves[ui.y][ui[playerSelecting][ui.y]].type then canWield = true end
 			end
 		end
 	end
