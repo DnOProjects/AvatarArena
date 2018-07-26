@@ -35,8 +35,6 @@ function love.draw()
 	end
 	ui.draw()
 
-	love.graphics.print(love.timer.getFPS())
-
 end
 
 function love.keypressed(key)
