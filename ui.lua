@@ -29,17 +29,8 @@ function ui.switch(d)
 	elseif ui.y==4 then
 		playerSelecting = playerSelecting+d
 		if playerSelecting==0 then playerSelecting=1 end
-		if playerSelecting==3 then 
-			gameState = "game" 
-			players[1].utility = ui[1][1]
-			players[1].attack = ui[1][2]
-			players[1].power = ui[1][3]
-			players[2].utility = ui[2][1]
-			players[2].attack = ui[2][2]
-			players[2].power = ui[2][3]
-
-			players[1].hp = characters[players[1].char].hp
-			players[2].hp = characters[players[2].char].hp
+		if playerSelecting==3 then
+			startGame() 
 		end
 	else
 		canWeild=false

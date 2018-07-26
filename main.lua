@@ -27,7 +27,7 @@ function love.update(dt)
 	players.update(dt)
 	moves.update(dt)
 	ui.update()
-	sound.update()
+	sound.update(dt)
 
 	removeProjectiles()
 
@@ -50,6 +50,21 @@ function love.draw()
 	end
 	ui.draw()
 
+end
+
+function startGame()
+	gameState = "game" 
+	players[1].utility = ui[1][1]
+	players[1].attack = ui[1][2]
+	players[1].power = ui[1][3]
+	players[2].utility = ui[2][1]
+	players[2].attack = ui[2][2]
+	players[2].power = ui[2][3]
+
+	players[1].hp = characters[players[1].char].hp
+	players[2].hp = characters[players[2].char].hp
+
+	sound.play("roundIntro")
 end
 
 function love.keypressed(key)
