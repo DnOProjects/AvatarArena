@@ -9,6 +9,7 @@ moves = { --first moves must all be normal
 {{name="charge",type="normal",cost=2},
 {name="aurora borealis",type="water",cost=8},
 {name="blow",type="air",cost=8},
+{name="redirect",type="fire",cost=8},
 {name="wall",type="earth",cost=5}},
 --Attack
 {{name="arrow",type="normal",cost=6},
@@ -26,6 +27,7 @@ function moves.load()
 	arrowImg = love.graphics.newImage("arrow.png")
 	waterOrbImg = love.graphics.newImage("water.png")
 	earthOrbImg = love.graphics.newImage("earth.png")
+	redirectIcon = love.graphics.newImage("redirectIcon.png")
 	
 	fireOrbImg = love.graphics.newImage("fireSprite.png")
 	airOrbImg = love.graphics.newImage("airSprite.png")
@@ -46,6 +48,14 @@ end
 			for i=1,2 do
 				pl=players[i]
 				if pl.x==p.rx and pl.y==p.ry then players.move(i,p.d,false) end
+			end
+		end
+		if p.name == "redirect" then
+			for i=1,#projectiles do
+				op = projectiles[i]
+				if not(op==p) and op.rx==p.rx and op.ry==p.ry then
+					op.d=p.d
+				end
 			end
 		end
 	end
@@ -120,6 +130,10 @@ function moves.cast(typeNum,num,pn)
 
 		if name == "arrow" then
 			projectiles[#projectiles+1] = {name=name,damage=10,image=arrowImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
+			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+		end
+		if name=="redirect" then
+			projectiles[#projectiles+1] = {despawn=2,name=name,damage=0,image=redirectIcon,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 		end
 		if name == "spurt" then

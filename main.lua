@@ -47,8 +47,8 @@ function love.draw()
 
 	if gameState=="game" then
 		map.draw()
-		players.draw()
 		moves.draw()
+		players.draw()
 	end
 	ui.draw()
 
