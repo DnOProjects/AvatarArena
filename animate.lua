@@ -1,9 +1,13 @@
 require "logic"
 animate = {}
 
-function animate.draw(sprite,x,y,percent,r,spriteLength)
-	spriteNum = math.floor((percent/100)*spriteLength,0)
-	quad=love.graphics.newQuad(spriteNum*120,0,120,120,120*spriteLength,120)
+function animate.draw(sprite,x,y,percent,r,spriteLength,continuous)
+	if not continuous then
+		spriteNum = math.floor((percent/100)*spriteLength,0)
+		quad=love.graphics.newQuad(spriteNum*120,0,120,120,120*spriteLength,120)
+	else
+		quad=love.graphics.newQuad((120*spriteLength-120)*percent/100,0,120,120,120*spriteLength,120)
+	end
 	love.graphics.draw(p.image,quad,x,y,r,1,1,60,60)
 end
 

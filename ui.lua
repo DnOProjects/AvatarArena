@@ -77,7 +77,7 @@ function ui.draw()
 				box=ui[i][j]
 				move = moves[j][box]
 				love.graphics.rectangle("line",(i-1)*1080+100,j*130+400,500,100,5,5)
-				love.graphics.printf(move.name,(i-1)*1080+150,j*130+413,500,"center",0,0.8)
+				love.graphics.printf(move.name,(i-1)*1080+30,j*130+413,800,"center",0,0.8)
 				love.graphics.setLineWidth(2)
 			end
 			if playerSelecting==i and ui.y==4 then love.graphics.setLineWidth(20) end

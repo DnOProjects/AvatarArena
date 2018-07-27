@@ -50,7 +50,7 @@ end
 	function players.checkForHits()
 		for i=1,2 do
 			for j=1,#projectiles do
-				if projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 and players[i].hp > 0 then
+				if projectiles[j].damage>0 and projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 and players[i].hp > 0 then
 					players[i].hp=players[i].hp-projectiles[j].damage
 					players[i].invulnerability = 10
 					projectilesToRemove[#projectilesToRemove+1] = j
@@ -101,7 +101,7 @@ end
 
 		for i=1,#projectiles do
 			pr=projectiles[i]
-			if pr.blocker and p.x==pr.rx and p.y==pr.ry then return false end
+			if pr.blocker and p.x==pr.rx and p.y==pr.ry and not(pr.blocker=="forceField") then return false  end
 		end
 
 		return true

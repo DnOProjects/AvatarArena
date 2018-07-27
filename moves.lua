@@ -7,7 +7,8 @@ moves = { --first moves must all be normal
 
 --Utility
 {{name="charge",type="normal",cost=2},
-{name="wall",type="earth",cost=16}},
+{name="aurora borealis",type="water",cost=8},
+{name="wall",type="earth",cost=5}},
 --Attack
 {{name="arrow",type="normal",cost=6},
 {name="spurt",type="water",cost=16},
@@ -24,15 +25,28 @@ function moves.load()
 	arrowImg = love.graphics.newImage("arrow.png")
 	waterOrbImg = love.graphics.newImage("water.png")
 	earthOrbImg = love.graphics.newImage("earth.png")
+	
+	fireOrbImg = love.graphics.newImage("fireSprite.png")
 	airOrbImg = love.graphics.newImage("airSprite.png")
-	fireOrbImg = love.graphics.newImage("fire.png")
+	auroraImg = love.graphics.newImage("auroraSprite.png")
 end
 
 function moves.update(dt)
 	moves.moveProjectiles(dt)
 	moves.roundPositions()
 	moves.removeReduntantProjectiles()
+	moves.despawn(dt)
 end
+
+	function moves.despawn(dt)
+		for i=1,#projectiles do
+			p=projectiles[i]
+			if p.despawn then
+				p.despawn = p.despawn - dt
+				if p.despawn < 0 then projectilesToRemove[#projectilesToRemove+1]=i end
+			end
+		end
+	end
 	
 	function moves.removeReduntantProjectiles()
 		for i=1,#projectiles do
@@ -74,7 +88,7 @@ function moves.draw()
 		p=projectiles[i]
 		love.graphics.setColor(255,255,255)
 		if p.percent then
-			animate.draw(p.image,p.rx*120-60,p.ry*120+60,p.percent,math.pi*p.d/2,p.spriteLength)
+			animate.draw(p.image,p.rx*120-60,p.ry*120+60,p.percent,math.pi*p.d/2,p.spriteLength,p.continuous)
 		else
 			love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.d/2,1,1,60,60)
 		end
@@ -104,6 +118,10 @@ function moves.cast(typeNum,num,pn)
 			projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=2,name=name,damage=10,image=airOrbImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 		end
+		if name == "aurora borealis" then
+			projectiles[#projectiles+1] = {continuous=true,blocker="forceField",despawn=5,percent=0,spriteLength=6,aSpeed=1,name=name,damage=0,image=auroraImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+		end
 		if name == "blast" then
 			for i=0,1 do
 				local d = p.d+1+(i*2)
@@ -118,8 +136,8 @@ function moves.cast(typeNum,num,pn)
 		end
 		if name == "wall" then
 			for i=1,3 do
-				if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {name=name,blocker="fragile",damage=0,image=earthOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
-					else projectiles[#projectiles+1] = {name=name,damage=0,blocker="fragile",image=earthOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 0,rx=0,ry=0} end
+				if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {name=name,despawn=1,blocker="fragile",damage=0,image=earthOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+					else projectiles[#projectiles+1] = {name=name,damage=0,despawn=1,blocker="fragile",image=earthOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 0,rx=0,ry=0} end
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 		end
