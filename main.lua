@@ -7,6 +7,7 @@ require "sound"
 
 function love.load()
 
+	math.randomseed(os.time())
 	love.window.setFullscreen(true)
 	love.mouse.setVisible(false)
     love.graphics.setDefaultFilter("nearest","linear", 100 )

@@ -18,7 +18,9 @@ moves = { --first moves must all be normal
 {name="blast",type="fire",cost=10},
 {name="boulder",type="earth",cost=8}},
 --Power
-{{name="block",type="normal",cost=40}}
+{{name="block",type="normal",cost=40},
+{name="lightning",type="fire",cost=40},
+{name="flood",type="water",cost=40}}
 }
 
 projectiles = {}
@@ -28,6 +30,8 @@ function moves.load()
 	waterOrbImg = love.graphics.newImage("water.png")
 	earthOrbImg = love.graphics.newImage("earth.png")
 	redirectIcon = love.graphics.newImage("redirectIcon.png")
+	lightningImg = love.graphics.newImage("lightning.png")
+	floodImg = love.graphics.newImage("flood.png")
 	
 	fireOrbImg = love.graphics.newImage("fireSprite.png")
 	airOrbImg = love.graphics.newImage("airSprite.png")
@@ -53,8 +57,28 @@ end
 		if p.name == "redirect" then
 			for i=1,#projectiles do
 				op = projectiles[i]
-				if not(op==p) and op.rx==p.rx and op.ry==p.ry and op.redirectable then
-					op.d=p.d
+				--if op.redirectable then
+					if not(op==p) and op.rx==p.rx and op.ry==p.ry then
+						op.d=p.d
+					end
+				--end
+			end
+		end
+		if p.name == "lightning" then
+			if p.branched==false and p.despawn<0.47 then
+				local multi = math.random(1,7)
+				if not (multi==2) then multi=1 end
+				p.branched = true
+				local x=p.rx
+				local y=p.ry
+				if p.d==0 then y=y-1 end
+				if p.d==1 then x=x+1 end
+				if p.d==2 then y=y+1 end
+				if p.d==3 then x=x-1 end
+				for i=1,multi do
+					local d=p.d-1+i
+					if d==4 then d=0 end
+					projectiles[#projectiles+1] = {branched = false,despawn=0.5,name=p.name,damage=50,image=lightningImg,x=x,y=y,d=d,speed = 0,rx=0,ry=0}
 				end
 			end
 		end
@@ -125,9 +149,8 @@ function moves.cast(typeNum,num,pn)
 	p=players[pn]
 	if p.chi >= moves[typeNum][num].cost then
 		p.chi=p.chi-moves[typeNum][num].cost
-
 		name = moves[typeNum][num].name
-
+		
 		if name == "arrow" then
 			projectiles[#projectiles+1] = {name=name,damage=10,image=arrowImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
@@ -175,6 +198,15 @@ function moves.cast(typeNum,num,pn)
 				if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {name=name,despawn=1,blocker="fragile",damage=0,image=earthOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 					else projectiles[#projectiles+1] = {name=name,damage=0,despawn=1,blocker="fragile",image=earthOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 0,rx=0,ry=0} end
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+			end
+		end
+		if name == "lightning" then
+			projectiles[#projectiles+1] = {branched=false,despawn=0.5,name=name,damage=50,image=lightningImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+			projectiles[#projectiles] = moves.moveProj(#projectiles,1)	
+		end
+		if name == "flood" then
+			for x=1,16 do
+				
 			end
 		end
 		
