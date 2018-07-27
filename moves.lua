@@ -8,6 +8,7 @@ moves = { --first moves must all be normal
 --Utility
 {{name="charge",type="normal",cost=2},
 {name="aurora borealis",type="water",cost=8},
+{name="blow",type="air",cost=8},
 {name="wall",type="earth",cost=5}},
 --Attack
 {{name="arrow",type="normal",cost=6},
@@ -29,6 +30,7 @@ function moves.load()
 	fireOrbImg = love.graphics.newImage("fireSprite.png")
 	airOrbImg = love.graphics.newImage("airSprite.png")
 	auroraImg = love.graphics.newImage("auroraSprite.png")
+	windImg = love.graphics.newImage("windSprite.png")
 end
 
 function moves.update(dt)
@@ -36,7 +38,17 @@ function moves.update(dt)
 	moves.roundPositions()
 	moves.removeReduntantProjectiles()
 	moves.despawn(dt)
+	for i=1,#projectiles do moves.updateProjectile(projectiles[i]) end
 end
+
+	function moves.updateProjectile(p)
+		if p.name == "blow" then
+			for i=1,2 do
+				pl=players[i]
+				if pl.x==p.rx and pl.y==p.ry then players.move(i,p.d,false) end
+			end
+		end
+	end
 
 	function moves.despawn(dt)
 		for i=1,#projectiles do
@@ -86,12 +98,16 @@ end
 function moves.draw()
 	for i=1,#projectiles do
 		p=projectiles[i]
-		love.graphics.setColor(255,255,255)
+		if (not p.despawn) or p.despawn > 0.5 then love.graphics.setColor(255,255,255)
+		else love.graphics.setColor(255,255,255,p.despawn/0.5*255) end
+
 		if p.percent then
-			animate.draw(p.image,p.rx*120-60,p.ry*120+60,p.percent,math.pi*p.d/2,p.spriteLength,p.continuous)
+			animate.draw(p.image,p.rx*120-60,p.ry*120+60,p.percent,math.pi*p.d/2,p.spriteLength,p.continuous,p.horisontal)
 		else
 			love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.d/2,1,1,60,60)
 		end
+
+		love.graphics.setColor(255,255,255)
 	end
 end
 
@@ -119,8 +135,14 @@ function moves.cast(typeNum,num,pn)
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 		end
 		if name == "aurora borealis" then
-			projectiles[#projectiles+1] = {continuous=true,blocker="forceField",despawn=5,percent=0,spriteLength=6,aSpeed=1,name=name,damage=0,image=auroraImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+			projectiles[#projectiles+1] = {spriteLength=6,continuous=true,blocker="forceField",despawn=5,percent=0,aSpeed=1,name=name,damage=0,image=auroraImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+		end
+		if name == "blow" then
+			for i=1,4 do
+				projectiles[#projectiles+1] = {horisontal = true,continuous=true,despawn=5,percent=0,aSpeed=1,name=name,damage=0,image=windImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles] = moves.moveProj(#projectiles,i)
+			end
 		end
 		if name == "blast" then
 			for i=0,1 do
