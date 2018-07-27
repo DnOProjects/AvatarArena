@@ -21,6 +21,7 @@ function love.load()
     projectilesToRemove = {}
 
     moveSet = {0,0}
+
 end
 
 function love.update(dt)
@@ -56,12 +57,11 @@ end
 
 function startGame()
 	gameState = "game" 
-	players[1].utility = ui[1][1]
-	players[1].attack = ui[1][2]
-	players[1].power = ui[1][3]
-	players[2].utility = ui[2][1]
-	players[2].attack = ui[2][2]
-	players[2].power = ui[2][3]
+	for i=1,2 do
+		players[i].utility = ui[i][1]
+		players[i].attack = ui[i][2]
+		players[i].power = ui[i][3]
+	end
 
 	players[1].hp = characters[players[1].char].hp
 	players[2].hp = characters[players[2].char].hp
