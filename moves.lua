@@ -45,13 +45,21 @@ function moves.update(dt)
 	moves.removeReduntantProjectiles()
 	moves.despawn(dt)
 	for i=1,#projectiles do moves.updateProjectile(projectiles[i]) end
+	for i=1,2 do 
+		if not(players[i].beenBlown==false) then
+			if players[i].beenBlown-dt > 0 then players[i].beenBlown = players[i].beenBlown-dt else players[i].beenBlown = false end
+		end
+	end
 end
 
 	function moves.updateProjectile(p)
 		if p.name == "blow" then
 			for i=1,2 do
 				pl=players[i]
-				if pl.x==p.rx and pl.y==p.ry then players.move(i,p.d,false) end
+				if pl.x==p.rx and pl.y==p.ry and not(pl.beenBlown) then
+					players.move(i,p.d,true)
+					pl.beenBlown=0.1
+				end
 			end
 		end
 		if p.name == "redirect" then
@@ -64,10 +72,22 @@ end
 				--end
 			end
 		end
+		if p.name == "flood" then
+			if p.layer > 3 and p.despawn<1.3^p.layer-0.1 and p.willSpawn then
+				p.willSpawn=false
+				for x=1,16 do
+					local willSpawn = false
+					if x==1 then willSpawn = true end
+					projectiles[#projectiles+1]={willSpawn=willSpawn,layer=p.layer-1,despawn=1.3^p.layer-1,name=p.name,damage=50,image=floodImg,x=x,y=p.layer-1,d=p.d,speed = 0,rx=0,ry=0}
+				end
+			end
+		end
 		if p.name == "lightning" then
 			if p.branched==false and p.despawn<0.47 then
 				local multi = math.random(1,7)
 				if not (multi==2) then multi=1 end
+				if p.turns>2 then multi=1 end
+				if multi==2 then p.turns=p.turns+1 end
 				p.branched = true
 				local x=p.rx
 				local y=p.ry
@@ -78,7 +98,7 @@ end
 				for i=1,multi do
 					local d=p.d-1+i
 					if d==4 then d=0 end
-					projectiles[#projectiles+1] = {branched = false,despawn=0.5,name=p.name,damage=50,image=lightningImg,x=x,y=y,d=d,speed = 0,rx=0,ry=0}
+					projectiles[#projectiles+1] = {turns=p.turns,branched = false,despawn=0.5,name=p.name,damage=50,image=floodImg,x=x,y=y,d=d,speed = 0,rx=0,ry=0}
 				end
 			end
 		end
@@ -147,7 +167,7 @@ end
 
 function moves.cast(typeNum,num,pn)
 	p=players[pn]
-	if p.chi >= moves[typeNum][num].cost then
+	if p.chi >= moves[typeNum][num].cost and players.canCast(p) then
 		p.chi=p.chi-moves[typeNum][num].cost
 		name = moves[typeNum][num].name
 		
@@ -173,7 +193,6 @@ function moves.cast(typeNum,num,pn)
 		end
 		if name == "aurora borealis" then
 			projectiles[#projectiles+1] = {spriteLength=6,continuous=true,blocker="forceField",despawn=5,percent=0,aSpeed=1,name=name,damage=0,image=auroraImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
-			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 		end
 		if name == "blow" then
 			for i=1,4 do
@@ -190,23 +209,25 @@ function moves.cast(typeNum,num,pn)
 			end
 		end
 		if name == "boulder" then
-			projectiles[#projectiles+1] = {name=name,damage=20,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 8,rx=0,ry=0}
+			projectiles[#projectiles+1] = {name=name,damage=15,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 		end
 		if name == "wall" then
 			for i=1,3 do
 				if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {name=name,despawn=1,blocker="fragile",damage=0,image=earthOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
-					else projectiles[#projectiles+1] = {name=name,damage=0,despawn=1,blocker="fragile",image=earthOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 0,rx=0,ry=0} end
+					else projectiles[#projectiles+1] = {name=name,damage=0,despawn=2,blocker="fragile",image=earthOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 0,rx=0,ry=0} end
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 		end
 		if name == "lightning" then
-			projectiles[#projectiles+1] = {branched=false,despawn=0.5,name=name,damage=50,image=lightningImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+			projectiles[#projectiles+1] = {turns=0,branched=false,despawn=0.5,name=name,damage=50,image=lightningImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)	
 		end
 		if name == "flood" then
 			for x=1,16 do
-				
+				willSpawn=false
+				if x==1 then willSpawn=true end
+				projectiles[#projectiles+1] = {willSpawn=willSpawn,layer=8,despawn=1.3^9,name=name,damage=50,image=floodImg,x=x,y=8,d=p.d,speed = 0,rx=0,ry=0}
 			end
 		end
 		

@@ -5,6 +5,8 @@ function ui.load()
 	font = love.graphics.newFont("font.ttf",72)
 	love.graphics.setFont(font)
 
+	winScreen = love.graphics.newImage("winScreenBackground.png")
+
 	playerSelecting=1
 
 	for i=1,2 do
@@ -109,6 +111,22 @@ function ui.draw()
 		love.graphics.setColor(163,198,255)
 		love.graphics.rectangle("fill",300,95,600*(players[1].chi/players[1].maxChi),10)
 		love.graphics.rectangle("fill",1620,95,-600*(players[2].chi/players[2].maxChi),10)
+	end
+
+	if gameState == "winScreen" then
+		if loser==1 then winner=2 else winner=1 end
+		love.graphics.draw(winScreen, 0, 0, 0, 1920/winScreen:getWidth(), 1080/winScreen:getHeight())
+		love.graphics.draw(characters[players[winner].char].portrait,810,200)
+		love.graphics.draw(characters[players[loser].char].portrait,865,800,0,0.5,0.5)
+		love.graphics.setColor(0,0,0)
+		love.graphics.setLineWidth(4)
+		love.graphics.rectangle("line",809,199,252,358,5,5)
+		love.graphics.rectangle("line",864,799,126,179,5,5)
+		love.graphics.print("Winner",820,130)
+		love.graphics.print("Loser",866,750,0,0.7)
+		love.graphics.setLineWidth(20)
+		love.graphics.circle("line",930,660,50)
+		love.graphics.setColor(255,255,255)
 	end
 
 end

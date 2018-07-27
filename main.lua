@@ -54,6 +54,8 @@ function love.draw()
 	end
 	ui.draw()
 
+	love.graphics.print(#projectiles)
+
 end
 
 function startGame()
@@ -69,6 +71,9 @@ function startGame()
 
 	players[1].maxHp = characters[players[1].char].hp
 	players[2].maxHp = characters[players[2].char].hp
+
+	players[1].chiRegen = characters[players[1].char].chiRegen
+	players[2].chiRegen = characters[players[2].char].chiRegen
 
 	arenaType = characters[players[1].char].bends[1]
 	sound.play("roundIntro")
@@ -114,6 +119,15 @@ function love.keypressed(key)
 		if key=="down" then ui.y=ui.y+1 end
 		if key=="left" then ui.switch(-1) end
 		if key=="right" then ui.switch(1) end
+	end
+
+	if gameState=="winScreen" and key=="right" then 
+		gameState="characterSelection" 
+		map.load()
+	    moves.load()
+	    players.load()
+	    ui.load()
+	    projectiles	={}
 	end
 
 end

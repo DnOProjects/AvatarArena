@@ -13,14 +13,14 @@ function players.load()
 	tophPortrait= love.graphics.newImage("tophPortrait.png")
 
 	characters = {
-{name="Aang",img=aangImg,portrait=aangPortrait,moveTimer=0.1,hp=100,bends={"air","earth","fire","water","energy","normal"}},
-{name="Katara",img=kataraImg,portrait=kataraPortrait,moveTimer=0.15,hp=120,bends={"water","normal"}},
-{name="Iroh",img=irohImg,portrait=irohPortrait,moveTimer=0.15,hp=120,bends={"fire","normal"}},
-{name="Toph",img=tophImg,portrait=tophPortrait,moveTimer=0.15,hp=120,bends={"earth","normal"}}
+{name="Aang",chiRegen=4,img=aangImg,portrait=aangPortrait,moveTimer=0.1,hp=100,bends={"air","earth","fire","water","energy","normal"}},
+{name="Katara",chiRegen=4,img=kataraImg,portrait=kataraPortrait,moveTimer=0.15,hp=120,bends={"water","normal"}},
+{name="Iroh",chiRegen=8,img=irohImg,portrait=irohPortrait,moveTimer=0.15,hp=80,bends={"fire","normal"}},
+{name="Toph",chiRegen=4,img=tophImg,portrait=tophPortrait,moveTimer=0.15,hp=130,bends={"earth","normal"}}
 }
 
-	players[1] = {char=1,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=20,chi=0,maxChi=100,utility=1,attack=1,power=1}
-	players[2] = {char=1,x=16,y=8,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=20,chi=0,maxChi=100,utility=1,attack=1,power=1}
+	players[1] = {beenBlown=false,char=1,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=1,attack=1,power=1}
+	players[2] = {beenBlown=false,char=1,x=16,y=8,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=1,attack=1,power=1}
 end
 
 function players.update(dt)
@@ -54,7 +54,9 @@ end
 				if projectiles[j].damage>0 and projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 and players[i].hp > 0 then
 					players[i].hp=players[i].hp-projectiles[j].damage
 					players[i].invulnerability = 10
-					projectilesToRemove[#projectilesToRemove+1] = j
+					if not(projectiles[j].name=="flood") then
+						projectilesToRemove[#projectilesToRemove+1] = j
+					end				
 				end
 			end
 			if players[i].hp < 0 then
@@ -66,18 +68,10 @@ end
 	function players.die()
 		for i=1,2 do
 			if(players[i].hp <= 0)then
-				map.load()
-			    moves.load()
-			    players.load()
-			    ui.load()
-			    sound.load()
-			    gameState = "characterSelection"
+			    players[i].hp=1
+			    gameState = "winScreen"
 			    projectilesToRemove = {}
-			    --[[for i=1,2 do
-			    	for i=1,3 do
-			    		ui[i][j] = 1
-			    	end
-			 	end]]
+			    loser = i
 			end
 		end
 	end
@@ -124,5 +118,15 @@ end
 			if pr.blocker and p.x==pr.rx and p.y==pr.ry and not(pr.blocker=="forceField") then return false  end
 		end
 
+		return true
+	end
+
+	function players.canCast(p)
+		for i=1,#projectiles do
+			pr=projectiles[i]
+			if pr.rx==p.x and pr.ry==p.y then
+				if pr.name == "aurora borealis" then return false end
+			end
+		end
 		return true
 	end
