@@ -29,6 +29,7 @@ function love.update(dt)
 	moves.update(dt)
 	ui.update()
 	sound.update(dt)
+	animate.update(dt)
 
 	removeProjectiles()
 
@@ -68,6 +69,7 @@ function startGame()
 	players[1].maxHp = characters[players[1].char].hp
 	players[2].maxHp = characters[players[2].char].hp
 
+	arenaType = characters[players[1].char].bends[1]
 	sound.play("roundIntro")
 end
 

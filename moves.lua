@@ -6,7 +6,8 @@ require "sound"
 moves = { --first moves must all be normal
 
 --Utility
-{{name="charge",type="normal",cost=2}},
+{{name="charge",type="normal",cost=2},
+{name="wall",type="earth",cost=16}},
 --Attack
 {{name="arrow",type="normal",cost=6},
 {name="spurt",type="water",cost=16},
@@ -29,15 +30,26 @@ end
 
 function moves.update(dt)
 	moves.moveProjectiles(dt)
-	moves.floorPositions()
-	moves.updateAnimations(dt)
+	moves.roundPositions()
+	moves.removeReduntantProjectiles()
 end
-
-	function moves.updateAnimations(dt)
+	
+	function moves.removeReduntantProjectiles()
 		for i=1,#projectiles do
 			p=projectiles[i]
-			if p.percent then p.percent = p.percent + dt*100*p.aSpeed end
-			if p.percent and p.percent > 100 then p.percent = p.percent-100 end
+			if p.rx<1 or p.rx>16 or p.ry<1 or p.ry > 8 then
+				projectilesToRemove[#projectilesToRemove+1]=i
+			end
+
+			for j=1,#projectiles do
+				if not(i==j) then
+					op=projectiles[j]
+					if op.blocker and op.rx==p.rx and op.ry==p.ry then
+						projectilesToRemove[#projectilesToRemove+1]=i
+						if op.blocker=="fragile" then projectilesToRemove[#projectilesToRemove+1]=j end
+					end
+				end
+			end
 		end
 	end
 
@@ -45,11 +57,11 @@ end
 		--speed is in tiles/sec
 		for i=1,#projectiles do
 			p=projectiles[i]
-			p=moves.moveProj(p,p.speed*dt)
+			p=moves.moveProj(i,p.speed*dt)
 		end
 	end
 
-	function moves.floorPositions()
+	function moves.roundPositions()
 		for i=1,#projectiles do
 			p=projectiles[i]
 			p.rx = logic.round(p.x,0)
@@ -78,44 +90,53 @@ function moves.cast(typeNum,num,pn)
 
 		if name == "arrow" then
 			projectiles[#projectiles+1] = {name=name,damage=10,image=arrowImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
-			projectiles[#projectiles] = moves.moveProj(projectiles[#projectiles],1)
+			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 		end
 		if name == "spurt" then
 			for i=1,3 do
 				if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {name=name,damage=10,image=waterOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 2,rx=0,ry=0}
 					else projectiles[#projectiles+1] = {name=name,damage=10,image=waterOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 2,rx=0,ry=0} end
-				projectiles[#projectiles] = moves.moveProj(projectiles[#projectiles],1)
+				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 		end
 		if name == "charge" then for i=1,3 do players.move(pn,p.d,true) end end
 		if name == "gust" then
 			projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=2,name=name,damage=10,image=airOrbImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
-			projectiles[#projectiles] = moves.moveProj(projectiles[#projectiles],1)
+			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 		end
 		if name == "blast" then
 			for i=0,1 do
 				local d = p.d+1+(i*2)
-				if d==4 then d=0 end
-				if d==5 then d=1 end
-				if d==6 then d=2 end
+				if d>3 then d=d-4 end
 				projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=0.7,name=name,damage=10,image=fireOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
-				projectiles[#projectiles] = moves.moveProj(projectiles[#projectiles],1)
+				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 		end
 		if name == "boulder" then
 			projectiles[#projectiles+1] = {name=name,damage=20,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 8,rx=0,ry=0}
-			projectiles[#projectiles] = moves.moveProj(projectiles[#projectiles],1)
+			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+		end
+		if name == "wall" then
+			for i=1,3 do
+				if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {name=name,blocker="fragile",damage=0,image=earthOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+					else projectiles[#projectiles+1] = {name=name,damage=0,blocker="fragile",image=earthOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 0,rx=0,ry=0} end
+				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+			end
 		end
 		
 		moves.playMoveSound(moves[typeNum][num].type)
 	end
 end
 
-function moves.moveProj(p,num)
+function moves.moveProj(n,num)
+
+	local p=projectiles[n]
+
 	if p.d==0 then p.y=p.y-num end
 	if p.d==1 then p.x=p.x+num end
 	if p.d==2 then p.y=p.y+num end
 	if p.d==3 then p.x=p.x-num end
+
 	return p
 end
 

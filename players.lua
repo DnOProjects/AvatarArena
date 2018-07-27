@@ -82,6 +82,27 @@ function players.move(p,d,unconditional)
 		if d==2 then players[p].y=players[p].y+1 end
 		if d==3 then players[p].x=players[p].x-1 end
 	end
+	if not(players.canBeHere(p)) then 
+		players[p].x = ox
+		players[p].y=oy
+	end
 	if players[p].x<1 or players[p].x>16 then players[p].x = ox end
 	if players[p].y<1 or players[p].y>8 then players[p].y = oy end
-end
+end	
+
+	function players.canBeHere(n)
+		p=players[n]
+		on=n+1
+		if on==3 then on=1 end
+		op=players[on]
+
+		if p.x<1 or p.x>16 or p.y<1 or p.y>8
+		or (p.x==op.x and p.y==op.y) then return false end
+
+		for i=1,#projectiles do
+			pr=projectiles[i]
+			if pr.blocker and p.x==pr.rx and p.y==pr.ry then return false end
+		end
+
+		return true
+	end
