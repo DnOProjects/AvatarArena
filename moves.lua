@@ -53,7 +53,7 @@ end
 		if p.name == "redirect" then
 			for i=1,#projectiles do
 				op = projectiles[i]
-				if not(op==p) and op.rx==p.rx and op.ry==p.ry then
+				if not(op==p) and op.rx==p.rx and op.ry==p.ry and op.redirectable then
 					op.d=p.d
 				end
 			end
@@ -162,7 +162,7 @@ function moves.cast(typeNum,num,pn)
 			for i=0,1 do
 				local d = p.d+1+(i*2)
 				if d>3 then d=d-4 end
-				projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=0.7,name=name,damage=10,image=fireOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
+				projectiles[#projectiles+1] = {redirectable=true,percent=0,spriteLength=6,aSpeed=0.7,name=name,damage=10,image=fireOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 		end
