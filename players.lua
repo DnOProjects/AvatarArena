@@ -27,6 +27,7 @@ function players.update(dt)
 	players.updateTimer(dt)
 	players.checkForHits()
 	players.poolChi(dt)
+	players.die()
 end
 
 	function players.poolChi(dt)
@@ -58,6 +59,25 @@ end
 			end
 			if players[i].hp < 0 then
 				players[i].hp=0
+			end
+		end
+	end
+
+	function players.die()
+		for i=1,2 do
+			if(players[i].hp <= 0)then
+				map.load()
+			    moves.load()
+			    players.load()
+			    ui.load()
+			    sound.load()
+			    gameState = "characterSelection"
+			    projectilesToRemove = {}
+			    --[[for i=1,2 do
+			    	for i=1,3 do
+			    		ui[i][j] = 1
+			    	end
+			 	end]]
 			end
 		end
 	end
