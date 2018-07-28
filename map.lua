@@ -1,12 +1,13 @@
 map = {}
 
 function map.load()
-	fireGrass = love.graphics.newImage("fireGrass.png")
-	waterGrass = love.graphics.newImage("waterGrass.png")
-	airGrass = love.graphics.newImage("airGrass.png")
-	earthGrass = love.graphics.newImage("earthGrass.png")
+	fireGrass = love.graphics.newImage("Images/Grass/fireGrass.png")
+	waterGrass = love.graphics.newImage("Images/Grass/waterGrass.png")
+	airGrass = love.graphics.newImage("Images/Grass/airGrass.png")
+	earthGrass = love.graphics.newImage("Images/Grass/earthGrass.png")
+	normalGrass = love.graphics.newImage("Images/Grass/normalGrass.png")
 
-	grasses = {fire={image=fireGrass,diff=50},air={image=airGrass,diff=15},earth={image=earthGrass,diff=30},water={image=waterGrass,diff=10}}
+	grasses = {fire={image=fireGrass,diff=50},air={image=airGrass,diff=15},earth={image=earthGrass,diff=30},water={image=waterGrass,diff=10},sokka={image=normalGrass,diff=10}}
 
 	for x=1,16 do
 		map[#map+1] = {}

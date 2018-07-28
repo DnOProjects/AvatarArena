@@ -10,13 +10,15 @@ moves = { --first moves must all be normal
 {name="aurora borealis",type="water",cost=8},
 {name="blow",type="air",cost=8},
 {name="redirect",type="fire",cost=8},
-{name="wall",type="earth",cost=5}},
+{name="wall",type="earth",cost=5},
+{name="sword block",type="sokka",cost=5}},
 --Attack
 {{name="arrow",type="normal",cost=6},
 {name="spurt",type="water",cost=16},
 {name="gust",type="air",cost=8},
 {name="blast",type="fire",cost=10},
-{name="boulder",type="earth",cost=8}},
+{name="boulder",type="earth",cost=8},
+{name="boomerang",type="normal",cost=6}},
 --Power
 {{name="block",type="normal",cost=40},
 {name="lightning",type="fire",cost=50},
