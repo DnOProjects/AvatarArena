@@ -105,7 +105,7 @@ end
 				for i=1,multi do
 					local d=p.d-1+i
 					if d==4 then d=0 end
-					projectiles[#projectiles+1] = {turns=p.turns,branched = false,despawn=0.5,name=p.name,damage=50,image=floodImg,x=x,y=y,d=d,speed = 0,rx=0,ry=0}
+					projectiles[#projectiles+1] = {turns=p.turns,branched = false,despawn=0.5,name=p.name,damage=50,image=lightningImg,x=x,y=y,d=d,speed = 0,rx=0,ry=0}
 				end
 			end
 		end
