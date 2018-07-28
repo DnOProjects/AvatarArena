@@ -19,7 +19,7 @@ moves = { --first moves must all be normal
 {name="spurt",type="water",cost=16,desc="To-write"},
 {name="gust",type="air",cost=8,desc="To-write"},
 {name="blast",type="fire",cost=10,desc="To-write"},
-{name="boomerang",type="normal",cost=6,desc="To-write"},
+{name="boomerang",type="sokka",cost=6,desc="To-write"},
 {name="boulder",type="earth",cost=8,desc="To-write"}},
 --Power
 
