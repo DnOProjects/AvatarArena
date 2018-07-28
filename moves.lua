@@ -21,6 +21,7 @@ moves = { --first moves must all be normal
 {{name="block",type="normal",cost=40},
 {name="lightning",type="fire",cost=50},
 {name="gale",type="air",cost=30},
+{name="shockwave",type="earth",cost=30},
 {name="flood",type="water",cost=80}}
 }
 
@@ -207,6 +208,13 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 		end
+		if name=="shockwave" then
+			for i=1,8 do
+				local d=i-1
+				projectiles[#projectiles+1] = {name=name,damage=15,image=earthOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
+				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+			end
+		end
 		if name == "aurora borealis" then
 			projectiles[#projectiles+1] = {spriteLength=6,continuous=true,blocker="forceField",despawn=5,percent=0,aSpeed=1,name=name,damage=0,image=auroraImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 		end
@@ -259,6 +267,22 @@ function moves.moveProj(n,num)
 	if p.d==1 then p.x=p.x+num end
 	if p.d==2 then p.y=p.y+num end
 	if p.d==3 then p.x=p.x-num end
+	if p.d==4 then 
+		p.x=p.x-num 
+		p.y=p.y-num 
+	end
+	if p.d==5 then 
+		p.x=p.x+num 
+		p.y=p.y-num 
+	end
+	if p.d==6 then 
+		p.x=p.x+num 
+		p.y=p.y+num 
+	end
+	if p.d==7 then 
+		p.x=p.x-num 
+		p.y=p.y+num 
+	end
 
 	return p
 end
