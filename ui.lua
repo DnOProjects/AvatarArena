@@ -7,10 +7,10 @@ function ui.load()
 
 	winScreen = love.graphics.newImage("Images/winScreenBackground.png")
 
-	waterSymbolImg = love.graphics.newImage("waterSymbol.png")
-	earthSymbolImg = love.graphics.newImage("earthSymbol.png")
-	airSymbolImg = love.graphics.newImage("airSymbol.png")
-	fireSymbolImg = love.graphics.newImage("fireSymbol.png")
+	waterSymbolImg = love.graphics.newImage("images/symbols/waterSymbol.png")
+	earthSymbolImg = love.graphics.newImage("images/symbols/earthSymbol.png")
+	airSymbolImg = love.graphics.newImage("images/symbols/airSymbol.png")
+	fireSymbolImg = love.graphics.newImage("images/symbols/fireSymbol.png")
 
 	elementSymbols={water=waterSymbolImg,earth=earthSymbolImg,air=airSymbolImg,fire=fireSymbolImg}
 
@@ -75,10 +75,10 @@ function ui.draw()
 				love.graphics.print("Character:",780,70)
 				love.graphics.print("Hp: "..c.hp,720,200,0,0.8,0.8) 
 				love.graphics.print("Chi: "..c.chiRegen,720,300,0,0.8,0.8) 
-				love.graphics.print("Bends:",840,400)
+				if not(c.name=="Sokka") then love.graphics.print("Bends:",840,400) end
 				for i=1,#c.bends do
 					e=c.bends[i]
-					if not(e=="normal" or e=="energy") then
+					if not(e=="normal" or e=="energy" or e=="sokka") then
 						local y=0
 						if i>2 then y=1 end
 						love.graphics.draw(elementSymbols[e],i*230+490-(y*460),500+y*230)
@@ -88,7 +88,7 @@ function ui.draw()
 				move = moves[ui.y][ui[playerSelecting][ui.y]]
 				love.graphics.printf(move.name..":",720,70,600,"center",0,0.8,0.8)
 				local textYOffset=0
-				if not(move.type=="normal" or move.type=="energy") then
+				if not(move.type=="normal" or move.type=="energy" or move.type=="sokka") then
 					love.graphics.draw(elementSymbols[move.type],840,200)
 					textYOffset=300 
 				end
