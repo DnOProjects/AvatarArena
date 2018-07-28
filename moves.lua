@@ -9,12 +9,12 @@ moves = { --first moves must all be normal
 {{name="charge",type="normal",cost=2,desc="You charge forwards with such force that you can almost phase-through certain projectiles!"},
 {name="aurora borealis",type="water",cost=8,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
 {name="blow",type="air",cost=8,desc="A funnel of air to propel you forwards or push your opponent back!"},
-{name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
+{name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
 {name="sword block",type="sokka",cost=5,desc="You deflect an enemy's attack, sending it flying away to the side."},
 {name="wall",type="earth",cost=5,desc="The ground rises up to shield you from harm!"}},
 
 --Attack
-{{name="arrow",type="normal",cost=6,desc="A well-placed arrow can be as effective as any pillar of fire or collumn of rock!"},
+{{name="arrow",type="normal",cost=6,desc="A well-placed arrow can be as effective as any pillar of fire or column of rock!"},
 {name="spurt",type="water",cost=16,desc="A writhing spray of water, ready to force itself down your enemy's throat and drown their very lungs!"},
 {name="gust",type="air",cost=8,desc="A ball of whirling air."},
 {name="blast",type="fire",cost=10,desc="Two glowing embers shoot sideways from each hand."},
