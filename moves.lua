@@ -27,7 +27,7 @@ moves = { --first moves must all be normal
 {name="gale",type="air",cost=30,desc="A devestating, unpredictable flurry of wind!"},
 {name="shockwave",type="earth",cost=30,desc="You send seismic waves rippling through the earth, letting it rise up around you!"},
 {name="flood",type="water",cost=80,desc="The waters rise up to drown your enemies!"},
-{name="shift",type="water",cost=60,desc="Using spirit-bending, you shift the battle into the spirit-world, rendering all bending ineffective!"}}
+{name="shift",type="air",cost=60,desc="You shift the battle into the spirit-world, rendering all bending ineffective!"}}
 }
 
 projectiles = {}
