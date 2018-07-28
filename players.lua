@@ -7,6 +7,7 @@ function players.load()
 	irohImg = love.graphics.newImage("Images/Characters/iroh.png")
 	tophImg = love.graphics.newImage("Images/Characters/toph.png")
 	gyatsoImg = love.graphics.newImage("Images/Characters/gyatso.png")
+	sokkaImg = love.graphics.newImage("Images/Characters/sokka.png")
 
 	aangPortrait = love.graphics.newImage("Images/Portraits/aangPortrait.png")
 	kataraPortrait = love.graphics.newImage("Images/Portraits/kataraPortrait.png")
@@ -27,7 +28,7 @@ function players.load()
 
 	players[1] = {beenBlown=false,char=1,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=1,attack=1,power=1}
 	players[2] = {beenBlown=false,char=1,x=16,y=8,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=1,attack=1,power=1}
-	
+
 end
 
 function players.update(dt)
