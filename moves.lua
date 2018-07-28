@@ -247,6 +247,10 @@ function moves.cast(typeNum,num,pn)
 				projectiles[#projectiles+1] = {willSpawn=willSpawn,layer=8,despawn=1.3^9,name=name,damage=50,image=floodTopImg,x=x,y=8,d=0,speed = 0,rx=0,ry=0}
 			end
 		end
+		if name == "boomerang" then
+			projectiles[#projectiles+1] = {name=name,damage=10,image=boomerangImg,x=p.x,y=p.y,d=p.d,speed = 8,rx=0,ry=0}
+			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+		end
 		
 		moves.playMoveSound(moves[typeNum][num].type)
 	end
