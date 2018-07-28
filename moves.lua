@@ -6,28 +6,27 @@ require "sound"
 moves = { --first moves must all be normal
 
 --Utility
+{{name="charge",type="normal",cost=2,desc="You charge forwards with such force that you can almost phase-through certain projectiles!"},
+{name="aurora borealis",type="water",cost=8,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
+{name="blow",type="air",cost=8,desc="A funnel of air to propel you forwards or push your opponent back!"},
+{name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
+{name="sword block",type="sokka",cost=5,desc="You deflect an enemy's attack, sending it flying away to the side."},
+{name="wall",type="earth",cost=5,desc="The ground rises up to shield you from harm!"}},
 
-{{name="charge",type="normal",cost=2,desc="To-write"},
-{name="aurora borealis",type="water",cost=8,desc="To-write"},
-{name="blow",type="air",cost=8,desc="To-write"},
-{name="redirect",type="fire",cost=8,desc="To-write"},
-{name="sword block",type="sokka",cost=5,desc="To-write"},
-{name="wall",type="earth",cost=5,desc="To-write"}},
 --Attack
+{{name="arrow",type="normal",cost=6,desc="A well-placed arrow can be as effective as any pillar of fire or collumn of rock!"},
+{name="spurt",type="water",cost=16,desc="A writhing spray of water, ready to force itself down your enemy's throat and drown their very lungs!"},
+{name="gust",type="air",cost=8,desc="A ball of whirling air."},
+{name="blast",type="fire",cost=10,desc="Two glowing embers shoot sideways from each hand."},
+{name="boomerang",type="normal",cost=6,desc="The boomerang whirls around the edge of the arena before returning to your hand."},
+{name="boulder",type="earth",cost=8,desc="A giant rolling boulder - it's a little slow but deals a lot of damage."}},
 
-{{name="arrow",type="normal",cost=6,desc="To-write"},
-{name="spurt",type="water",cost=16,desc="To-write"},
-{name="gust",type="air",cost=8,desc="To-write"},
-{name="blast",type="fire",cost=10,desc="To-write"},
-{name="boomerang",type="normal",cost=6,desc="To-write"},
-{name="boulder",type="earth",cost=8,desc="To-write"}},
 --Power
-
 {{name="block",type="normal",cost=40,desc="To-write"},
-{name="lightning",type="fire",cost=50,desc="To-write"},
-{name="gale",type="air",cost=30,desc="To-write"},
-{name="shockwave",type="earth",cost=30,desc="To-write"},
-{name="flood",type="water",cost=80,desc="To-write"}}
+{name="lightning",type="fire",cost=50,desc="\"The energy is both yin and yang, you can separate these energies, creating an imbalance. The energy wants to restore balance and in a moment the positive and negative energy come crashing back together. You provide release and guidance, creating lightning.\""},
+{name="gale",type="air",cost=30,desc="A devestating, unpredictable flurry of wind!"},
+{name="shockwave",type="earth",cost=30,desc="You send seismic waves rippling through the earth, letting it rise up around you!"},
+{name="flood",type="water",cost=80,desc="The waters rise up to drown your enemies!"}}
 }
 
 projectiles = {}

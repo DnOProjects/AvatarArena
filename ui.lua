@@ -2,7 +2,8 @@ require "logic"
 ui = {y=0}
 
 function ui.load()
-	font = love.graphics.newFont("font.ttf",72)
+	font = love.graphics.newFont("fonts/font.ttf",72)
+	descriptionFont = love.graphics.newFont("fonts/descriptionFont.ttf",72)
 	love.graphics.setFont(font)
 
 	winScreen = love.graphics.newImage("Images/winScreenBackground.png")
@@ -92,7 +93,9 @@ function ui.draw()
 					love.graphics.draw(elementSymbols[move.type],840,200)
 					textYOffset=300 
 				end
-				love.graphics.printf(move.desc,720,200+textYOffset,400,"left",0,0.5,0.5)
+				love.graphics.setFont(descriptionFont)
+				love.graphics.printf(move.desc,710,200+textYOffset,990,"left",0,0.5,0.5)
+				love.graphics.setFont(font)
 			end
 		end
 
