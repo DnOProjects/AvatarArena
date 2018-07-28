@@ -19,8 +19,9 @@ moves = { --first moves must all be normal
 {name="boulder",type="earth",cost=8}},
 --Power
 {{name="block",type="normal",cost=40},
-{name="lightning",type="fire",cost=40},
-{name="flood",type="water",cost=40}}
+{name="lightning",type="fire",cost=50},
+{name="gale",type="air",cost=30},
+{name="flood",type="water",cost=80}}
 }
 
 projectiles = {}
@@ -32,6 +33,7 @@ function moves.load()
 	redirectIcon = love.graphics.newImage("redirectIcon.png")
 	lightningImg = love.graphics.newImage("lightning.png")
 	floodImg = love.graphics.newImage("flood.png")
+	floodTopImg = love.graphics.newImage("floodTop.png")
 	
 	fireOrbImg = love.graphics.newImage("fireSprite.png")
 	airOrbImg = love.graphics.newImage("airSprite.png")
@@ -73,12 +75,17 @@ end
 			end
 		end
 		if p.name == "flood" then
-			if p.layer > 3 and p.despawn<1.3^p.layer-0.1 and p.willSpawn then
-				p.willSpawn=false
-				for x=1,16 do
-					local willSpawn = false
-					if x==1 then willSpawn = true end
-					projectiles[#projectiles+1]={willSpawn=willSpawn,layer=p.layer-1,despawn=1.3^p.layer-1,name=p.name,damage=50,image=floodImg,x=x,y=p.layer-1,d=p.d,speed = 0,rx=0,ry=0}
+			if p.layer > 3 and p.despawn<1.3^p.layer-0.1 then
+				if p.willSpawn then
+					p.willSpawn=false
+					p.image=floodImg
+					for x=1,16 do
+						local willSpawn = false
+						if x==1 then willSpawn = true end
+						projectiles[#projectiles+1]={willSpawn=willSpawn,layer=p.layer-1,despawn=1.3^p.layer-1,name=p.name,damage=50,image=floodTopImg,x=x,y=p.layer-1,d=p.d,speed = 0,rx=0,ry=0}
+					end
+				else
+					p.image=floodImg
 				end
 			end
 		end
@@ -169,7 +176,7 @@ function moves.cast(typeNum,num,pn)
 	p=players[pn]
 	if p.chi >= moves[typeNum][num].cost and players.canCast(p) then
 		p.chi=p.chi-moves[typeNum][num].cost
-		name = moves[typeNum][num].name
+		local name = moves[typeNum][num].name
 		
 		if name == "arrow" then
 			projectiles[#projectiles+1] = {name=name,damage=10,image=arrowImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
@@ -190,6 +197,15 @@ function moves.cast(typeNum,num,pn)
 		if name == "gust" then
 			projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=2,name=name,damage=10,image=airOrbImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+		end
+		if name == "gale" then
+			for j=1,3 do
+				for i=1,3 do
+					if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=j*i,name=name,damage=10,image=airOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed =j*i,rx=0,ry=0}
+						else projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=j*i,name=name,damage=10,image=airOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed =j*i,rx=0,ry=0} end
+					projectiles[#projectiles] = moves.moveProj(#projectiles,j)
+				end
+			end
 		end
 		if name == "aurora borealis" then
 			projectiles[#projectiles+1] = {spriteLength=6,continuous=true,blocker="forceField",despawn=5,percent=0,aSpeed=1,name=name,damage=0,image=auroraImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
@@ -227,7 +243,7 @@ function moves.cast(typeNum,num,pn)
 			for x=1,16 do
 				willSpawn=false
 				if x==1 then willSpawn=true end
-				projectiles[#projectiles+1] = {willSpawn=willSpawn,layer=8,despawn=1.3^9,name=name,damage=50,image=floodImg,x=x,y=8,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {willSpawn=willSpawn,layer=8,despawn=1.3^9,name=name,damage=50,image=floodTopImg,x=x,y=8,d=0,speed = 0,rx=0,ry=0}
 			end
 		end
 		

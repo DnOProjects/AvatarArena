@@ -54,8 +54,6 @@ function love.draw()
 	end
 	ui.draw()
 
-	love.graphics.print(#projectiles)
-
 end
 
 function startGame()
