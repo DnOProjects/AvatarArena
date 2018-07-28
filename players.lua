@@ -1,33 +1,23 @@
 players = {}
 
+players[1] = {beenBlown=false,char=1,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=1,attack=1,power=1}
+players[2] = {beenBlown=false,char=1,x=16,y=8,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=1,attack=1,power=1}
+
 function players.load()
-
-	aangImg = love.graphics.newImage("Images/Characters/aang.png")
-	kataraImg = love.graphics.newImage("Images/Characters/katara.png")
-	irohImg = love.graphics.newImage("Images/Characters/iroh.png")
-	tophImg = love.graphics.newImage("Images/Characters/toph.png")
-	gyatsoImg = love.graphics.newImage("Images/Characters/gyatso.png")
-	sokkaImg = love.graphics.newImage("Images/Characters/sokka.png")
-
-	aangPortrait = love.graphics.newImage("Images/Portraits/aangPortrait.png")
-	kataraPortrait = love.graphics.newImage("Images/Portraits/kataraPortrait.png")
-	irohPortrait = love.graphics.newImage("Images/Portraits/irohPortrait.png")
-	tophPortrait = love.graphics.newImage("Images/Portraits/tophPortrait.png")
-	gyatsoPortrait= love.graphics.newImage("Images/Portraits/gyatsoPortrait.png")
-	sokkaPortrait = love.graphics.newImage("Images/Portraits/sokkaPortrait.png")
 	
-
 	characters = {
 {name="Aang",chiRegen=4,img=aangImg,portrait=aangPortrait,moveTimer=0.1,hp=100,bends={"air","earth","fire","water","energy","normal"}},
 {name="Katara",chiRegen=4,img=kataraImg,portrait=kataraPortrait,moveTimer=0.15,hp=120,bends={"water","normal"}},
 {name="Iroh",chiRegen=8,img=irohImg,portrait=irohPortrait,moveTimer=0.15,hp=80,bends={"fire","normal"}},
 {name="Toph",chiRegen=4,img=tophImg,portrait=tophPortrait,moveTimer=0.15,hp=130,bends={"earth","normal"}},
 {name="Gyatso",chiRegen=6,img=gyatsoImg,portrait=gyatsoPortrait,moveTimer=0,hp=80,bends={"air","normal"}},
-{name="Sokka",chiRegen=4,img=tophImg,portrait=sokkaPortrait,moveTimer=0.15,hp=130,bends={"sokka","normal"}}
+{name="Sokka",chiRegen=4,img=sokkaImg,portrait=sokkaPortrait,moveTimer=0.15,hp=130,bends={"sokka","normal"}}
 }
 
-	players[1] = {beenBlown=false,char=1,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=1,attack=1,power=1}
-	players[2] = {beenBlown=false,char=1,x=16,y=8,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=1,attack=1,power=1}
+	p1 = players[1]
+	p2 = players[2]
+	players[1] = {beenBlown=false,char=p1.char,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
+	players[2] = {beenBlown=false,char=p2.char,x=16,y=8,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
 
 end
 

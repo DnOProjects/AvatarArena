@@ -18,7 +18,7 @@ moves = { --first moves must all be normal
 {name="spurt",type="water",cost=16,desc="A writhing spray of water, ready to force itself down your enemy's throat and drown their very lungs!"},
 {name="gust",type="air",cost=8,desc="A ball of whirling air."},
 {name="blast",type="fire",cost=10,desc="Two glowing embers shoot sideways from each hand."},
-{name="boomerang",type="normal",cost=6,desc="The boomerang whirls around the edge of the arena before returning to your hand."},
+{name="boomerang",type="sokka",cost=6,desc="The boomerang whirls around the edge of the arena before returning to your hand."},
 {name="boulder",type="earth",cost=8,desc="A giant rolling boulder - it's a little slow but deals a lot of damage."}},
 
 --Power
@@ -32,18 +32,7 @@ moves = { --first moves must all be normal
 projectiles = {}
 
 function moves.load()
-	arrowImg = love.graphics.newImage("Images/Abilities/arrow.png")
-	redirectIcon = love.graphics.newImage("Images/Abilities/redirectIcon.png")
-	lightningImg = love.graphics.newImage("Images/Abilities/lightning.png")
-	floodImg = love.graphics.newImage("Images/Abilities/flood.png")
-	floodTopImg = love.graphics.newImage("Images/Abilities/floodTop.png")
-	
-	waterOrbImg = love.graphics.newImage("Images/Abilities/water.png")
-	earthOrbImg = love.graphics.newImage("Images/Abilities/earth.png")
-	fireOrbImg = love.graphics.newImage("Images/Abilities/fireSprite.png")
-	airOrbImg = love.graphics.newImage("Images/Abilities/airSprite.png")
-	auroraImg = love.graphics.newImage("Images/Abilities/auroraSprite.png")
-	windImg = love.graphics.newImage("Images/Abilities/windSprite.png")
+	-- Nothing here, so sad :(
 end
 
 function moves.update(dt)

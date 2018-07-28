@@ -3,6 +3,7 @@ require "map"
 require "players"
 require "moves"
 require "ui"
+require "images"
 require "sound"
 
 function love.load()
@@ -122,14 +123,10 @@ function love.keypressed(key)
 	if gameState=="winScreen" and key=="right" then 
 		gameState="characterSelection" 
 		map.load()
-	    moves.load()
+		players.load()
 	    ui.load()
 	    ui.y = 0
 	    projectiles	= {}
-	    p1 = players[1]
-	    p2 = players[2]
-	    players[1] = {beenBlown=false,char=p1.char,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
-		players[2] = {beenBlown=false,char=p2.char,x=16,y=8,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
 	end
 
 end

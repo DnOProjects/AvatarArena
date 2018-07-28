@@ -6,13 +6,6 @@ function ui.load()
 	descriptionFont = love.graphics.newFont("fonts/descriptionFont.ttf",72)
 	love.graphics.setFont(font)
 
-	winScreen = love.graphics.newImage("Images/winScreenBackground.png")
-
-	waterSymbolImg = love.graphics.newImage("images/symbols/waterSymbol.png")
-	earthSymbolImg = love.graphics.newImage("images/symbols/earthSymbol.png")
-	airSymbolImg = love.graphics.newImage("images/symbols/airSymbol.png")
-	fireSymbolImg = love.graphics.newImage("images/symbols/fireSymbol.png")
-
 	elementSymbols={water=waterSymbolImg,earth=earthSymbolImg,air=airSymbolImg,fire=fireSymbolImg}
 
 	playerSelecting=1
