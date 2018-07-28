@@ -6,18 +6,23 @@ require "sound"
 moves = { --first moves must all be normal
 
 --Utility
+
 {{name="charge",type="normal",cost=2,desc="To-write"},
 {name="aurora borealis",type="water",cost=8,desc="To-write"},
 {name="blow",type="air",cost=8,desc="To-write"},
 {name="redirect",type="fire",cost=8,desc="To-write"},
+{name="sword block",type="sokka",cost=5,desc="To-write"},
 {name="wall",type="earth",cost=5,desc="To-write"}},
 --Attack
+
 {{name="arrow",type="normal",cost=6,desc="To-write"},
 {name="spurt",type="water",cost=16,desc="To-write"},
 {name="gust",type="air",cost=8,desc="To-write"},
 {name="blast",type="fire",cost=10,desc="To-write"},
+{name="boomerang",type="normal",cost=6,desc="To-write"},
 {name="boulder",type="earth",cost=8,desc="To-write"}},
 --Power
+
 {{name="block",type="normal",cost=40,desc="To-write"},
 {name="lightning",type="fire",cost=50,desc="To-write"},
 {name="gale",type="air",cost=30,desc="To-write"},
@@ -28,18 +33,18 @@ moves = { --first moves must all be normal
 projectiles = {}
 
 function moves.load()
-	arrowImg = love.graphics.newImage("arrow.png")
-	waterOrbImg = love.graphics.newImage("water.png")
-	earthOrbImg = love.graphics.newImage("earth.png")
-	redirectIcon = love.graphics.newImage("redirectIcon.png")
-	lightningImg = love.graphics.newImage("lightning.png")
-	floodImg = love.graphics.newImage("flood.png")
-	floodTopImg = love.graphics.newImage("floodTop.png")
+	arrowImg = love.graphics.newImage("Images/Abilities/arrow.png")
+	redirectIcon = love.graphics.newImage("Images/Abilities/redirectIcon.png")
+	lightningImg = love.graphics.newImage("Images/Abilities/lightning.png")
+	floodImg = love.graphics.newImage("Images/Abilities/flood.png")
+	floodTopImg = love.graphics.newImage("Images/Abilities/floodTop.png")
 	
-	fireOrbImg = love.graphics.newImage("fireSprite.png")
-	airOrbImg = love.graphics.newImage("airSprite.png")
-	auroraImg = love.graphics.newImage("auroraSprite.png")
-	windImg = love.graphics.newImage("windSprite.png")
+	waterOrbImg = love.graphics.newImage("Images/Abilities/water.png")
+	earthOrbImg = love.graphics.newImage("Images/Abilities/earth.png")
+	fireOrbImg = love.graphics.newImage("Images/Abilities/fireSprite.png")
+	airOrbImg = love.graphics.newImage("Images/Abilities/airSprite.png")
+	auroraImg = love.graphics.newImage("Images/Abilities/auroraSprite.png")
+	windImg = love.graphics.newImage("Images/Abilities/windSprite.png")
 end
 
 function moves.update(dt)

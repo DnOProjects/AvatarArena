@@ -1,13 +1,13 @@
 sound = {}
 
 function sound.load()
-	ambientMusic = love.audio.newSource("backgroundMusic.mp3")
+	ambientMusic = love.audio.newSource("Sounds/backgroundMusic.mp3")
+	roundIntroEffect = love.audio.newSource("Sounds/roundIntro.mp3","static")
 
-	roundIntroEffect = love.audio.newSource("roundIntro.mp3","static")
-	earthEffect = love.audio.newSource("earthEffect.mp3","static")
-	waterEffect = love.audio.newSource("waterEffect.mp3","static")
-	airEffect = love.audio.newSource("airEffect.mp3","static")
-	fireEffect = love.audio.newSource("fireEffect.mp3","static")
+	earthEffect = love.audio.newSource("Sounds/Effects/earthEffect.mp3","static")
+	waterEffect = love.audio.newSource("Sounds/Effects/waterEffect.mp3","static")
+	airEffect = love.audio.newSource("Sounds/Effects/airEffect.mp3","static")
+	fireEffect = love.audio.newSource("Sounds/Effects/fireEffect.mp3","static")
 
 	ambientMusic:setLooping(true)
 	ambientMusic:play()
