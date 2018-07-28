@@ -5,7 +5,7 @@ function ui.load()
 	font = love.graphics.newFont("font.ttf",72)
 	love.graphics.setFont(font)
 
-	winScreen = love.graphics.newImage("winScreenBackground.png")
+	winScreen = love.graphics.newImage("Images/winScreenBackground.png")
 
 	playerSelecting=1
 
