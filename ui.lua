@@ -7,6 +7,13 @@ function ui.load()
 
 	winScreen = love.graphics.newImage("winScreenBackground.png")
 
+	waterSymbolImg = love.graphics.newImage("waterSymbol.png")
+	earthSymbolImg = love.graphics.newImage("earthSymbol.png")
+	airSymbolImg = love.graphics.newImage("airSymbol.png")
+	fireSymbolImg = love.graphics.newImage("fireSymbol.png")
+
+	elementSymbols={water=waterSymbolImg,earth=earthSymbolImg,air=airSymbolImg,fire=fireSymbolImg}
+
 	playerSelecting=1
 
 	for i=1,2 do
@@ -60,30 +67,59 @@ function ui.draw()
 	if gameState == "characterSelection" then
 		love.graphics.setLineWidth(2)
 		love.graphics.setColor(255,255,255)
-		love.graphics.draw(char1.portrait,100,100)
-		love.graphics.draw(char1.img,500,215.6,0,2,2)
-		if ui.y==0 and playerSelecting==1 then love.graphics.rectangle("line",500,215.6,240,240) end
-		love.graphics.printf(char1.name,500,100,240,"center")
-		love.graphics.printf("Hp:100         water..air",100,450,1280,"center",0,0.5)
+
+		if ui.y<4 then
+			love.graphics.rectangle("line",700,40,500,1000)
+			if ui.y==0 then 
+				c=characters[players[playerSelecting].char]
+				love.graphics.print("Character:",780,70)
+				love.graphics.print("Hp: "..c.hp,720,200,0,0.8,0.8) 
+				love.graphics.print("Chi: "..c.chiRegen,720,300,0,0.8,0.8) 
+				love.graphics.print("Bends:",840,400)
+				for i=1,#c.bends do
+					e=c.bends[i]
+					if not(e=="normal" or e=="energy") then
+						local y=0
+						if i>2 then y=1 end
+						love.graphics.draw(elementSymbols[e],i*230+490-(y*460),500+y*230)
+					end
+				end
+			else 
+				move = moves[ui.y][ui[playerSelecting][ui.y]]
+				love.graphics.printf(move.name..":",720,70,600,"center",0,0.8,0.8)
+				local textYOffset=0
+				if not(move.type=="normal" or move.type=="energy") then
+					love.graphics.draw(elementSymbols[move.type],840,200)
+					textYOffset=300 
+				end
+				love.graphics.printf(move.desc,720,200+textYOffset,400,"left",0,0.5,0.5)
+			end
+		end
+
+		love.graphics.draw(char1.portrait,10,100)
+		love.graphics.draw(char1.img,410,215.6,0,2,2)
+		if ui.y==0 and playerSelecting==1 then love.graphics.rectangle("line",410,215.6,240,240) end
+		love.graphics.printf(char1.name,410,100,240,"center")
+		love.graphics.printf("Hp:100         water..air",10,450,1280,"center",0,0.5)
 
 		love.graphics.setColor(255,255,255)
-		love.graphics.draw(char2.portrait,1180,100)
-		love.graphics.draw(char2.img,1580,215.6,0,2,2)
-		if ui.y==0 and playerSelecting==2 then love.graphics.rectangle("line",1580,215.6,240,240) end
-		love.graphics.printf(char2.name,1580,100,240,"center")
-		love.graphics.printf("Hp:100         water..air",1180,450,1280,"center",0,0.5)
+		love.graphics.draw(char2.portrait,1270,100)
+		love.graphics.draw(char2.img,1670,215.6,0,2,2)
+		if ui.y==0 and playerSelecting==2 then love.graphics.rectangle("line",1670,215.6,240,240) end
+		love.graphics.printf(char2.name,1670,100,240,"center")
+		love.graphics.printf("Hp:100         water..air",1270,450,1280,"center",0,0.5)
 
 		for i=1,2 do
 			for j=1,3 do
 				if ui.y==j and playerSelecting==i then love.graphics.setLineWidth(20) end
 				box=ui[i][j]
 				move = moves[j][box]
-				love.graphics.rectangle("line",(i-1)*1080+100,j*130+400,500,100,5,5)
-				love.graphics.printf(move.name,(i-1)*1080+30,j*130+413,800,"center",0,0.8)
+				love.graphics.rectangle("line",(i-1)*1260+10,j*130+400,500,100,5,5)
+				love.graphics.printf(move.name,(i-1)*1260-60,j*130+413,800,"center",0,0.8)
 				love.graphics.setLineWidth(2)
 			end
 			if playerSelecting==i and ui.y==4 then love.graphics.setLineWidth(20) end
-			love.graphics.circle("line",(i-1)*1080+350,1000,50)
+			love.graphics.circle("line",(i-1)*1260+260,1000,50)
 			love.graphics.setLineWidth(2)
 		end
 

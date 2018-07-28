@@ -6,23 +6,23 @@ require "sound"
 moves = { --first moves must all be normal
 
 --Utility
-{{name="charge",type="normal",cost=2},
-{name="aurora borealis",type="water",cost=8},
-{name="blow",type="air",cost=8},
-{name="redirect",type="fire",cost=8},
-{name="wall",type="earth",cost=5}},
+{{name="charge",type="normal",cost=2,desc="To-write"},
+{name="aurora borealis",type="water",cost=8,desc="To-write"},
+{name="blow",type="air",cost=8,desc="To-write"},
+{name="redirect",type="fire",cost=8,desc="To-write"},
+{name="wall",type="earth",cost=5,desc="To-write"}},
 --Attack
-{{name="arrow",type="normal",cost=6},
-{name="spurt",type="water",cost=16},
-{name="gust",type="air",cost=8},
-{name="blast",type="fire",cost=10},
-{name="boulder",type="earth",cost=8}},
+{{name="arrow",type="normal",cost=6,desc="To-write"},
+{name="spurt",type="water",cost=16,desc="To-write"},
+{name="gust",type="air",cost=8,desc="To-write"},
+{name="blast",type="fire",cost=10,desc="To-write"},
+{name="boulder",type="earth",cost=8,desc="To-write"}},
 --Power
-{{name="block",type="normal",cost=40},
-{name="lightning",type="fire",cost=50},
-{name="gale",type="air",cost=30},
-{name="shockwave",type="earth",cost=30},
-{name="flood",type="water",cost=80}}
+{{name="block",type="normal",cost=40,desc="To-write"},
+{name="lightning",type="fire",cost=50,desc="To-write"},
+{name="gale",type="air",cost=30,desc="To-write"},
+{name="shockwave",type="earth",cost=30,desc="To-write"},
+{name="flood",type="water",cost=80,desc="To-write"}}
 }
 
 projectiles = {}
