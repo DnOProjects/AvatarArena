@@ -309,7 +309,7 @@ function moves.cast(typeNum,num,pn)
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 		end
 		if name == "sword block" then
-			projectiles[#projectiles+1] = {blocker="diagonal",despawn=1,name=name,damage=0,image=swordImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+			projectiles[#projectiles+1] = {caster=pn,movesWithCaster=true,blocker="diagonal",despawn=1,name=name,damage=0,image=swordImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 			p.invulnerability = 7.8
 		end
 		if name == "sword flurry" then
