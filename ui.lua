@@ -96,14 +96,12 @@ function ui.draw()
 				love.graphics.draw(char.img,410,215.6,0,2,2)
 				if ui[1].y==0 then love.graphics.rectangle("line",410,215.6,240,240) end
 				love.graphics.printf(char.name,410,100,240,"center")
-				love.graphics.printf("Hp:100         water..air",10,450,1280,"center",0,0.5)
 			elseif i == 2 then
 				love.graphics.setColor(255,255,255)
 				love.graphics.draw(char.portrait,1270,100)
 				love.graphics.draw(char.img,1670,215.6,0,2,2)
 				if ui[2].y==0 then love.graphics.rectangle("line",1670,215.6,240,240) end
 				love.graphics.printf(char.name,1670,100,240,"center")
-				love.graphics.printf("Hp:100         water..air",1270,450,1280,"center",0,0.5)
 			end
 
 			for j=1,3 do
@@ -161,3 +159,4 @@ function ui.draw()
 	end
 
 end
+
