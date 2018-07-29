@@ -125,7 +125,9 @@ end
 			p=projectiles[i]
 			if p.despawn then
 				p.despawn = p.despawn - dt
-				if p.despawn < 0 then projectilesToRemove[#projectilesToRemove+1]=i end
+				if p.despawn < 0 then
+					projectilesToRemove[#projectilesToRemove+1]=i
+				end
 			end
 		end
 	end
@@ -143,8 +145,11 @@ end
 					if op.blocker and op.rx==p.rx and op.ry==p.ry then
 						if not(op.blocker=="diagonal") then projectilesToRemove[#projectilesToRemove+1]=i end
 						if op.blocker=="fragile" or op.blocker=="diagonal" then projectilesToRemove[#projectilesToRemove+1]=j end
-						if op.blocker=="diagonal" then p.d=op.d+1 
-							if p.d==4 then p.d=0 end
+						if op.blocker=="diagonal" then
+							--[[p.d=op.d+1 
+							if p.d==4 then p.d=0 end]]
+							p.d=op.d+5
+							if p.d==8 then p.d=4 end
 						end
 					end
 				end
@@ -271,9 +276,9 @@ function moves.cast(typeNum,num,pn)
 		end
 		if name == "sword block" then
 			projectiles[#projectiles+1] = {blocker="diagonal",despawn=1,name=name,damage=0,image=swordImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
-			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+			p.invulnerability = 7.8
 		end
-		
+
 		moves.playMoveSound(moves[typeNum][num].type)
 	end
 end
