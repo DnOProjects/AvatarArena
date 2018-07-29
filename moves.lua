@@ -11,7 +11,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="aurora borealis",type="water",cost=8,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
 {name="wall",type="earth",cost=5,desc="The ground rises up to shield you from harm!"},
 {name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
-{name="sword block",type="sokka",cost=5,desc="You deflect an enemy's attack, sending it flying away to the side."}},
+{name="sword block",type="sokka",cost=5,desc="You deflect an enemy's attack, sending it flying away to the side.\n\n"}},
 
 --Attack
 {{name="arrow",type="normal",cost=6,desc="A well-placed arrow can be as effective as any pillar of fire or column of rock!"},
@@ -94,7 +94,7 @@ end
 					for x=1,16 do
 						local willSpawn = false
 						if x==1 then willSpawn = true end
-						projectiles[#projectiles+1]={willSpawn=willSpawn,layer=p.layer-1,despawn=1.3^p.layer-1,name=p.name,damage=50,image=floodTopImg,x=x,y=p.layer-1,d=p.d,speed = 0,rx=0,ry=0}
+						projectiles[#projectiles+1]={rotate=false,willSpawn=willSpawn,layer=p.layer-1,despawn=1.3^p.layer-1,name=p.name,damage=50,image=floodTopImg,x=x,y=p.layer-1,d=p.d,speed = 0,rx=0,ry=0}
 					end
 				else
 					p.image=floodImg
@@ -156,10 +156,7 @@ end
 					if op.blocker and op.rx==p.rx and op.ry==p.ry then
 						if not(op.blocker=="diagonal") then projectilesToRemove[#projectilesToRemove+1]=i end
 						if op.blocker=="fragile" or op.blocker=="diagonal" then projectilesToRemove[#projectilesToRemove+1]=j end
-						if op.blocker=="diagonal" then
-							--[[p.d=op.d+1 
-							p.despawn=0.7
-							if p.d==4 then p.d=0 end]]
+						if op.blocker=="diagonal" and not(p.name=="lightning") then
 							p.d=op.d+5
 							p.despawn=0.7
 							p.rotateAmount=0.785398*(2*p.d-9)
@@ -201,7 +198,7 @@ function moves.draw()
 					love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,0,1,1,60,60)
 				else
 					if p.rotateAmount == nil then
-						if p.vd == nil then
+						if p.vd == nil then --vd=visual direction
 							love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.d/2,1,1,60,60)
 						else
 							love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.vd/2,1,1,60,60)
@@ -295,7 +292,7 @@ function moves.cast(typeNum,num,pn)
 			for x=1,16 do
 				willSpawn=false
 				if x==1 then willSpawn=true end
-				projectiles[#projectiles+1] = {willSpawn=willSpawn,layer=8,despawn=1.3^9,name=name,damage=50,image=floodTopImg,x=x,y=8,d=0,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {rotate=false,willSpawn=willSpawn,layer=8,despawn=1.3^9,name=name,damage=50,image=floodTopImg,x=x,y=8,d=0,speed = 0,rx=0,ry=0}
 			end
 		end
 		if name == "spike" then
@@ -309,7 +306,7 @@ function moves.cast(typeNum,num,pn)
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 		end
 		if name == "sword block" then
-			projectiles[#projectiles+1] = {caster=pn,movesWithCaster=true,blocker="diagonal",despawn=1,name=name,damage=0,image=swordImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+			projectiles[#projectiles+1] = {caster=pn,blocker="diagonal",despawn=1,name=name,damage=0,image=swordImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 			p.invulnerability = 7.8
 		end
 		if name == "sword flurry" then
