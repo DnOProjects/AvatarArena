@@ -152,7 +152,7 @@ end
 							if p.d==4 then p.d=0 end]]
 							p.d=op.d+5
 							p.despawn=0.7
-							p.rotateAmount=0.785398*(p.d-(9-p.d))
+							p.rotateAmount=0.785398*(2*p.d-9)
 							if p.d==8 then p.d=4 end
 						end
 					end
