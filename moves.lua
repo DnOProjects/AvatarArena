@@ -141,8 +141,11 @@ end
 				if not(i==j) then
 					op=projectiles[j]
 					if op.blocker and op.rx==p.rx and op.ry==p.ry then
-						projectilesToRemove[#projectilesToRemove+1]=i
-						if op.blocker=="fragile" then projectilesToRemove[#projectilesToRemove+1]=j end
+						if not(op.blocker=="diagonal") then projectilesToRemove[#projectilesToRemove+1]=i end
+						if op.blocker=="fragile" or op.blocker=="diagonal" then projectilesToRemove[#projectilesToRemove+1]=j end
+						if op.blocker=="diagonal" then p.d=op.d+1 
+							if p.d==4 then p.d=0 end
+						end
 					end
 				end
 			end
@@ -263,7 +266,11 @@ function moves.cast(typeNum,num,pn)
 			end
 		end
 		if name == "boomerang" then
-			projectiles[#projectiles+1] = {caster=pn,bounces=0,name=name,damage=10,image=boomerangImg,x=p.x,y=p.y,d=p.d,speed = 20,rx=0,ry=0}
+			projectiles[#projectiles+1] = {caster=pn,bounces=0,name=name,damage=10,image=boomerangImg,x=p.x,y=p.y,d=p.d,speed = 10,rx=0,ry=0}
+			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+		end
+		if name == "sword block" then
+			projectiles[#projectiles+1] = {blocker="diagonal",despawn=1,name=name,damage=0,image=swordImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 		end
 		
