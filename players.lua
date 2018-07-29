@@ -11,7 +11,7 @@ function players.load()
 {name="Iroh",chiRegen=8,img=irohImg,portrait=irohPortrait,moveTimer=0.15,hp=80,bends={"fire","normal"}},
 {name="Toph",chiRegen=4,img=tophImg,portrait=tophPortrait,moveTimer=0.15,hp=130,bends={"earth","normal"}},
 {name="Gyatso",chiRegen=6,img=gyatsoImg,portrait=gyatsoPortrait,moveTimer=0,hp=80,bends={"air","normal"}},
-{name="Sokka",chiRegen=4,img=sokkaImg,portrait=sokkaPortrait,moveTimer=0.15,hp=130,bends={"sokka","normal"}}
+{name="Sokka",chiRegen=40,img=sokkaImg,portrait=sokkaPortrait,moveTimer=0.15,hp=130,bends={"sokka","normal"}}
 }
 
 	p1 = players[1]
@@ -50,11 +50,11 @@ end
 		for i=1,2 do
 			for j=1,#projectiles do
 				if projectiles[j].damage>0 and projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 and players[i].hp > 0 then
-					if not((projectiles[j].name=="boomerang" or projectiles[j].name=="sword swipe") and projectiles[j].caster==i) then
+					if not((projectiles[j].name=="boomerang" or projectiles[j].name=="sword flurry") and projectiles[j].caster==i) then
 						players[i].hp=players[i].hp-projectiles[j].damage
 						players[i].invulnerability = 10
 					end
-					if not(projectiles[j].name=="flood" or projectiles[j].name=="sword swipe") then
+					if not(projectiles[j].name=="flood" or projectiles[j].name=="sword flurry") then
 						if not(projectiles[j].name=="boomerang") or projectiles[j].caster == i then
 							projectilesToRemove[#projectilesToRemove+1] = j
 						end
