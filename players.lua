@@ -50,8 +50,10 @@ end
 		for i=1,2 do
 			for j=1,#projectiles do
 				if projectiles[j].damage>0 and projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 and players[i].hp > 0 then
-					players[i].hp=players[i].hp-projectiles[j].damage
-					players[i].invulnerability = 10
+					if not(projectiles[j].name=="boomerang" and projectiles[j].caster==i) then
+						players[i].hp=players[i].hp-projectiles[j].damage
+						players[i].invulnerability = 10
+					end
 					if not(projectiles[j].name=="flood") then
 						projectilesToRemove[#projectilesToRemove+1] = j
 					end				

@@ -50,6 +50,20 @@ function moves.update(dt)
 end
 
 	function moves.updateProjectile(p)
+		if p.name == "boomerang" then
+			if p.rx==1 and p.d==3 then p.d,p.bounces=0,p.bounces+1 end
+			if p.ry==1 and p.d==0 then p.d,p.bounces=1,p.bounces+1 end
+			if p.rx==16 and p.d==1 then p.d,p.bounces=2,p.bounces+1 end
+			if p.ry==8 and p.d==2 then p.d,p.bounces=3,p.bounces+1 end
+			if p.bounces > 4 then
+				if p.rx==players[p.caster].x then
+					if p.ry>players[p.caster].y then p.d=0 else p.d=2 end
+				end
+				if p.ry==players[p.caster].y then
+					if p.rx>players[p.caster].x then p.d=3 else p.d=1 end
+				end
+			end
+		end
 		if p.name == "blow" then
 			for i=1,2 do
 				pl=players[i]
@@ -249,7 +263,7 @@ function moves.cast(typeNum,num,pn)
 			end
 		end
 		if name == "boomerang" then
-			projectiles[#projectiles+1] = {name=name,damage=10,image=boomerangImg,x=p.x,y=p.y,d=p.d,speed = 8,rx=0,ry=0}
+			projectiles[#projectiles+1] = {caster=pn,bounces=0,name=name,damage=10,image=boomerangImg,x=p.x,y=p.y,d=p.d,speed = 20,rx=0,ry=0}
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 		end
 		
