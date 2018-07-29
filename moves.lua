@@ -76,6 +76,11 @@ end
 				end
 			end
 		end
+		if p.name == "spike" and p.despawn < 1.91 and p.spawned==false then
+			p.spawned=true
+			projectiles[#projectiles+1] = {spawned=false,rotate=false,despawn=2,name=p.name,damage=4,image=earthSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+		end
 		if p.name == "redirect" then
 			for i=1,#projectiles do
 				op = projectiles[i]
@@ -296,10 +301,8 @@ function moves.cast(typeNum,num,pn)
 			end
 		end
 		if name == "spike" then
-			for i=1,16 do
-				projectiles[#projectiles+1] = {rotate=false,despawn=3,name=name,damage=4,image=earthSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
-				projectiles[#projectiles] = moves.moveProj(#projectiles,i)
-			end
+			projectiles[#projectiles+1] = {spawned=false,rotate=false,despawn=2,name=name,damage=4,image=earthSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 		end
 		if name == "boomerang" then
 			projectiles[#projectiles+1] = {caster=pn,bounces=0,name=name,damage=10,image=boomerangImg,x=p.x,y=p.y,d=p.d,speed = 10,rx=0,ry=0}
