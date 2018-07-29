@@ -28,11 +28,13 @@ end
 
 function love.update(dt)
 
-	players.update(dt)
-	moves.update(dt)
+	if gameState=="game" then
+		players.update(dt)
+		moves.update(dt)
+		animate.update(dt)
+	end
 	ui.update()
 	sound.update(dt)
-	animate.update(dt)
 
 	removeProjectiles()
 

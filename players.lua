@@ -55,15 +55,8 @@ end
 						players[i].invulnerability = 10
 					end
 					if not(projectiles[j].name=="flood" or projectiles[j].name=="sword swipe") then
-						if projectiles[j].name=="boomerang" then
-							if projectiles[j].caster == i then
-								projectilesToRemove[#projectilesToRemove+1] = j
-							end
-						else
+						if not(projectiles[j].name=="boomerang") or projectiles[j].caster == i then
 							projectilesToRemove[#projectilesToRemove+1] = j
-						end
-						if projectiles[j].name=="sword block" then
-							p.invulnerability=0
 						end
 					end
 				end
@@ -91,12 +84,12 @@ function players.draw()
 		love.graphics.setColor(255,255,255)
 		local doInvulnerability = true
 		for j=1,#projectiles do
-			op = projectiles[j]
-			if op.name == "sword block" and op.rx == p.x and op.ry == p.y then
+			pr = projectiles[j]
+			if pr.name == "sword block" and pr.caster==i then
 				doInvulnerability = false
 			end
 		end
-		if p.invulnerability>0 and doInvulnerability==true then
+		if p.invulnerability>0 and doInvulnerability then
 			love.graphics.setColor(255,255,255,(math.sin(p.invulnerability)+1)*100)
 		end
 		love.graphics.draw(characters[p.char].img,p.x*120-60,p.y*120+60,math.pi*p.d/2,1,1,60,60)
