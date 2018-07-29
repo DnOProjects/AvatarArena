@@ -18,6 +18,7 @@ moves = { --first moves must all be normal
 {name="spurt",type="water",cost=16,desc="A writhing spray of water, ready to force itself down your enemy's throat and drown their very lungs!"},
 {name="gust",type="air",cost=8,desc="A ball of whirling air."},
 {name="blast",type="fire",cost=10,desc="Two glowing embers shoot sideways from each hand."},
+{name="spike",type="earth",cost=10,desc="Huge spikes of earth emerge from the ground in a line."},
 {name="boomerang",type="sokka",cost=6,desc="The boomerang whirls around the edge of the arena before returning to your hand."},
 {name="boulder",type="earth",cost=8,desc="A giant rolling boulder - it's a little slow but deals a lot of damage."}},
 
@@ -143,7 +144,7 @@ end
 					if op.blocker and op.rx==p.rx and op.ry==p.ry then
 						if not(op.blocker=="diagonal") then projectilesToRemove[#projectilesToRemove+1]=i end
 						if op.blocker=="fragile" or op.blocker=="diagonal" then projectilesToRemove[#projectilesToRemove+1]=j end
-						if op.blocker=="diagonal" then p.d=op.d+1 
+						if op.blocker=="diagonal" then p.d,p.despawn=op.d+1,0.5
 							if p.d==4 then p.d=0 end
 						end
 					end
@@ -177,7 +178,11 @@ function moves.draw()
 		if p.percent then
 			animate.draw(p.image,p.rx*120-60,p.ry*120+60,p.percent,math.pi*p.d/2,p.spriteLength,p.continuous,p.horisontal)
 		else
-			love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.d/2,1,1,60,60)
+			if p.rotate==false then
+				love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,0,1,1,60,60)
+			else
+				love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.d/2,1,1,60,60)
+			end
 		end
 
 		love.graphics.setColor(255,255,255)
@@ -263,6 +268,12 @@ function moves.cast(typeNum,num,pn)
 				willSpawn=false
 				if x==1 then willSpawn=true end
 				projectiles[#projectiles+1] = {willSpawn=willSpawn,layer=8,despawn=1.3^9,name=name,damage=50,image=floodTopImg,x=x,y=8,d=0,speed = 0,rx=0,ry=0}
+			end
+		end
+		if name == "spike" then
+			for i=1,16 do
+				projectiles[#projectiles+1] = {rotate=false,despawn=3,name=name,damage=4,image=earthSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles] = moves.moveProj(#projectiles,i)
 			end
 		end
 		if name == "boomerang" then
