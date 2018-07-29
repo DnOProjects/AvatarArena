@@ -119,9 +119,9 @@ function love.keypressed(key)
 		if(moveSet[1] == 0)then
 			if key=="r" then ui[1].y=ui[1].y-1 end
 			if key=="f" then ui[1].y=ui[1].y+1 end
-			if key=="g" then ui.switch(-1,1) end
+			if key=="d" then ui.switch(-1,1) end
 			if key=="g" then ui.switch(1,1) end
-			if key=="r" or key=="f" or key=="g" or key=="g" then showDescription = 1 end
+			if key=="r" or key=="f" or key=="d" or key=="g" then showDescription = 1 end
 		elseif(moveSet[1] == 1)then
 			if key=="w" then ui[1].y=ui[1].y-1 end
 			if key=="s" then ui[1].y=ui[1].y+1 end
