@@ -131,8 +131,8 @@ function love.keypressed(key)
 		end
 
 		if(moveSet[2] == 0)then
-			if key=="up" then ui[2].y=ui[1].y-1 end
-			if key=="down" then ui[2].y=ui[1].y+1 end
+			if key=="up" then ui[2].y=ui[2].y-1 end
+			if key=="down" then ui[2].y=ui[2].y+1 end
 			if key=="left" then ui.switch(-1,2) end
 			if key=="right" then ui.switch(1,2) end
 			if key=="up" or key=="down" or key=="left" or key=="right" then showDescription = 2 end
