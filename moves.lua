@@ -152,6 +152,7 @@ end
 							if p.d==4 then p.d=0 end]]
 							p.d=op.d+5
 							p.despawn=0.7
+							p.rotateAmount=0.785398*(p.d-(9-p.d))
 							if p.d==8 then p.d=4 end
 						end
 					end
@@ -188,7 +189,11 @@ function moves.draw()
 			if p.rotate==false then
 				love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,0,1,1,60,60)
 			else
-				love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.d/2,1,1,60,60)
+				if p.rotateAmount == nil then
+					love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.d/2,1,1,60,60)
+				else
+					love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,p.rotateAmount,1,1,60,60)
+				end
 			end
 		end
 
