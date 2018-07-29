@@ -50,11 +50,11 @@ end
 		for i=1,2 do
 			for j=1,#projectiles do
 				if projectiles[j].damage>0 and projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 and players[i].hp > 0 then
-					if not(projectiles[j].name=="boomerang" and projectiles[j].caster==i) then
+					if not((projectiles[j].name=="boomerang" or projectiles[j].name=="sword swipe") and projectiles[j].caster==i) then
 						players[i].hp=players[i].hp-projectiles[j].damage
 						players[i].invulnerability = 10
 					end
-					if not(projectiles[j].name=="flood") then
+					if not(projectiles[j].name=="flood" or projectiles[j].name=="sword swipe") then
 						if projectiles[j].name=="boomerang" then
 							if projectiles[j].caster == i then
 								projectilesToRemove[#projectilesToRemove+1] = j
@@ -106,9 +106,24 @@ end
 
 function players.move(p,d,unconditional)
 	ox,oy = players[p].x,players[p].y
+	for i=1,#projectiles do
+		pr = projectiles[i]
+		if pr.movesWithCaster == true and pr.caster == p then
+			pr.ox,pr.oy=pr.x,pr.y
+		end
+	end
 	if players[p].timer==0 or unconditional then
 		if not unconditional then players[p].timer = characters[players[p].char].moveTimer end
 		players[p].d = d
+		for i=1,#projectiles do
+			pr = projectiles[i]
+			if pr.movesWithCaster == true and pr.caster == p then
+				if d==0 then pr.y=pr.y-1 end
+				if d==1 then pr.x=pr.x+1 end
+				if d==2 then pr.y=pr.y+1 end
+				if d==3 then pr.x=pr.x-1 end
+			end
+		end
 		if d==0 then players[p].y=players[p].y-1 end
 		if d==1 then players[p].x=players[p].x+1 end
 		if d==2 then players[p].y=players[p].y+1 end
@@ -116,10 +131,15 @@ function players.move(p,d,unconditional)
 	end
 	if not(players.canBeHere(p)) then 
 		players[p].x = ox
-		players[p].y=oy
+		players[p].y = oy
+		for i=1,#projectiles do
+			pr = projectiles[i]
+			if pr.movesWithCaster == true and pr.caster == p then
+				pr.x = pr.ox
+				pr.y = pr.oy
+			end
+		end
 	end
-	if players[p].x<1 or players[p].x>16 then players[p].x = ox end
-	if players[p].y<1 or players[p].y>8 then players[p].y = oy end
 end	
 
 	function players.canBeHere(n)
