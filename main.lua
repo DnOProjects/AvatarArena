@@ -114,18 +114,28 @@ function love.keypressed(key)
 	end
 
 	if gameState=="characterSelection" then
-		if key=="up" then ui.y=ui.y-1 end
-		if key=="down" then ui.y=ui.y+1 end
-		if key=="left" then ui.switch(-1) end
-		if key=="right" then ui.switch(1) end
+		if key=="up" then ui[1].y=ui[1].y-1 end
+		if key=="down" then ui[1].y=ui[1].y+1 end
+		if key=="left" then ui.switch(-1,1) end
+		if key=="right" then ui.switch(1,1) end
+		if key=="up" or key=="down" or key=="left" or key=="right" then showDescription = 1 end
+
+		if key=="r" then ui[2].y=ui[2].y-1 end
+		if key=="f" then ui[2].y=ui[2].y+1 end
+		if key=="g" then ui.switch(-1,2) end
+		if key=="d" then ui.switch(1,2) end
+		if key=="r" or key=="f" or key=="g" or key=="d" then showDescription = 2 end
+
+		if key=="return" then ui.start() end
 	end
 
-	if gameState=="winScreen" and key=="right" then 
+	if gameState=="winScreen" and key=="return" then 
 		gameState="characterSelection" 
 		map.load()
 		players.load()
 	    ui.load()
-	    ui.y = 0
+	    ui[1].y = 0
+	    ui[2].y = 0
 	    projectiles	= {}
 	end
 
