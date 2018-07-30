@@ -98,24 +98,29 @@ end
 	function players.checkForHits()
 		for i=1,2 do
 			for j=1,#projectiles do
-				if projectiles[j].damage>0 and projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 and players[i].deflecting == false and players[i].hp > 0 then
-					if not(projectiles[j].damagesCaster == false and projectiles[j].caster==i) then
+
+				if not(logic.inList(projectilesToRemove,i)) then
+
+					if projectiles[j].damage>0 and projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 and players[i].deflecting == false and players[i].hp > 0 then
+						if not(projectiles[j].name=="seed" and projectiles[j].caster==i) and not(projectiles[j].damagesCaster == false and projectiles[j].caster==i) then
+							players[i].hp=players[i].hp-projectiles[j].damage
+							players[i].invulnerability = 10
+						end
+						if projectiles[j].removesOnHit == nil or projectiles[j].removesOnHit==true then
+							if projectiles[j].removesOnHitCaster == nil or (projectiles[j].removesOnHitCaster == false and projectiles[j].caster == i) then
+								projectilesToRemove[#projectilesToRemove+1] = j
+							end
+						end
+					elseif projectiles[j].damage < 0 and projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].hp < players[i].maxHp then
 						players[i].hp=players[i].hp-projectiles[j].damage
-						players[i].invulnerability = 10
-					end
-					if projectiles[j].removesOnHit == nil or projectiles[j].removesOnHit==true then
-						if projectiles[j].removesOnHitCaster == nil or (projectiles[j].removesOnHitCaster == false and projectiles[j].caster == i) then
-							projectilesToRemove[#projectilesToRemove+1] = j
+						if players[i].hp > players[i].maxHp then players[i].hp = players[i].maxHp end
+						if projectiles[j].removesOnHit == nil or projectiles[j].removesOnHit==true then
+							if projectiles[j].removesOnHitCaster == nil or (projectiles[j].removesOnHitCaster == false and projectiles[j].caster == i) then
+								projectilesToRemove[#projectilesToRemove+1] = j
+							end
 						end
 					end
-				elseif projectiles[j].damage < 0 and projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].hp < players[i].maxHp then
-					players[i].hp=players[i].hp-projectiles[j].damage
-					if players[i].hp > players[i].maxHp then players[i].hp = players[i].maxHp end
-					if projectiles[j].removesOnHit == nil or projectiles[j].removesOnHit==true then
-						if projectiles[j].removesOnHitCaster == nil or (projectiles[j].removesOnHitCaster == false and projectiles[j].caster == i) then
-							projectilesToRemove[#projectilesToRemove+1] = j
-						end
-					end
+
 				end
 			end
 			if players[i].hp < 0 then
@@ -159,7 +164,7 @@ function players.move(p,d,unconditional)
 			pr.ox,pr.oy=pr.x,pr.y
 		end
 	end
-	if players[p].timer==0 or unconditional then
+	if (players[p].timer==0 or unconditional) then
 		if not unconditional then players[p].timer = characters[players[p].char].moveTimer end
 		players[p].d = d
 		players[p].lineOfSight = {}
@@ -201,7 +206,7 @@ end
 
 		for i=1,#projectiles do
 			pr=projectiles[i]
-			if pr.blocker and p.x==pr.rx and p.y==pr.ry and not(pr.blocker=="forceField") then return false  end
+			if pr.blocker and p.x==pr.rx and p.y==pr.ry and not(pr.blocker=="forceField" or pr.blocker=="fragileForceField") then return false  end
 		end
 
 		return true
