@@ -283,7 +283,7 @@ function moves.cast(typeNum,num,pn)
 				players.shiftTimer = 3
 			end
 			if name == "arrow" then
-				projectiles[#projectiles+1] = {name=name,damage=10,image=healOrbImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
+				projectiles[#projectiles+1] = {name=name,damage=10,image=arrowImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name=="redirect" then
