@@ -50,7 +50,7 @@ end
 	function players.checkForLineOfSight()
 		for pn=1,2 do
 			p = players[pn]
-			for widthMod=-1,1 do
+			for widthMod=-2,2 do
 				if p.d == 0 then
 					for lengthMod=1,p.y do
 						table.insert(p.lineOfSight,{x=p.x+widthMod,y=lengthMod})
