@@ -175,7 +175,10 @@ end
 					explode = true
 					projectilesToRemove[#projectilesToRemove+1]=j
 				end end
-				if p.rx==1 or p.rx==16 or p.ry==1 or p.ry==8 then explode = true end
+				if p.rx==1 and p.d==3 then explode = true end
+				if p.rx==16 and p.d==1 then explode = true end
+				if p.ry==1 and p.d==0 then explode = true end
+				if p.ry==8 and p.d==2 then explode = true end
 				if explode == true then
 					if p.name == "combustion" then
 						projectiles[#projectiles+1] = {expanded=false,rotate=false,despawn=1,name="combustionExplosion",damage=20,image=explosion,x=p.x,y=p.y,d=0,speed = 0,rx=0,ry=0}
