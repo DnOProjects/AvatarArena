@@ -4,7 +4,8 @@ require "moves"
 require "ui"
 require "images"
 require "sound"
-require "input"
+require "server"
+require "client"
 
 function love.load()
 
@@ -27,6 +28,9 @@ function love.load()
 end
 
 function love.update(dt)
+
+	server:update(dt)
+	client.updateData(dt)
 
 	if gameState=="game" then
 		players.update(dt)

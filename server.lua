@@ -1,6 +1,20 @@
-input = {}
+lovernetlib = require('lovernet')
+server = lovernetlib.new{type=lovernetlib.mode.server}
 
-function love.keypressed(key)
+server:addOp('q') --query (send gameState to client)
+server:addOp('p') --point (recieve keyPresses)
+
+gameState = {}
+server:addProcessOnServer('q',function(self,peer,arg,storage)
+  return gameState
+end)
+
+server:addValidateOnServer('p',{key='string'})
+
+server:addProcessOnServer('p',function(self,peer,arg,storage)
+  user = self:getUser(peer)
+
+  key=arg.key
 
 	if gameState == "game" then
 		if(moveSet[1] == 0)then
@@ -70,5 +84,4 @@ function love.keypressed(key)
 	    ui[2].y = 0
 	    projectiles	= {}
 	end
-
-end
+end)
