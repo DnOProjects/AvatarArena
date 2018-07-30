@@ -8,7 +8,6 @@ function server.load()
 
 	if onlineGame then
 		server:addProcessOnServer('q',function(self,peer,arg,storage)
-			print(canvas:newImageData():encode("png"):getSize())
 		  return canvas:newImageData():getString( )
 		end)
 	end
@@ -18,7 +17,13 @@ function server.load()
 	server:addProcessOnServer('p',function(self,peer,arg,storage)
 	  user = self:getUser(peer)
 
-	  key=arg.key
+	  server.keyInput(arg.key)
+
+	end)
+
+end
+
+function server.keyInput(key)
 
 		if gameState == "game" then
 			if(moveSet[1] == 0)then
@@ -88,6 +93,4 @@ function server.load()
 		    ui[2].y = 0
 		    projectiles	= {}
 		end
-	end)
-
 end

@@ -5,7 +5,6 @@ require "ui"
 require "images"
 require "sound"
 require "server"
-require "client"
 
 function love.load()
 
@@ -34,7 +33,6 @@ end
 function love.update(dt)
 
 	server:update(dt)
-	client.updateData(dt)
 
 	if gameState=="game" then
 		players.update(dt)
@@ -68,11 +66,12 @@ function love.draw()
 		moves.draw()
 		players.draw()
 	end
+
 	ui.draw()
 
 	if onlineGame then
 		love.graphics.setCanvas()
-		client.draw()
+		love.graphics.print("Running server..")
 	end
 
 end
@@ -96,4 +95,8 @@ function startGame()
 
 	arenaType = characters[players[1].char].bends[1]
 	sound.play("roundIntro")
+end
+
+function love.keypressed(key)
+	if not onlineGame then server.keyInput(key) end
 end

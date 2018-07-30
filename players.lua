@@ -4,6 +4,9 @@ players[1] = {beenBlown=false,char=1,x=1,y=1,d=0,timer=0,invulnerability=0,hp=10
 players[2] = {beenBlown=false,char=1,x=16,y=8,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=1,attack=1,power=1}
 
 function players.load()
+
+	players.world = "physical"
+	players.shiftTimer = 0
 	
 	characters = {
 {name="Aang",chiRegen=4,img=aangImg,portrait=aangPortrait,moveTimer=0.1,hp=100,bends={"air","earth","fire","water","energy","normal"}},
@@ -38,6 +41,10 @@ end
 	end
 
 	function players.updateTimer(dt)
+		players.shiftTimer = players.shiftTimer - dt
+		if players.shiftTimer < 0 then players.shiftTimer = 0 end
+		if players.shiftTimer==0 then players.world="physical" else players.world="spiritual" end
+
 		for i=1,2 do
 			p = players[i]
 			p.timer = p.timer - dt

@@ -223,121 +223,126 @@ function moves.draw()
 end
 
 function moves.cast(typeNum,num,pn)
-	p=players[pn]
-	if p.chi >= moves[typeNum][num].cost and players.canCast(p) then
-		p.chi=p.chi-moves[typeNum][num].cost
-		local name = moves[typeNum][num].name
-		
-		if name == "freeze" then
-			for i=1,#projectiles do
-				p=projectiles[i]
-				if p.freezes ~= nil then
-					for j=1,#players[pn].lineOfSight do
-						if players[pn].lineOfSight[j].x == p.rx and players[pn].lineOfSight[j].y == p.ry then
-							projectilesToRemove[#projectilesToRemove+1]=i
-							projectiles[#projectiles+1] = {rotate=false,blocker="fragile",despawn=4,name="ice",damage=0,image=iceImg,x=p.rx,y=p.ry,d=p.d,speed = 0,rx=0,ry=0}
-							break
+	if players.world == "physical" or moves[typeNum][num].type == "normal" or moves[typeNum][num].type == "sokka" then
+		p=players[pn]
+		if p.chi >= moves[typeNum][num].cost and players.canCast(p) then
+			p.chi=p.chi-moves[typeNum][num].cost
+			local name = moves[typeNum][num].name
+			
+			if name == "freeze" then
+				for i=1,#projectiles do
+					p=projectiles[i]
+					if p.freezes ~= nil then
+						for j=1,#players[pn].lineOfSight do
+							if players[pn].lineOfSight[j].x == p.rx and players[pn].lineOfSight[j].y == p.ry then
+								projectilesToRemove[#projectilesToRemove+1]=i
+								projectiles[#projectiles+1] = {rotate=false,blocker="fragile",despawn=4,name="ice",damage=0,image=iceImg,x=p.rx,y=p.ry,d=p.d,speed = 0,rx=0,ry=0}
+								break
+							end
 						end
 					end
 				end
 			end
-		end
-		if name == "arrow" then
-			projectiles[#projectiles+1] = {name=name,damage=10,image=arrowImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
-			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
-		end
-		if name=="redirect" then
-			projectiles[#projectiles+1] = {despawn=2,name=name,damage=0,image=redirectIcon,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
-			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
-		end
-		if name == "spurt" then
-			for i=1,3 do
-				if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {freezes=true,name=name,damage=10,image=waterOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 2,rx=0,ry=0}
-					else projectiles[#projectiles+1] = {freezes=true,name=name,damage=10,image=waterOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 2,rx=0,ry=0} end
+			if name == "shift" then
+				players.shiftTimer = 20
+			end
+			if name == "arrow" then
+				projectiles[#projectiles+1] = {name=name,damage=10,image=arrowImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
-		end
-		if name == "charge" then for i=1,3 do players.move(pn,p.d,true) end end
-		if name == "gust" then
-			projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=2,name=name,damage=10,image=airOrbImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
-			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
-		end
-		if name == "gale" then
-			for j=1,3 do
+			if name=="redirect" then
+				projectiles[#projectiles+1] = {despawn=2,name=name,damage=0,image=redirectIcon,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+			end
+			if name == "spurt" then
 				for i=1,3 do
-					if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=j*i,name=name,damage=10,image=airOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed =j*i,rx=0,ry=0}
-						else projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=j*i,name=name,damage=10,image=airOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed =j*i,rx=0,ry=0} end
-					projectiles[#projectiles] = moves.moveProj(#projectiles,j)
+					if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {freezes=true,name=name,damage=10,image=waterOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 2,rx=0,ry=0}
+						else projectiles[#projectiles+1] = {freezes=true,name=name,damage=10,image=waterOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 2,rx=0,ry=0} end
+					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
-		end
-		if name=="shockwave" then
-			for i=1,8 do
-				local d=i-1
-				projectiles[#projectiles+1] = {name=name,damage=15,image=earthOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
+			if name == "charge" then for i=1,3 do players.move(pn,p.d,true) end end
+			if name == "gust" then
+				projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=2,name=name,damage=10,image=airOrbImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
-		end
-		if name == "aurora borealis" then
-			projectiles[#projectiles+1] = {spriteLength=6,continuous=true,blocker="forceField",despawn=5,percent=0,aSpeed=1,name=name,damage=0,image=auroraImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
-		end
-		if name == "blow" then
-			for i=1,4 do
-				projectiles[#projectiles+1] = {horisontal = true,continuous=true,despawn=5,percent=0,aSpeed=1,name=name,damage=0,image=windImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
-				projectiles[#projectiles] = moves.moveProj(#projectiles,i)
+			if name == "gale" then
+				for j=1,3 do
+					for i=1,3 do
+						if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=j*i,name=name,damage=10,image=airOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed =j*i,rx=0,ry=0}
+							else projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=j*i,name=name,damage=10,image=airOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed =j*i,rx=0,ry=0} end
+						projectiles[#projectiles] = moves.moveProj(#projectiles,j)
+					end
+				end
 			end
-		end
-		if name == "blast" then
-			for i=0,1 do
-				local d = p.d+1+(i*2)
-				if d>3 then d=d-4 end
-				projectiles[#projectiles+1] = {redirectable=true,percent=0,spriteLength=6,aSpeed=0.7,name=name,damage=10,image=fireOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
+			if name=="shockwave" then
+				for i=1,8 do
+					local d=i-1
+					projectiles[#projectiles+1] = {name=name,damage=15,image=earthOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
+					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+				end
+			end
+			if name == "aurora borealis" then
+				projectiles[#projectiles+1] = {spriteLength=6,continuous=true,blocker="forceField",despawn=5,percent=0,aSpeed=1,name=name,damage=0,image=auroraImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+			end
+			if name == "blow" then
+				for i=1,4 do
+					projectiles[#projectiles+1] = {horisontal = true,continuous=true,despawn=5,percent=0,aSpeed=1,name=name,damage=0,image=windImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+					projectiles[#projectiles] = moves.moveProj(#projectiles,i)
+				end
+			end
+			if name == "blast" then
+				for i=0,1 do
+					local d = p.d+1+(i*2)
+					if d>3 then d=d-4 end
+					projectiles[#projectiles+1] = {redirectable=true,percent=0,spriteLength=6,aSpeed=0.7,name=name,damage=10,image=fireOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
+					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+				end
+			end
+			if name == "boulder" then
+				projectiles[#projectiles+1] = {name=name,damage=15,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
-		end
-		if name == "boulder" then
-			projectiles[#projectiles+1] = {name=name,damage=15,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
-			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
-		end
-		if name == "wall" then
-			for i=1,3 do
-				if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {name=name,despawn=1,blocker="fragile",damage=0,image=earthOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
-					else projectiles[#projectiles+1] = {name=name,damage=0,despawn=2,blocker="fragile",image=earthOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 0,rx=0,ry=0} end
+			if name == "wall" then
+				for i=1,3 do
+					if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {name=name,despawn=1,blocker="fragile",damage=0,image=earthOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+						else projectiles[#projectiles+1] = {name=name,damage=0,despawn=2,blocker="fragile",image=earthOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 0,rx=0,ry=0} end
+					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+				end
+			end
+			if name == "lightning" then
+				projectiles[#projectiles+1] = {turns=0,branched=false,despawn=0.5,name=name,damage=50,image=lightningImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles] = moves.moveProj(#projectiles,1)	
+			end
+			if name == "flood" then
+				for x=1,16 do
+					willSpawn=false
+					if x==1 then willSpawn=true end
+					projectiles[#projectiles+1] = {freezes=true,rotate=false,willSpawn=willSpawn,layer=8,despawn=1.3^9,name=name,damage=50,image=floodTopImg,x=x,y=8,d=0,speed = 0,rx=0,ry=0}
+				end
+			end
+			if name == "spike" then
+				projectiles[#projectiles+1] = {spawned=false,rotate=false,despawn=2,name=name,damage=4,image=earthSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
-		end
-		if name == "lightning" then
-			projectiles[#projectiles+1] = {turns=0,branched=false,despawn=0.5,name=name,damage=50,image=lightningImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
-			projectiles[#projectiles] = moves.moveProj(#projectiles,1)	
-		end
-		if name == "flood" then
-			for x=1,16 do
-				willSpawn=false
-				if x==1 then willSpawn=true end
-				projectiles[#projectiles+1] = {freezes=true,rotate=false,willSpawn=willSpawn,layer=8,despawn=1.3^9,name=name,damage=50,image=floodTopImg,x=x,y=8,d=0,speed = 0,rx=0,ry=0}
-			end
-		end
-		if name == "spike" then
-			projectiles[#projectiles+1] = {spawned=false,rotate=false,despawn=2,name=name,damage=4,image=earthSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
-			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
-		end
-		if name == "boomerang" then
-			projectiles[#projectiles+1] = {caster=pn,bounces=0,name=name,damage=10,image=boomerangImg,x=p.x,y=p.y,d=p.d,speed = 10,rx=0,ry=0}
-			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
-		end
-		if name == "sword block" then
-			projectiles[#projectiles+1] = {caster=pn,blocker="diagonal",despawn=1,name=name,damage=0,image=swordImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
-			p.invulnerability = 7.8
-		end
-		if name == "sword flurry" then
-			projectiles[#projectiles+1] = {caster=pn,movesWithCaster=true,despawn=3,name="swinging sword",damage=0,image=swordImg,x=p.x,y=p.y,d=p.d,vd=p.d,speed = 0,rx=0,ry=0}
-			for i=1,8 do
-				projectiles[#projectiles+1] = {caster=pn,movesWithCaster=true,despawn=3,name=name,damage=15,x=p.x,y=p.y,d=i-1,speed = 0,rx=0,ry=0}
+			if name == "boomerang" then
+				projectiles[#projectiles+1] = {caster=pn,bounces=0,name=name,damage=10,image=boomerangImg,x=p.x,y=p.y,d=p.d,speed = 10,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
-		end
+			if name == "sword block" then
+				projectiles[#projectiles+1] = {caster=pn,blocker="diagonal",despawn=1,name=name,damage=0,image=swordImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				p.invulnerability = 7.8
+			end
+			if name == "sword flurry" then
+				projectiles[#projectiles+1] = {caster=pn,movesWithCaster=true,despawn=3,name="swinging sword",damage=0,image=swordImg,x=p.x,y=p.y,d=p.d,vd=p.d,speed = 0,rx=0,ry=0}
+				for i=1,8 do
+					projectiles[#projectiles+1] = {caster=pn,movesWithCaster=true,despawn=3,name=name,damage=15,x=p.x,y=p.y,d=i-1,speed = 0,rx=0,ry=0}
+					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+				end
+			end
 
-		moves.playMoveSound(moves[typeNum][num].type)
+			moves.playMoveSound(moves[typeNum][num].type)
+		end
 	end
 end
 

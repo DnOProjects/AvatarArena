@@ -1,3 +1,6 @@
+love.window.setFullscreen(true)
+love.mouse.setVisible(false)
+
 lovernetlib = require('lovernet')
 client = lovernetlib.new()
 
@@ -6,11 +9,11 @@ client:addOp('q')
 
 client.pushTimer = 0
 
-function client.updateData(dt)
+function love.update(dt)
 
   client.pushTimer = client.pushTimer - dt
 
-  if client.pushTimer < 0 and onlineGame then 
+  if client.pushTimer < 0  then 
     client:pushData('q')
     client.pushTimer=20 --reduces frames/second but REDUCES INTERNET TRAFFIC
   end
@@ -19,7 +22,7 @@ function client.updateData(dt)
 
 end
 
-function client.draw()
+function love.draw()
   if client:getCache('q') then
     local encoded = client:getCache('q')
     local decoded = love.image.newImageData(love.graphics.getWidth(),love.graphics.getHeight(),encoded)
