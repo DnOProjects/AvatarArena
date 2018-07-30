@@ -21,6 +21,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="spike",type="earth",cost=10,desc="Huge spikes of earth emerge from the ground in a line."},
 {name="boulder",type="earth",cost=8,desc="A giant rolling boulder - it's a little slow but deals a lot of damage."},
 {name="blast",type="fire",cost=10,desc="Two glowing embers shoot sideways from each hand."},
+{name="sear",type="fire",cost=18,desc="Four balls of fire radiate inaccurately from your body."},
 {name="boomerang",type="sokka",cost=6,desc="The boomerang whirls around the edge of the arena before returning to your hand."}},
 
 --Power
@@ -42,6 +43,7 @@ end
 
 function moves.update(dt)
 	moves.moveProjectiles(dt)
+	moves.rotateProjectiles(dt)
 	moves.roundPositions()
 	moves.removeReduntantProjectiles()
 	moves.despawn(dt)
@@ -52,6 +54,15 @@ function moves.update(dt)
 		end
 	end
 end
+
+	function moves.rotateProjectiles(dt)
+		for i=1,#projectiles do
+			p=projectiles[i]
+			if p.vd then
+				p.vd=p.vd+10*dt
+			end
+		end
+	end
 
 	function moves.updateProjectile(p,dt)
 		if p.name == "boomerang" then
@@ -129,9 +140,6 @@ end
 		end
 		if p.name == "sword flurry" or p.name == "swinging sword" then
 			p.d = players[p.caster].d
-			if p.name == "swinging sword" then
-				p.vd=p.vd+10*dt
-			end
 		end
 	end
 
@@ -200,7 +208,9 @@ function moves.draw()
 
 		if not(p.image == nil)then
 			if p.percent then
-				animate.draw(p.image,p.rx*120-60,p.ry*120+60,p.percent,math.pi*p.d/2,p.spriteLength,p.continuous,p.horisontal)
+				local r = math.pi*p.d/2
+				if not(p.vd==nil) then r=math.pi*p.vd/2 end
+				animate.draw(p.image,p.rx*120-60,p.ry*120+60,p.percent,r,p.spriteLength,p.continuous,p.horisontal)
 			else
 				if p.rotate==false then
 					love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,0,1,1,60,60)
@@ -289,6 +299,12 @@ function moves.cast(typeNum,num,pn)
 				for i=1,4 do
 					projectiles[#projectiles+1] = {horisontal = true,continuous=true,despawn=5,percent=0,aSpeed=1,name=name,damage=0,image=windImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,i)
+				end
+			end
+			if name == "sear" then
+				for i=4,7 do
+					projectiles[#projectiles+1] = {vd=p.d,redirectable=true,percent=0,spriteLength=6,aSpeed=7,name=name,damage=10,image=fireOrbImg,x=p.x,y=p.y,d=i,speed = 2,rx=0,ry=0}
+					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
 			if name == "blast" then
