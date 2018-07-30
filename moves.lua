@@ -11,6 +11,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="shift",type="air",cost=10,desc="You shift the battle into the spirit-world, rendering all bending ineffective!"},
 {name="freeze",type="water",cost=0,desc="All water in the arena turns to solid ice!"},
 {name="aurora borealis",type="water",cost=8,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
+{name="heal",type="water",cost=15,desc="Healing is a special ability possessed by some waterbenders that enables them to heal those who have been wounded, including themselves."},
 {name="wall",type="earth",cost=5,desc="The ground rises up to shield you from harm!"},
 {name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
 {name="sword block",type="sokka",cost=5,desc="You deflect an enemy's attack, sending it flying away to the side.\n\n"}},
@@ -28,7 +29,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 --Power
 {{name="block",type="normal",cost=40,desc="To-write"},
 {name="gale",type="air",cost=30,desc="A devestating, unpredictable flurry of wind!"},
-{name="flood",type="water",cost=80,desc="The waters rise up to drown your enemies!"},
+{name="flood",type="water",cost=60,desc="The waters rise up to drown your enemies!"},
 {name="seed",type="water",cost=60,desc="A huge thorny plant begins to grow with you, unharmed at its center."},
 {name="shockwave",type="earth",cost=30,desc="You send seismic waves rippling through the earth, letting it rise up around you!"},
 {name="smelt",type="earth",cost=30,desc="Melt all rocks on the map into flowing lava!"},
@@ -100,7 +101,7 @@ end
 				p.hasSpread = true
 				for x=-1,1 do
 					for y=-1,1 do
-						projectiles[#projectiles+1] = {removesOnHit=false,hasSpread=true,rotate=false,despawn=5,name="lava",damage=20,image=lavaImg,x=p.rx+x,y=p.ry+y,d=p.d,speed = 0,rx=0,ry=0}
+						projectiles[#projectiles+1] = {meltable=true,removesOnHit=false,hasSpread=true,rotate=false,despawn=5,name="lava",damage=20,image=lavaImg,x=p.rx+x,y=p.ry+y,d=p.d,speed = 0,rx=0,ry=0}
 					end
 				end
 			end
@@ -274,11 +275,15 @@ function moves.cast(typeNum,num,pn)
 					end
 				end
 			end
+			if name == "heal" then
+				projectiles[#projectiles+1] = {name=name,damage=-20,image=healOrbImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles] = moves.moveProj(#projectiles,2)
+			end
 			if name == "shift" then
 				players.shiftTimer = 3
 			end
 			if name == "arrow" then
-				projectiles[#projectiles+1] = {name=name,damage=10,image=arrowImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
+				projectiles[#projectiles+1] = {name=name,damage=10,image=healOrbImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name=="redirect" then

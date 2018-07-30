@@ -31,6 +31,7 @@ fireSymbolImg = love.graphics.newImage("images/symbols/fireSymbol.png")
 	waterOrbImg = love.graphics.newImage("Images/Abilities/water.png")
 	iceImg = love.graphics.newImage("Images/Abilities/ice.png")
 	auroraImg = love.graphics.newImage("Images/Abilities/auroraSprite.png")
+	healOrbImg = love.graphics.newImage("Images/Abilities/heal.png")
 	floodImg = love.graphics.newImage("Images/Abilities/flood.png")
 	floodTopImg = love.graphics.newImage("Images/Abilities/floodTop.png")
 
