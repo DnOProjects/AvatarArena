@@ -29,6 +29,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="gale",type="air",cost=30,desc="A devestating, unpredictable flurry of wind!"},
 {name="shift",type="air",cost=60,desc="You shift the battle into the spirit-world, rendering all bending ineffective!"},
 {name="flood",type="water",cost=80,desc="The waters rise up to drown your enemies!"},
+{name="seed",type="water",cost=60,desc="A huge thorny plant begins to grow with you, unharmed at its center."},
 {name="shockwave",type="earth",cost=30,desc="You send seismic waves rippling through the earth, letting it rise up around you!"},
 {name="lightning",type="fire",cost=50,desc="\"The energy is both yin and yang, you can separate these energies, creating an imbalance. The energy wants to restore balance and in a moment the positive and negative energy come crashing back together. You provide release and guidance, creating lightning.\""},
 {name="sword flurry",type="sokka",cost=40,desc="Swing your sword around you to impale nearby enemies!"}}
