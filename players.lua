@@ -28,6 +28,7 @@ end
 
 function players.update(dt)
 	players.updateTimer(dt)
+	players.checkForBlock()
 	players.checkForHits()
 	players.checkForLineOfSight()
 	players.poolChi(dt)
@@ -81,16 +82,29 @@ end
 		end
 	end
 
+	function players.checkForBlock()
+		for i=1,2 do
+			p=players[i]
+			p.deflecting = false
+			for j=1,#projectiles do
+				proj=projectiles[j]
+				if proj.name == "sword block" and proj.caster == i then
+					p.deflecting = true
+				end
+			end
+		end
+	end
+
 	function players.checkForHits()
 		for i=1,2 do
 			for j=1,#projectiles do
 				if projectiles[j].damage>0 and projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 and players[i].deflecting == false and players[i].hp > 0 then
-					if not((projectiles[j].name=="boomerang" or projectiles[j].name=="sword flurry") and projectiles[j].caster==i) then
+					if not(projectiles[j].damagesCaster == false and projectiles[j].caster==i) then
 						players[i].hp=players[i].hp-projectiles[j].damage
 						players[i].invulnerability = 10
 					end
 					if projectiles[j].removesOnHit == nil or projectiles[j].removesOnHit==true then
-						if not(projectiles[j].name=="boomerang") or projectiles[j].caster == i then
+						if projectiles[j].removesOnHitCaster == nil or (projectiles[j].removesOnHitCaster == false and projectiles[j].caster == i) then
 							projectilesToRemove[#projectilesToRemove+1] = j
 						end
 					end
