@@ -30,7 +30,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {{name="block",type="normal",cost=40,desc="To-write"},
 {name="gale",type="air",cost=30,desc="A devestating, unpredictable flurry of wind!"},
 {name="flood",type="water",cost=60,desc="The waters rise up to drown your enemies!"},
-{name="seed",type="water",cost=60,desc="A huge thorny plant begins to grow with you, unharmed at its center."},
+{name="seed",type="water",cost=40,desc="A huge thorny plant begins to grow with you, unharmed at its center."},
 {name="shockwave",type="earth",cost=30,desc="You send seismic waves rippling through the earth, letting it rise up around you!"},
 {name="smelt",type="earth",cost=30,desc="Melt all rocks on the map into flowing lava!"},
 {name="lightning",type="fire",cost=50,desc="\"The energy is both yin and yang, you can separate these energies, creating an imbalance. The energy wants to restore balance and in a moment the positive and negative energy come crashing back together. You provide release and guidance, creating lightning.\""},
@@ -84,7 +84,7 @@ end
 			end
 		end
 		if p.name == "seed" then
-			if math.random(1,300) == 1 then
+			if math.random(1,100) == 1 then
 				projectiles[#projectiles+1] = {despawn=10,blocker="fragileForceField",caster=p.caster,rotate=false,name=p.name,damage=10,image=thornsImg,x=p.x,y=p.y,d=p.d+math.random(-1,1),speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				shouldRemove = (projectiles[#projectiles].x == players[p.caster].x) and (projectiles[#projectiles].y == players[p.caster].y)
@@ -242,7 +242,7 @@ end
 					op=projectiles[j]
 					if op.blocker and op.rx==p.rx and op.ry==p.ry and p.blocker==nil and not(logic.inList(projectilesToRemove,i)) and not(logic.inList(projectilesToRemove,j)) then --blockers cannot be blocked and projectiles about to be removed cannot be blocked
 
-						if (not(op.blocker=="diagonal")) then projectilesToRemove[#projectilesToRemove+1]=i end
+						if (not(op.blocker=="diagonal" or op.blocker=="fragileForceField")) then projectilesToRemove[#projectilesToRemove+1]=i end
 						if (op.blocker=="fragile" or op.blocker=="fragileForceField")  then projectilesToRemove[#projectilesToRemove+1]=j end
 						if op.blocker=="diagonal" and not(p.name=="lightning") then
 							p.d=op.d+5
