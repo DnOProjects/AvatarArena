@@ -8,6 +8,8 @@ function players.load()
 	players.world = "physical"
 	players.shiftTimer = 0
 	
+	lineOfSightWidth = 5
+
 	characters = {
 {name="Aang",chiRegen=4,img=aangImg,portrait=aangPortrait,moveTimer=0.1,hp=100,bends={"air","earth","fire","water","energy","normal"}},
 {name="Katara",chiRegen=4,img=kataraImg,portrait=kataraPortrait,moveTimer=0.15,hp=120,bends={"water","normal"}},
@@ -57,7 +59,7 @@ end
 	function players.checkForLineOfSight()
 		for pn=1,2 do
 			p = players[pn]
-			for widthMod=-1,1 do
+			for widthMod=-(lineOfSightWidth-1)/2,(lineOfSightWidth-1)/2 do
 				if p.d == 0 then
 					for lengthMod=1,p.y do
 						table.insert(p.lineOfSight,{x=p.x+widthMod,y=lengthMod})
