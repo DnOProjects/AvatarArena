@@ -34,7 +34,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="shockwave",type="earth",cost=30,desc="You send seismic waves rippling through the earth, letting it rise up around you!"},
 {name="smelt",type="earth",cost=30,desc="Melt all rocks on the map into flowing lava!"},
 {name="lightning",type="fire",cost=50,desc="\"The energy is both yin and yang, you can separate these energies, creating an imbalance. The energy wants to restore balance and in a moment the positive and negative energy come crashing back together. You provide release and guidance, creating lightning.\""},
-{name="combustion",type="fire",cost=1,desc="SPARKY SPARKY BOOM"},
+{name="combustion",type="fire",cost=40,desc="SPARKY SPARKY BOOM"},
 {name="sword flurry",type="sokka",cost=60,desc="Swing your sword around you to impale nearby enemies!"}}
 
 }
