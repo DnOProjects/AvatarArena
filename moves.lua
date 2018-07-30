@@ -51,7 +51,7 @@ function moves.update(dt)
 	moves.roundPositions()
 	moves.removeReduntantProjectiles()
 	moves.despawn(dt)
-	for i=1,#projectiles do moves.updateProjectile(projectiles[i],dt) end
+	for i=1,#projectiles do moves.updateProjectile(projectiles[i],dt,i) end
 	for i=1,2 do 
 		if not(players[i].beenBlown==false) then
 			if players[i].beenBlown-dt > 0 then players[i].beenBlown = players[i].beenBlown-dt else players[i].beenBlown = false end
@@ -68,7 +68,7 @@ end
 		end
 	end
 
-	function moves.updateProjectile(p,dt)
+	function moves.updateProjectile(p,dt,pn)
 		if p.name == "boomerang" then
 			if p.rx==1 and p.d==3 then p.d,p.bounces=0,p.bounces+1 end
 			if p.ry==1 and p.d==0 then p.d,p.bounces=1,p.bounces+1 end
@@ -80,6 +80,20 @@ end
 				end
 				if p.ry==players[p.caster].y then
 					if p.rx>players[p.caster].x then p.d=3 else p.d=1 end
+				end
+			end
+		end
+		if p.name == "seed" then
+			if math.random(1,300) == 1 then
+				projectiles[#projectiles+1] = {despawn=10,blocker="fragileForceField",caster=p.caster,rotate=false,name=p.name,damage=10,image=thornsImg,x=p.x,y=p.y,d=p.d+math.random(-1,1),speed = 0,rx=0,ry=0}
+				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+				shouldRemove = (projectiles[#projectiles].x == players[p.caster].x) and (projectiles[#projectiles].y == players[p.caster].y)
+				for i=1,#projectiles-1 do
+					op = projectiles[i]
+					if op.name=="seed" and op.x==projectiles[#projectiles].x and op.y==projectiles[#projectiles].y then shouldRemove = true end
+				end
+				if shouldRemove then
+					projectilesToRemove[#projectilesToRemove+1]=#projectiles
 				end
 			end
 		end
@@ -227,9 +241,9 @@ end
 				if not(i==j) then --a blocker cannot block itself
 					op=projectiles[j]
 					if op.blocker and op.rx==p.rx and op.ry==p.ry and p.blocker==nil and not(logic.inList(projectilesToRemove,i)) and not(logic.inList(projectilesToRemove,j)) then --blockers cannot be blocked and projectiles about to be removed cannot be blocked
-						
+
 						if (not(op.blocker=="diagonal")) then projectilesToRemove[#projectilesToRemove+1]=i end
-						if (op.blocker=="fragile")  then projectilesToRemove[#projectilesToRemove+1]=j end
+						if (op.blocker=="fragile" or op.blocker=="fragileForceField")  then projectilesToRemove[#projectilesToRemove+1]=j end
 						if op.blocker=="diagonal" and not(p.name=="lightning") then
 							p.d=op.d+5
 							p.despawn=0.7
@@ -310,6 +324,12 @@ function moves.cast(typeNum,num,pn)
 							end
 						end
 					end
+				end
+			end
+			if name == "seed" then
+				for i=0,3 do
+					projectiles[#projectiles+1] = {despawn=10,blocker="fragileForceField",caster=pn,rotate=false,name=name,damage=10,image=thornsImg,x=p.x,y=p.y,d=i,speed = 0,rx=0,ry=0}
+					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
 			if name == "heal" then
