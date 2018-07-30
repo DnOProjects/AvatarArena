@@ -34,6 +34,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="shockwave",type="earth",cost=30,desc="You send seismic waves rippling through the earth, letting it rise up around you!"},
 {name="smelt",type="earth",cost=30,desc="Melt all rocks on the map into flowing lava!"},
 {name="lightning",type="fire",cost=50,desc="\"The energy is both yin and yang, you can separate these energies, creating an imbalance. The energy wants to restore balance and in a moment the positive and negative energy come crashing back together. You provide release and guidance, creating lightning.\""},
+{name="combustion",type="fire",cost=1,desc="SPARKY SPARKY BOOM"},
 {name="sword flurry",type="sokka",cost=60,desc="Swing your sword around you to impale nearby enemies!"}}
 
 }
@@ -148,6 +149,42 @@ end
 					local d=p.d-1+i
 					if d==4 then d=0 end
 					projectiles[#projectiles+1] = {turns=p.turns,branched = false,despawn=0.5,name=p.name,damage=50,image=lightningImg,x=x,y=y,d=d,speed = 0,rx=0,ry=0}
+				end
+			end
+		end
+		if p.name == "combustion" then
+			if p.expanded==false and p.despawn<0.47 then
+				p.expanded=true
+				local explode = false
+				for i=1,2 do if p.rx==players[i].x and p.ry==players[i].y then explode = true end end
+				for j=1,#projectiles do if p.rx==projectiles[j].rx and p.ry==projectiles[j].ry and projectiles[j].name ~= "combustion" and projectiles[j].name ~= "combustionExplosion" then
+					explode = true
+					projectilesToRemove[#projectilesToRemove+1]=j
+				end end
+				if p.rx==1 or p.rx==16 or p.ry==1 or p.ry==8 then explode = true end
+				if explode == true then
+					if p.name == "combustion" then
+						projectiles[#projectiles+1] = {expanded=false,despawn=1,name="combustionExplosion",damage=20,image=explosion,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+					end
+					projectilesToRemove[#projectilesToRemove+1]=i
+				else
+					local x=p.rx
+					local y=p.ry
+					if p.d==0 then y=y-1 end
+					if p.d==1 then x=x+1 end
+					if p.d==2 then y=y+1 end
+					if p.d==3 then x=x-1 end
+					projectiles[#projectiles+1] = {expanded=false,despawn=0.5,name=p.name,damage=0,image=combustionBlastImg,x=x,y=y,d=p.d,speed = 0,rx=0,ry=0}
+				end
+			end
+		end
+		if p.name == "combustionExplosion" and p.expanded==false then
+			p.expanded = true
+			for x=-2,2 do
+				for y=-2,2 do
+					if not((x==2 and y==2) or (x==2 and y==-2) or (x==-2 and y==2) or (x==-2 and y==-2)) then
+						projectiles[#projectiles+1] = {expanded=true,despawn=1,name="combustionExplosion",damage=20,image=explosionImg,x=p.x+x,y=p.y+y,d=p.d,speed = 0,rx=0,ry=0}
+					end
 				end
 			end
 		end
@@ -276,7 +313,7 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 			if name == "heal" then
-				projectiles[#projectiles+1] = {name=name,damage=-20,image=healOrbImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {freezes=true,name=name,damage=-20,image=healOrbImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,2)
 			end
 			if name == "shift" then
@@ -355,6 +392,10 @@ function moves.cast(typeNum,num,pn)
 			if name == "lightning" then
 				projectiles[#projectiles+1] = {turns=0,branched=false,despawn=0.5,name=name,damage=50,image=lightningImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)	
+			end
+			if name == "combustion" then
+				projectiles[#projectiles+1] = {expanded=false,despawn=0.5,name=name,damage=0,image=combustionBlastImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "flood" then
 				for x=1,16 do
