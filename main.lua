@@ -9,6 +9,8 @@ require "client"
 
 function love.load()
 
+	onlineGame = false
+
 	math.randomseed(os.time())
 	love.window.setFullscreen(true)
 	love.mouse.setVisible(false)
@@ -19,6 +21,8 @@ function love.load()
     players.load()
     ui.load()
     sound.load()
+
+    server.load()
 
     gameState = "characterSelection"
     projectilesToRemove = {}
@@ -54,12 +58,22 @@ end
 
 function love.draw()
 
+	if onlineGame then
+		canvas = love.graphics.newCanvas()
+		love.graphics.setCanvas(canvas)
+	end
+
 	if gameState=="game" then
 		map.draw()
 		moves.draw()
 		players.draw()
 	end
 	ui.draw()
+
+	if onlineGame then
+		love.graphics.setCanvas()
+		client.draw()
+	end
 
 end
 
