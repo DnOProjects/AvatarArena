@@ -8,7 +8,8 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 --Utility
 {{name="charge",type="normal",cost=2,desc="You charge forwards with such force that you can almost phase-through certain projectiles!"},
 {name="blow",type="air",cost=8,desc="A funnel of air to propel you forwards or push your opponent back!"},
-{name="freeze",type="water",cost=10,desc="All water in the arena turns to solid ice!"},
+{name="shift",type="air",cost=10,desc="You shift the battle into the spirit-world, rendering all bending ineffective!"},
+{name="freeze",type="water",cost=0,desc="All water in the arena turns to solid ice!"},
 {name="aurora borealis",type="water",cost=8,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
 {name="wall",type="earth",cost=5,desc="The ground rises up to shield you from harm!"},
 {name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
@@ -27,12 +28,12 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 --Power
 {{name="block",type="normal",cost=40,desc="To-write"},
 {name="gale",type="air",cost=30,desc="A devestating, unpredictable flurry of wind!"},
-{name="shift",type="air",cost=60,desc="You shift the battle into the spirit-world, rendering all bending ineffective!"},
 {name="flood",type="water",cost=80,desc="The waters rise up to drown your enemies!"},
 {name="seed",type="water",cost=60,desc="A huge thorny plant begins to grow with you, unharmed at its center."},
 {name="shockwave",type="earth",cost=30,desc="You send seismic waves rippling through the earth, letting it rise up around you!"},
+{name="smelt",type="earth",cost=30,desc="Melt all rocks on the map into flowing lava!"},
 {name="lightning",type="fire",cost=50,desc="\"The energy is both yin and yang, you can separate these energies, creating an imbalance. The energy wants to restore balance and in a moment the positive and negative energy come crashing back together. You provide release and guidance, creating lightning.\""},
-{name="sword flurry",type="sokka",cost=40,desc="Swing your sword around you to impale nearby enemies!"}}
+{name="sword flurry",type="sokka",cost=60,desc="Swing your sword around you to impale nearby enemies!"}}
 
 }
 
@@ -46,9 +47,9 @@ function moves.update(dt)
 	moves.moveProjectiles(dt)
 	moves.rotateProjectiles(dt)
 	moves.roundPositions()
-	for i=1,#projectiles do moves.updateProjectile(projectiles[i],dt) end
 	moves.removeReduntantProjectiles()
 	moves.despawn(dt)
+	for i=1,#projectiles do moves.updateProjectile(projectiles[i],dt) end
 	for i=1,2 do 
 		if not(players[i].beenBlown==false) then
 			if players[i].beenBlown-dt > 0 then players[i].beenBlown = players[i].beenBlown-dt else players[i].beenBlown = false end
@@ -91,8 +92,18 @@ end
 		end
 		if p.name == "spike" and p.despawn < 1.98 and p.spawned==false then
 			p.spawned=true
-			projectiles[#projectiles+1] = {spawned=false,rotate=false,despawn=2,name=p.name,damage=8,image=earthSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+			projectiles[#projectiles+1] = {meltable=true,spawned=false,rotate=false,despawn=1.5,name=p.name,damage=8,image=earthSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+		end
+		if p.name == "lava" then
+			if p.hasSpread == false and p.despawn < 6 then
+				p.hasSpread = true
+				for x=-1,1 do
+					for y=-1,1 do
+						projectiles[#projectiles+1] = {removesOnHit=false,hasSpread=true,rotate=false,despawn=5,name="lava",damage=20,image=lavaImg,x=p.rx+x,y=p.ry+y,d=p.d,speed = 0,rx=0,ry=0}
+					end
+				end
+			end
 		end
 		if p.name == "redirect" then
 			for i=1,#projectiles do
@@ -177,7 +188,7 @@ end
 			for j=1,#projectiles do
 				if not(i==j) then --a blocker cannot block itself
 					op=projectiles[j]
-					if op.blocker and op.rx==p.rx and op.ry==p.ry and p.blocker==nil and not(logic.inList(projectilesToRemove,i)) then --blockers cannot be blocked and projectiles about to be removed cannot be blocked
+					if op.blocker and op.rx==p.rx and op.ry==p.ry and p.blocker==nil and not(logic.inList(projectilesToRemove,i)) and not(logic.inList(projectilesToRemove,j)) then --blockers cannot be blocked and projectiles about to be removed cannot be blocked
 						
 						if (not(op.blocker=="diagonal")) then projectilesToRemove[#projectilesToRemove+1]=i end
 						if (op.blocker=="fragile")  then projectilesToRemove[#projectilesToRemove+1]=j end
@@ -264,7 +275,7 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 			if name == "shift" then
-				players.shiftTimer = 20
+				players.shiftTimer = 3
 			end
 			if name == "arrow" then
 				projectiles[#projectiles+1] = {name=name,damage=10,image=arrowImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
@@ -298,7 +309,7 @@ function moves.cast(typeNum,num,pn)
 			if name=="shockwave" then
 				for i=1,8 do
 					local d=i-1
-					projectiles[#projectiles+1] = {name=name,damage=15,image=earthOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
+					projectiles[#projectiles+1] = {meltable=true,name=name,damage=15,image=earthOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
@@ -326,13 +337,13 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 			if name == "boulder" then
-				projectiles[#projectiles+1] = {name=name,damage=15,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
+				projectiles[#projectiles+1] = {meltable=true,name=name,damage=15,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 6,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "wall" then
 				for i=1,3 do
-					if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {name=name,despawn=1,blocker="fragile",damage=0,image=earthOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
-						else projectiles[#projectiles+1] = {name=name,damage=0,despawn=2,blocker="fragile",image=earthOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 0,rx=0,ry=0} end
+					if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {meltable=true,name=name,despawn=1,blocker="fragile",damage=0,image=earthOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+						else projectiles[#projectiles+1] = {meltable=true,name=name,damage=0,despawn=2,blocker="fragile",image=earthOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 0,rx=0,ry=0} end
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
@@ -348,8 +359,17 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 			if name == "spike" then
-				projectiles[#projectiles+1] = {spawned=false,rotate=false,despawn=2,name=name,damage=4,image=earthSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {meltable=true,spawned=false,rotate=false,despawn=1.5,name=name,damage=4,image=earthSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+			end
+			if name == "smelt" then
+				for i=1,#projectiles do
+					p=projectiles[i]
+					if p.meltable ~= nil then
+						projectilesToRemove[#projectilesToRemove+1]=i
+						projectiles[#projectiles+1] = {removesOnHit=false,hasSpread=false,rotate=false,despawn=8,name="lava",damage=20,image=lavaImg,x=p.rx,y=p.ry,d=p.d,speed = 0,rx=0,ry=0}
+					end
+				end
 			end
 			if name == "boomerang" then
 				projectiles[#projectiles+1] = {caster=pn,removesOnHitCaster=false,damagesCaster=false,bounces=0,name=name,damage=10,image=boomerangImg,x=p.x,y=p.y,d=p.d,speed = 10,rx=0,ry=0}

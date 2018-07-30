@@ -11,7 +11,10 @@ function love.load()
 	onlineGame = false
 
 	math.randomseed(os.time())
-	love.window.setFullscreen(true)
+	if not(onlineGame) then
+		love.window.setFullscreen(true)
+	end
+
 	love.mouse.setVisible(false)
     love.graphics.setDefaultFilter("nearest","linear", 100 )
 
@@ -25,6 +28,7 @@ function love.load()
 
     gameState = "characterSelection"
     projectilesToRemove = {}
+    showDescription = 1
 
     moveSet = {0,0}
 
@@ -57,7 +61,7 @@ end
 function love.draw()
 
 	if onlineGame then
-		canvas = love.graphics.newCanvas()
+		canvas = love.graphics.newCanvas(1920,1080)
 		love.graphics.setCanvas(canvas)
 	end
 

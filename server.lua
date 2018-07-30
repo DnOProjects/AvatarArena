@@ -32,9 +32,9 @@ function server.keyInput(key)
 				if key=="d" then players.move(1,3) end
 				if key=="g" then players.move(1,1) end
 
-				if key=="3" then moves.cast(3,players[1].power,1) end
-				if key=="2" then moves.cast(2,players[1].attack,1) end
-				if key=="1" then moves.cast(1,players[1].utility,1) end
+				if key=="2" then moves.cast(3,players[1].power,1) end
+				if key=="1" then moves.cast(2,players[1].attack,1) end
+				if key=="`" then moves.cast(1,players[1].utility,1) end
 			elseif(moveSet[1] == 1)then
 				if key=="w" then players.move(1,0) end
 				if key=="s" then players.move(1,2) end

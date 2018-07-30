@@ -59,6 +59,7 @@ function ui.draw()
 
 			love.graphics.setLineWidth(2)
 			love.graphics.setColor(255,255,255)
+			love.graphics.print(i,120+(1255*(i-1)),10)
 			if ui[i].y<4 then
 				love.graphics.rectangle("line",700,40,500,1000)
 				if showDescription == i then
@@ -72,8 +73,8 @@ function ui.draw()
 							e=c.bends[j]
 							if not(e=="normal" or e=="energy" or e=="sokka") then
 								local y=0
-								if j>2 then j=1 end
-								love.graphics.draw(elementSymbols[e],i*230+490-(y*460),500+y*230)
+								if j>2 then y=1 end
+								love.graphics.draw(elementSymbols[e],j*230+490-(y*460),500+y*230)
 							end
 						end
 					else -- Moves description
@@ -84,6 +85,7 @@ function ui.draw()
 							love.graphics.draw(elementSymbols[move.type],840,200)
 							textYOffset=300 
 						end
+						love.graphics.print("Chi Cost: "..move.cost,720,135+textYOffset,0,0.8,0.8) 
 						love.graphics.setFont(descriptionFont)
 						love.graphics.printf(move.desc,710,200+textYOffset,990,"left",0,0.5,0.5)
 						love.graphics.setFont(font)
@@ -151,8 +153,8 @@ function ui.draw()
 		love.graphics.setLineWidth(4)
 		love.graphics.rectangle("line",809,199,252,358,5,5)
 		love.graphics.rectangle("line",864,799,126,179,5,5)
-		love.graphics.print("Winner",820,130)
-		love.graphics.print("Loser",866,750,0,0.7)
+		love.graphics.print("Winner: Player "..winner,690,125)
+		love.graphics.print("Loser: Player "..loser,770,745,0,0.7)
 		love.graphics.setLineWidth(20)
 		love.graphics.circle("line",930,660,50)
 		love.graphics.setColor(255,255,255)
