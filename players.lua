@@ -5,6 +5,8 @@ players[2] = {beenBlown=false,char=1,x=16,y=8,d=0,timer=0,invulnerability=0,hp=1
 
 function players.load()
 	
+	lineOfSightWidth = 5
+
 	characters = {
 {name="Aang",chiRegen=4,img=aangImg,portrait=aangPortrait,moveTimer=0.1,hp=100,bends={"air","earth","fire","water","energy","normal"}},
 {name="Katara",chiRegen=4,img=kataraImg,portrait=kataraPortrait,moveTimer=0.15,hp=120,bends={"water","normal"}},
@@ -50,7 +52,7 @@ end
 	function players.checkForLineOfSight()
 		for pn=1,2 do
 			p = players[pn]
-			for widthMod=-2,2 do
+			for widthMod=-(lineOfSightWidth-1)/2,(lineOfSightWidth-1)/2 do
 				if p.d == 0 then
 					for lengthMod=1,p.y do
 						table.insert(p.lineOfSight,{x=p.x+widthMod,y=lengthMod})
