@@ -21,8 +21,8 @@ function players.load()
 
 	p1 = players[1]
 	p2 = players[2]
-	players[1] = {lineOfSight={},beenBlown=false,char=p1.char,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
-	players[2] = {lineOfSight={},beenBlown=false,char=p2.char,x=16,y=8,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
+	players[1] = {lineOfSight={},deflecting=false,beenBlown=false,char=p1.char,x=1,y=1,d=0,vd=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
+	players[2] = {lineOfSight={},deflecting=false,beenBlown=false,char=p2.char,x=16,y=8,d=0,vd=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
 
 end
 
@@ -50,7 +50,7 @@ end
 		for i=1,2 do
 			p = players[i]
 			p.timer = p.timer - dt
-			p.invulnerability = p.invulnerability -dt*10
+			p.invulnerability = p.invulnerability - dt*10
 			if p.timer < 0 then p.timer = 0 end
 			if p.invulnerability < 0 then p.invulnerability = 0 end
 		end
@@ -84,12 +84,12 @@ end
 	function players.checkForHits()
 		for i=1,2 do
 			for j=1,#projectiles do
-				if projectiles[j].damage>0 and projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 and players[i].hp > 0 then
+				if projectiles[j].damage>0 and projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 and players[i].deflecting == false and players[i].hp > 0 then
 					if not((projectiles[j].name=="boomerang" or projectiles[j].name=="sword flurry") and projectiles[j].caster==i) then
 						players[i].hp=players[i].hp-projectiles[j].damage
 						players[i].invulnerability = 10
 					end
-					if not(projectiles[j].name=="flood" or projectiles[j].name=="sword flurry") then
+					if projectiles[j].removesOnHit == nil or projectiles[j].removesOnHit==true then
 						if not(projectiles[j].name=="boomerang") or projectiles[j].caster == i then
 							projectilesToRemove[#projectilesToRemove+1] = j
 						end
@@ -117,17 +117,14 @@ function players.draw()
 	for i=1,2 do
 		p = players[i]
 		love.graphics.setColor(255,255,255)
-		local doInvulnerability = true
-		for j=1,#projectiles do
-			pr = projectiles[j]
-			if pr.name == "sword block" and pr.caster==i then
-				doInvulnerability = false
-			end
-		end
-		if p.invulnerability>0 and doInvulnerability then
+		if p.invulnerability>0 then
 			love.graphics.setColor(255,255,255,(math.sin(p.invulnerability)+1)*100)
 		end
-		love.graphics.draw(characters[p.char].img,p.x*120-60,p.y*120+60,math.pi*p.d/2,1,1,60,60)
+		if logic.round(players[i].vd) == 0 then
+			love.graphics.draw(characters[p.char].img,p.x*120-60,p.y*120+60,math.pi*p.d/2,1,1,60,60)
+		else
+			love.graphics.draw(characters[p.char].img,p.x*120-60,p.y*120+60,math.pi*p.vd/2,1,1,60,60)
+		end
 		love.graphics.setColor(255,255,255)
 	end
 end
