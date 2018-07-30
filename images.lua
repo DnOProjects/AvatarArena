@@ -45,6 +45,8 @@ fireSymbolImg = love.graphics.newImage("images/symbols/fireSymbol.png")
 	fireOrbImg = love.graphics.newImage("Images/Abilities/fireSprite.png")
 	redirectIcon = love.graphics.newImage("Images/Abilities/redirectIcon.png")
 	lightningImg = love.graphics.newImage("Images/Abilities/lightning.png")
+	combustionBlastImg = love.graphics.newImage("Images/Abilities/combustionBlast.png")
+	explosionImg = love.graphics.newImage("Images/Abilities/explosion.png")
 	
 	----Normal/Sokka
 	arrowImg = love.graphics.newImage("Images/Abilities/arrow.png")

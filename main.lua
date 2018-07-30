@@ -78,8 +78,6 @@ function love.draw()
 		love.graphics.print("Running server..")
 	end
 
-	love.graphics.print(#projectiles)
-
 end
 
 function startGame()
