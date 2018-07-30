@@ -164,7 +164,7 @@ end
 				if p.rx==1 or p.rx==16 or p.ry==1 or p.ry==8 then explode = true end
 				if explode == true then
 					if p.name == "combustion" then
-						projectiles[#projectiles+1] = {expanded=false,despawn=1,name="combustionExplosion",damage=20,image=explosion,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+						projectiles[#projectiles+1] = {expanded=false,rotate=false,despawn=1,name="combustionExplosion",damage=20,image=explosion,x=p.x,y=p.y,d=0,speed = 0,rx=0,ry=0}
 					end
 					projectilesToRemove[#projectilesToRemove+1]=i
 				else
