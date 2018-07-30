@@ -29,6 +29,7 @@ fireSymbolImg = love.graphics.newImage("images/symbols/fireSymbol.png")
 
 	---- Water
 	waterOrbImg = love.graphics.newImage("Images/Abilities/water.png")
+	iceImg = love.graphics.newImage("Images/Abilities/ice.png")
 	auroraImg = love.graphics.newImage("Images/Abilities/auroraSprite.png")
 	floodImg = love.graphics.newImage("Images/Abilities/flood.png")
 	floodTopImg = love.graphics.newImage("Images/Abilities/floodTop.png")

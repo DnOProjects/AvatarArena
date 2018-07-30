@@ -10,6 +10,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="blow",type="air",cost=8,desc="A funnel of air to propel you forwards or push your opponent back!"},
 {name="aurora borealis",type="water",cost=8,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
 {name="wall",type="earth",cost=5,desc="The ground rises up to shield you from harm!"},
+{name="freeze",type="water",cost=10,desc="All water in the arena turns to solid ice!"},
 {name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
 {name="sword block",type="sokka",cost=5,desc="You deflect an enemy's attack, sending it flying away to the side.\n\n"}},
 
@@ -99,7 +100,7 @@ end
 					for x=1,16 do
 						local willSpawn = false
 						if x==1 then willSpawn = true end
-						projectiles[#projectiles+1]={rotate=false,willSpawn=willSpawn,layer=p.layer-1,despawn=1.3^p.layer-1,name=p.name,damage=50,image=floodTopImg,x=x,y=p.layer-1,d=p.d,speed = 0,rx=0,ry=0}
+						projectiles[#projectiles+1]={freezes=true,rotate=false,willSpawn=willSpawn,layer=p.layer-1,despawn=1.3^p.layer-1,name=p.name,damage=50,image=floodTopImg,x=x,y=p.layer-1,d=p.d,speed = 0,rx=0,ry=0}
 					end
 				else
 					p.image=floodImg
@@ -156,17 +157,19 @@ end
 			end
 
 			for j=1,#projectiles do
-				if not(i==j) then
+				if not(i==j) then --a blocker cannot block itself
 					op=projectiles[j]
-					if op.blocker and op.rx==p.rx and op.ry==p.ry then
-						if not(op.blocker=="diagonal") then projectilesToRemove[#projectilesToRemove+1]=i end
-						if op.blocker=="fragile" or op.blocker=="diagonal" then projectilesToRemove[#projectilesToRemove+1]=j end
+					if op.blocker and op.rx==p.rx and op.ry==p.ry and p.blocker==nil and not(logic.inList(projectilesToRemove,i)) then --blockers cannot be blocked and projectiles about to be removed cannot be blocked
+						
+						if (not(op.blocker=="diagonal")) then projectilesToRemove[#projectilesToRemove+1]=i end
+						if (op.blocker=="fragile" or op.blocker=="diagonal")  then projectilesToRemove[#projectilesToRemove+1]=j end
 						if op.blocker=="diagonal" and not(p.name=="lightning") then
 							p.d=op.d+5
 							p.despawn=0.7
 							p.rotateAmount=0.785398*(2*p.d-9)
 							if p.d==8 then p.d=4 end
 						end
+
 					end
 				end
 			end
@@ -225,6 +228,17 @@ function moves.cast(typeNum,num,pn)
 		p.chi=p.chi-moves[typeNum][num].cost
 		local name = moves[typeNum][num].name
 		
+		if name == "freeze" then
+			for i=1,#projectiles do
+				p=projectiles[i]
+				if p.freezes then
+					local x=p.rx
+					local y=p.ry
+					projectilesToRemove[#projectilesToRemove+1]=i
+					projectiles[#projectiles+1] = {rotate=false,blocker="fragile",despawn=4,name="ice",damage=0,image=iceImg,x=x,y=y,d=p.d,speed = 0,rx=0,ry=0}
+				end
+			end
+		end
 		if name == "arrow" then
 			projectiles[#projectiles+1] = {name=name,damage=10,image=arrowImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
@@ -235,8 +249,8 @@ function moves.cast(typeNum,num,pn)
 		end
 		if name == "spurt" then
 			for i=1,3 do
-				if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {name=name,damage=10,image=waterOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 2,rx=0,ry=0}
-					else projectiles[#projectiles+1] = {name=name,damage=10,image=waterOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 2,rx=0,ry=0} end
+				if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {freezes=true,name=name,damage=10,image=waterOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 2,rx=0,ry=0}
+					else projectiles[#projectiles+1] = {freezes=true,name=name,damage=10,image=waterOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 2,rx=0,ry=0} end
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 		end
@@ -297,7 +311,7 @@ function moves.cast(typeNum,num,pn)
 			for x=1,16 do
 				willSpawn=false
 				if x==1 then willSpawn=true end
-				projectiles[#projectiles+1] = {rotate=false,willSpawn=willSpawn,layer=8,despawn=1.3^9,name=name,damage=50,image=floodTopImg,x=x,y=8,d=0,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {freezes=true,rotate=false,willSpawn=willSpawn,layer=8,despawn=1.3^9,name=name,damage=50,image=floodTopImg,x=x,y=8,d=0,speed = 0,rx=0,ry=0}
 			end
 		end
 		if name == "spike" then
