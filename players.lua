@@ -16,14 +16,15 @@ function players.load()
 
 	p1 = players[1]
 	p2 = players[2]
-	players[1] = {beenBlown=false,char=p1.char,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
-	players[2] = {beenBlown=false,char=p2.char,x=16,y=8,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
+	players[1] = {lineOfSight={},beenBlown=false,char=p1.char,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
+	players[2] = {lineOfSight={},beenBlown=false,char=p2.char,x=16,y=8,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
 
 end
 
 function players.update(dt)
 	players.updateTimer(dt)
 	players.checkForHits()
+	players.checkForLineOfSight()
 	players.poolChi(dt)
 	players.die()
 end
@@ -43,6 +44,31 @@ end
 			p.invulnerability = p.invulnerability -dt*10
 			if p.timer < 0 then p.timer = 0 end
 			if p.invulnerability < 0 then p.invulnerability = 0 end
+		end
+	end
+
+	function players.checkForLineOfSight()
+		for pn=1,2 do
+			p = players[pn]
+			for widthMod=-1,1 do
+				if p.d == 0 then
+					for lengthMod=1,p.y do
+						table.insert(p.lineOfSight,{x=p.x+widthMod,y=lengthMod})
+					end
+				elseif p.d == 1 then
+					for lengthMod=p.x,16 do
+						table.insert(p.lineOfSight,{x=lengthMod,y=p.y+widthMod})
+					end
+				elseif p.d == 2 then
+					for lengthMod=p.y,8 do
+						table.insert(p.lineOfSight,{x=p.x+widthMod,y=lengthMod})
+					end
+				elseif p.d == 3 then
+					for lengthMod=1,p.x do
+						table.insert(p.lineOfSight,{x=lengthMod,y=p.y+widthMod})
+					end
+				end
+			end
 		end
 	end
 
@@ -108,6 +134,7 @@ function players.move(p,d,unconditional)
 	if players[p].timer==0 or unconditional then
 		if not unconditional then players[p].timer = characters[players[p].char].moveTimer end
 		players[p].d = d
+		players[p].lineOfSight = {}
 		for i=1,#projectiles do
 			pr = projectiles[i]
 			if pr.movesWithCaster == true and pr.caster == p then

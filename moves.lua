@@ -8,9 +8,9 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 --Utility
 {{name="charge",type="normal",cost=2,desc="You charge forwards with such force that you can almost phase-through certain projectiles!"},
 {name="blow",type="air",cost=8,desc="A funnel of air to propel you forwards or push your opponent back!"},
+{name="freeze",type="water",cost=10,desc="All water in the arena turns to solid ice!"},
 {name="aurora borealis",type="water",cost=8,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
 {name="wall",type="earth",cost=5,desc="The ground rises up to shield you from harm!"},
-{name="freeze",type="water",cost=10,desc="All water in the arena turns to solid ice!"},
 {name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
 {name="sword block",type="sokka",cost=5,desc="You deflect an enemy's attack, sending it flying away to the side.\n\n"}},
 
@@ -231,11 +231,14 @@ function moves.cast(typeNum,num,pn)
 		if name == "freeze" then
 			for i=1,#projectiles do
 				p=projectiles[i]
-				if p.freezes then
-					local x=p.rx
-					local y=p.ry
-					projectilesToRemove[#projectilesToRemove+1]=i
-					projectiles[#projectiles+1] = {rotate=false,blocker="fragile",despawn=4,name="ice",damage=0,image=iceImg,x=x,y=y,d=p.d,speed = 0,rx=0,ry=0}
+				if p.freezes ~= nil then
+					for j=1,#players[pn].lineOfSight do
+						if players[pn].lineOfSight[j].x == p.rx and players[pn].lineOfSight[j].y == p.ry then
+							projectilesToRemove[#projectilesToRemove+1]=i
+							projectiles[#projectiles+1] = {rotate=false,blocker="fragile",despawn=4,name="ice",damage=0,image=iceImg,x=p.rx,y=p.ry,d=p.d,speed = 0,rx=0,ry=0}
+							break
+						end
+					end
 				end
 			end
 		end
