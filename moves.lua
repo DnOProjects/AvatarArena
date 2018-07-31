@@ -18,10 +18,10 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 
 --Attack
 {{name="arrow",type="normal",cost=6,desc="A well-placed arrow can be as effective as any pillar of fire or column of rock!"},
-{name="gust",type="air",cost=8,desc="A ball of whirling air."},
+{name="gust",type="air",cost=6,desc="A ball of whirling air."},
 {name="spurt",type="water",cost=16,desc="A writhing spray of water, ready to force itself down your enemy's throat and drown their very lungs!"},
+{name="boulder",type="earth",cost=6,desc="A giant rolling boulder - it's a little slow but deals a lot of damage."},
 {name="spike",type="earth",cost=10,desc="Huge spikes of earth emerge from the ground in a line."},
-{name="boulder",type="earth",cost=8,desc="A giant rolling boulder - it's a little slow but deals a lot of damage."},
 {name="blast",type="fire",cost=10,desc="Two glowing embers shoot sideways from each hand."},
 {name="sear",type="fire",cost=18,desc="Four balls of fire radiate inaccurately from your body."},
 {name="boomerang",type="sokka",cost=6,desc="The boomerang whirls around the edge of the arena before returning to your hand."}},
@@ -359,7 +359,7 @@ function moves.cast(typeNum,num,pn)
 			end
 			if name == "charge" then for i=1,3 do players.move(pn,p.d,true) end end
 			if name == "gust" then
-				projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=2,name=name,damage=10,image=airOrbImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
+				projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=2,name=name,damage=15,image=airOrbImg,x=p.x,y=p.y,d=p.d,speed = 8,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "gale" then
@@ -374,7 +374,7 @@ function moves.cast(typeNum,num,pn)
 			if name=="shockwave" then
 				for i=1,8 do
 					local d=i-1
-					projectiles[#projectiles+1] = {meltable=true,name=name,damage=15,image=earthOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
+					projectiles[#projectiles+1] = {meltable=true,name=name,damage=25,image=earthOrbImg,x=p.x,y=p.y,d=d,speed = 5,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
@@ -402,7 +402,7 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 			if name == "boulder" then
-				projectiles[#projectiles+1] = {meltable=true,name=name,damage=15,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 6,rx=0,ry=0}
+				projectiles[#projectiles+1] = {meltable=true,name=name,damage=20,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 6,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "wall" then
