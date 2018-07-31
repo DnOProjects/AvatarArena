@@ -88,7 +88,7 @@ end
 			p.deflecting = false
 			for j=1,#projectiles do
 				proj=projectiles[j]
-				if proj.name == "sword block" and proj.caster == i then
+				if proj.deflector == true and proj.caster == i then
 					p.deflecting = true
 				end
 			end
@@ -168,6 +168,14 @@ function players.move(p,d,unconditional)
 		if not unconditional then players[p].timer = characters[players[p].char].moveTimer end
 		players[p].d = d
 		players[p].lineOfSight = {}
+		if players[p].deflecting == true then
+			for i=1,#projectiles do
+				pr = projectiles[i]
+				if pr.movesWithCaster == false and pr.caster == p then
+					players[p].deflecting = false
+				end
+			end
+		end
 		for i=1,#projectiles do
 			pr = projectiles[i]
 			if pr.movesWithCaster == true and pr.caster == p then

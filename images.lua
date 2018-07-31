@@ -50,6 +50,7 @@ fireSymbolImg = love.graphics.newImage("images/symbols/fireSymbol.png")
 	
 	----Normal/Sokka
 	arrowImg = love.graphics.newImage("Images/Abilities/arrow.png")
+	shieldImg = love.graphics.newImage("Images/Abilities/shield.png")
 	swordImg = love.graphics.newImage("Images/Abilities/sokkasSword.png")
 	boomerangImg = love.graphics.newImage("Images/Abilities/sokkasBoomerang.png")
 

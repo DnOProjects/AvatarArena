@@ -6,13 +6,14 @@ require "sound"
 moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 
 --Utility
-{{name="charge",type="normal",cost=2,desc="You charge forwards with such force that you can almost phase-through certain projectiles!"},
+{{name="shield",type="normal",cost=5,desc="Equip a shield to block any attack!"},
 {name="blow",type="air",cost=8,desc="A funnel of air to propel you forwards or push your opponent back!"},
 {name="shift",type="air",cost=10,desc="You shift the battle into the spirit-world, rendering all bending ineffective!"},
 {name="freeze",type="water",cost=0,desc="All water in the arena turns to solid ice!"},
 {name="aurora borealis",type="water",cost=8,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
 {name="heal",type="water",cost=15,desc="Healing is a special ability possessed by some waterbenders that enables them to heal those who have been wounded, including themselves."},
 {name="wall",type="earth",cost=5,desc="The ground rises up to shield you from harm!"},
+{name="earth wave",type="earth",cost=2,desc="You charge forwards on rolling earth!"},
 {name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
 {name="sword block",type="sokka",cost=5,desc="You deflect an enemy's attack, sending it flying away to the side.\n\n"}},
 
@@ -245,8 +246,12 @@ end
 					op=projectiles[j]
 					if op.blocker and op.rx==p.rx and op.ry==p.ry and p.blocker==nil and not(logic.inList(projectilesToRemove,i)) and not(logic.inList(projectilesToRemove,j)) then --blockers cannot be blocked and projectiles about to be removed cannot be blocked
 
-						if (not(op.blocker=="diagonal" or op.blocker=="fragileForceField")) then projectilesToRemove[#projectilesToRemove+1]=i end
-						if (op.blocker=="fragile" or op.blocker=="fragileForceField")  then projectilesToRemove[#projectilesToRemove+1]=j end
+						if op.blocker=="shield" then
+							projectilesToRemove[#projectilesToRemove+1]=i
+							projectilesToRemove[#projectilesToRemove+1]=j
+						end
+						if op.blocker=="forceField" then projectilesToRemove[#projectilesToRemove+1]=i end
+						if (op.blocker=="fragile" or op.blocker=="fragileForceField") then projectilesToRemove[#projectilesToRemove+1]=j end
 						if op.blocker=="diagonal" and not(p.name=="lightning") then
 							p.d=op.d+5
 							p.despawn=0.7
@@ -315,6 +320,9 @@ function moves.cast(typeNum,num,pn)
 			p.chi=p.chi-moves[typeNum][num].cost
 			local name = moves[typeNum][num].name
 			
+			if name == "shield" then
+				projectiles[#projectiles+1] = {caster=pn,movesWithCaster=true,blocker="shield",despawn=1,name=name,damage=0,image=shieldImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+			end
 			if name == "freeze" then
 				for i=1,#projectiles do
 					p=projectiles[i]
@@ -357,7 +365,11 @@ function moves.cast(typeNum,num,pn)
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
-			if name == "charge" then for i=1,3 do players.move(pn,p.d,true) end end
+			if name == "earth wave" then
+				for i=1,3 do
+					players.move(pn,p.d,true)
+				end
+			end
 			if name == "gust" then
 				projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=2,name=name,damage=15,image=airOrbImg,x=p.x,y=p.y,d=p.d,speed = 8,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
@@ -445,7 +457,7 @@ function moves.cast(typeNum,num,pn)
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "sword block" then
-				projectiles[#projectiles+1] = {caster=pn,removesOnHit=false,blocker="diagonal",despawn=1,name=name,damage=0,image=swordImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {caster=pn,deflector=true,removesOnHit=false,blocker="diagonal",despawn=1,name=name,damage=0,image=swordImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 				p.deflecting = true
 			end
 			if name == "sword flurry" then
