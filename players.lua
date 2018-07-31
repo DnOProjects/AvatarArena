@@ -107,7 +107,7 @@ end
 							players[i].invulnerability = 10
 						end
 						if projectiles[j].removesOnHit == nil or projectiles[j].removesOnHit==true then
-							if projectiles[j].removesOnHitCaster == nil or (projectiles[j].removesOnHitCaster == false and projectiles[j].caster == i) then
+							if projectiles[j].removesOnHitCaster == nil or (projectiles[j].removesOnHitCaster == true and projectiles[j].caster == i) then
 								projectilesToRemove[#projectilesToRemove+1] = j
 							end
 						end

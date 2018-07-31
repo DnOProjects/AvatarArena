@@ -13,7 +13,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="aurora borealis",type="water",cost=8,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
 {name="heal",type="water",cost=15,desc="Healing is a special ability possessed by some waterbenders that enables them to heal those who have been wounded, including themselves."},
 {name="wall",type="earth",cost=5,desc="The ground rises up to shield you from harm!"},
-{name="earth wave",type="earth",cost=2,desc="You charge forwards on rolling earth!"},
+{name="earth wave",type="earth",cost=10,desc="You charge forwards on rolling earth!"},
 {name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
 {name="sword block",type="sokka",cost=5,desc="You deflect an enemy's attack, sending it flying away to the side.\n\n"}},
 
@@ -111,6 +111,18 @@ end
 			p.spawned=true
 			projectiles[#projectiles+1] = {meltable=true,spawned=false,rotate=false,despawn=1.5,name=p.name,damage=8,image=earthSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+		end
+		if p.name == "earth wave" and p.despawn < 0.4 and p.moved == false then
+			p.moved = true
+			local rider = nil
+			for i=1,2 do
+				if p.x == players[i].x and p.y == players[i].y then
+					rider = i
+				end
+			end
+			projectiles[#projectiles+1] = {rider=rider,meltable=true,removeOnHit=false,moved=false,despawn=0.5,name=p.name,damage=0,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+			if rider then players.move(projectiles[#projectiles].rider,projectiles[#projectiles].d,true) end
 		end
 		if p.name == "lava" then
 			if p.hasSpread == false and p.despawn < 6 then
@@ -365,11 +377,6 @@ function moves.cast(typeNum,num,pn)
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
-			if name == "earth wave" then
-				for i=1,3 do
-					players.move(pn,p.d,true)
-				end
-			end
 			if name == "gust" then
 				projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=2,name=name,damage=15,image=airOrbImg,x=p.x,y=p.y,d=p.d,speed = 8,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
@@ -443,6 +450,11 @@ function moves.cast(typeNum,num,pn)
 				projectiles[#projectiles+1] = {meltable=true,spawned=false,rotate=false,despawn=1.5,name=name,damage=4,image=earthSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
+			if name == "earth wave" then
+				projectiles[#projectiles+1] = {rider=pn,meltable=true,moved=false,removeOnHit=false,despawn=0.5,name=name,damage=0,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+				players.move(pn,p.d,true)
+			end
 			if name == "smelt" then
 				for i=1,#projectiles do
 					p=projectiles[i]
@@ -453,7 +465,7 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 			if name == "boomerang" then
-				projectiles[#projectiles+1] = {caster=pn,removesOnHitCaster=false,damagesCaster=false,bounces=0,name=name,damage=10,image=boomerangImg,x=p.x,y=p.y,d=p.d,speed = 10,rx=0,ry=0}
+				projectiles[#projectiles+1] = {caster=pn,removesOnHitCaster=true,damagesCaster=false,bounces=0,name=name,damage=10,image=boomerangImg,x=p.x,y=p.y,d=p.d,speed = 10,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "sword block" then
