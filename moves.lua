@@ -259,8 +259,10 @@ end
 					if op.blocker and op.rx==p.rx and op.ry==p.ry and p.blocker==nil and not(logic.inList(projectilesToRemove,i)) and not(logic.inList(projectilesToRemove,j)) then --blockers cannot be blocked and projectiles about to be removed cannot be blocked
 
 						if op.blocker=="shield" then
-							projectilesToRemove[#projectilesToRemove+1]=i
-							projectilesToRemove[#projectilesToRemove+1]=j
+							if p.d == op.d+2 or p.d == op.d-2 then
+								projectilesToRemove[#projectilesToRemove+1]=i
+								projectilesToRemove[#projectilesToRemove+1]=j
+							else op.blocker = "fragileForceField" end
 						end
 						if op.blocker=="forceField" then projectilesToRemove[#projectilesToRemove+1]=i end
 						if (op.blocker=="fragile" or op.blocker=="fragileForceField") then projectilesToRemove[#projectilesToRemove+1]=j end
@@ -393,7 +395,7 @@ function moves.cast(typeNum,num,pn)
 			if name=="shockwave" then
 				for i=1,8 do
 					local d=i-1
-					projectiles[#projectiles+1] = {meltable=true,name=name,damage=25,image=earthOrbImg,x=p.x,y=p.y,d=d,speed = 5,rx=0,ry=0}
+					projectiles[#projectiles+1] = {meltable=true,name=name,damage=20,image=earthOrbImg,x=p.x,y=p.y,d=d,speed = 12,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
