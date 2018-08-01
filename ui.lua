@@ -3,6 +3,8 @@ ui = {{y=0},{y=0}}
 
 function ui.load()
 
+	gameEvent = "unset"
+
 	selectionMethod = "choice"
 	ui.randomised=false
 
@@ -13,7 +15,7 @@ function ui.load()
 	{name="Oppenent",selected=1,options={"human","ai"}},
 	{name="Opponent Count",selected=1,options={1,2,3}},
 	{name="Selection",selected=1,options={"choice","random","random duel","blind","blind duel"}},
-	{name="Events",selected=1,options={"none"}}}
+	{name="Events",selected=1,options={"none","sea of chi","boost cycle","instablitiy"}}}
 	menuStage=1
 
 	impactFont = love.graphics.newFont("fonts/font.ttf",72)
@@ -43,7 +45,7 @@ function ui.randomMove(type,player)
 		picked = true
 		if moves[type][mq].type=="normal" and math.random(1,4)>2 then picked = false end
 	end
-	return mq
+	return mq --I am very sorry for using 2 meaningles letters - have an apology semicolon - (;) - there, much better
 end
 
 function ui.choose()
@@ -97,7 +99,15 @@ function ui.switch(d,playerSelecting)
 			players[playerSelecting].char = players[playerSelecting].char + d
 			if players[playerSelecting].char > #characters then players[playerSelecting].char = 1 end
 			if players[playerSelecting].char < 1 then players[playerSelecting].char = #characters end
-			for i=1,3 do ui[playerSelecting][i] = 1 end
+			for i=1,3 do
+				j=1
+				moveTypeIsValid = false
+				while not moveTypeIsValid do
+					ui[playerSelecting][i] = j
+					if logic.inList(characters[players[playerSelecting].char].bends,moves[i][j].type) then moveTypeIsValid = true end
+					j=j+1
+				end
+			end
 		elseif not(ui[playerSelecting].y==4) then
 			canWield=false
 			while not canWield do
@@ -258,6 +268,7 @@ function ui.draw()
 	end
 
 	if gameState == "game" then
+
 		love.graphics.rectangle("fill",0,0,love.graphics.getWidth(),120)
 
 		love.graphics.setColor(0,0,0)
@@ -279,6 +290,30 @@ function ui.draw()
 		love.graphics.setColor(163,198,255)
 		love.graphics.rectangle("fill",300,95,600*(players[1].chi/players[1].maxChi),10)
 		love.graphics.rectangle("fill",1620,95,-600*(players[2].chi/players[2].maxChi),10)
+
+		for i=1,2 do
+			local p=players[i]
+			for j=1,3 do
+				local c=moves[1][p.utility].cost
+				if j==2 then c = moves[2][p.attack].cost end
+				if j==3 then c = moves[3][p.power].cost end
+				if players[i].chi>=c then 
+					love.graphics.setColor(242,187,38)
+					love.graphics.setLineWidth(4) 
+				else 
+					love.graphics.setColor(0,0,0)
+					love.graphics.setLineWidth(1) 
+				end
+				c=600*c/players[i].maxChi
+				if i==2 then c=-c end
+				local baseX = 1320*i-1020
+				love.graphics.line(baseX+c,96,baseX+c,104)
+			end
+		end
+
+		love.graphics.setColor(163,120,4)
+		if gameEvent == "sea of chi" then love.graphics.print("X"..logic.round(((eventTimer+25)/50),1),900,10,0,0.9,0.9) end
+		love.graphics.setColor(255,255,255)
 	end
 end
 

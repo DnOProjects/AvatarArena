@@ -27,6 +27,7 @@ function players.load()
 end
 
 function players.update(dt)
+	players.updateGameEvents(dt)
 	players.updateTimer(dt)
 	players.checkForBlock()
 	players.checkForHits()
@@ -34,6 +35,14 @@ function players.update(dt)
 	players.poolChi(dt)
 	players.die()
 end
+
+	function players.updateGameEvents(dt)
+		if gameEvent=="sea of chi" then
+			for i=1,2 do
+				players[i].chiRegen = characters[players[i].char].chiRegen*((eventTimer+25)/50)
+			end
+		end
+	end
 
 	function players.poolChi(dt)
 		for i=1,2 do
@@ -44,6 +53,7 @@ end
 	end
 
 	function players.updateTimer(dt)
+		eventTimer=eventTimer+dt
 		players.shiftTimer = players.shiftTimer - dt
 		if players.shiftTimer < 0 then players.shiftTimer = 0 end
 		if players.shiftTimer==0 then players.world="physical" else players.world="spiritual" end

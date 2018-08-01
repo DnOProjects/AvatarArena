@@ -79,8 +79,10 @@ function love.draw()
 end
 
 function startGame()
-	projectiles={}
+	projectiles = {}
+	gameEvent = menu[5].options[menu[5].selected]
 	gameState = "game" 
+	eventTimer=0
 	for i=1,2 do
 		players[i].utility = ui[i][1]
 		players[i].attack = ui[i][2]
