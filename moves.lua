@@ -264,8 +264,8 @@ end
 								projectilesToRemove[#projectilesToRemove+1]=j
 							else op.blocker = "fragileForceField" end
 						end
-						if op.blocker=="forceField" then projectilesToRemove[#projectilesToRemove+1]=i end
-						if (op.blocker=="fragile" or op.blocker=="fragileForceField") then projectilesToRemove[#projectilesToRemove+1]=j end
+						if (not(op.blocker=="diagonal" or op.blocker=="fragileForceField")) then projectilesToRemove[#projectilesToRemove+1]=i end
+						if (op.blocker=="fragile" or op.blocker=="fragileForceField")  then projectilesToRemove[#projectilesToRemove+1]=j end
 						if op.blocker=="diagonal" and not(p.name=="lightning") then
 							p.d=op.d+5
 							p.despawn=0.7

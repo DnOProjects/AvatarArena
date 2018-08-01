@@ -2,9 +2,21 @@ require "logic"
 ui = {{y=0},{y=0}}
 
 function ui.load()
-	font = love.graphics.newFont("fonts/font.ttf",72)
+
+	selectionMethod = "choice"
+	ui.randomised=false
+	
+	--onlineGame, opponentType, numOpponents, selectionMethod,gameEvents
+	menu = {{name="Connection",selected=1,options={"local","online"}},
+	{name="Oppenent",selected=1,options={"human","ai"}},
+	{name="Opponent Count",selected=1,options={1,2,3}},
+	{name="Selection",selected=1,options={"choice","blind duel","random","blind"}},
+	{name="Events",selected=1,options={"none"}}}
+	menuStage=1
+
+	impactFont = love.graphics.newFont("fonts/font.ttf",72)
 	descriptionFont = love.graphics.newFont("fonts/descriptionFont.ttf",72)
-	love.graphics.setFont(font)
+	menuFont = love.graphics.newFont("fonts/menuFont.ttf",72)
 
 	elementSymbols={water=waterSymbolImg,earth=earthSymbolImg,air=airSymbolImg,fire=fireSymbolImg}
 
@@ -17,7 +29,42 @@ function ui.load()
 
 end
 
+function ui.randomMove(type,player)
+	c=characters[players[player].char]
+	validMoves={}
+	for i=1,#moves[type] do
+		if logic.inList(c.bends,moves[type][i].type) then validMoves[#validMoves+1] = i end
+	end
+	return validMoves[math.random(1,#validMoves)]
+end
+
+function ui.choose()
+	if selectionMethod == "blind" or (selectionMethod == "random" and not ui.randomised)then
+		for i=1,2 do 
+			players[i].char=math.random(1,#characters)
+			for j=1,3 do
+				ui[i][j]=ui.randomMove(j,i)
+			end
+		end
+		ui.randomised=true
+	end
+	if selectionMethod == "blind duel" then
+		c=math.random(1,#characters)
+		for i=1,2 do players[i].char=c end
+		m={}
+		for i=1,3 do
+			m[#m+1]=ui.randomMove(i,1)
+		end
+		for i=1,2 do
+			for j=1,3 do
+				ui[i][j]= m[j]
+			end
+		end
+	end
+end
+
 function ui.update()
+	if gameState == "characterSelection" then ui.choose() end
 	for playerSelecting=1,2 do
 		if ui[playerSelecting].y<0 then ui[playerSelecting].y=0 end
 		if ui[playerSelecting].y>4 then ui[playerSelecting].y=4 end
@@ -25,34 +72,60 @@ function ui.update()
 end
 
 function ui.switch(d,playerSelecting)
-	if ui[playerSelecting].y==0 then
-		players[playerSelecting].char = players[playerSelecting].char + d
-		if players[playerSelecting].char > #characters then players[playerSelecting].char = 1 end
-		if players[playerSelecting].char < 1 then players[playerSelecting].char = #characters end
-		for i=1,3 do ui[playerSelecting][i] = 1 end
-	elseif not(ui[playerSelecting].y==4) then
-		canWield=false
-		while not canWield do
-			ui[playerSelecting][ui[playerSelecting].y]=ui[playerSelecting][ui[playerSelecting].y]+d
-			if ui[playerSelecting][ui[playerSelecting].y]==0 then ui[playerSelecting][ui[playerSelecting].y] = #moves[ui[playerSelecting].y] end
-			if ui[playerSelecting][ui[playerSelecting].y]>#moves[ui[playerSelecting].y] then ui[playerSelecting][ui[playerSelecting].y] = 1 end
-			char=characters[players[playerSelecting].char]
-			for i=1,#char.bends do
-				if char.bends[i]==moves[ui[playerSelecting].y][ui[playerSelecting][ui[playerSelecting].y]].type then canWield = true end
+	if gameState=="menu" then
+		menu[menuStage].selected = menu[menuStage].selected+1
+		if menu[menuStage].selected > #menu[menuStage].options then menu[menuStage].selected = 1 end
+		if menu[menuStage].selected < 1 then menu[menuStage].selected = #menu[menuStage].options end
+	elseif selectionMethod=="choice" then
+		if ui[playerSelecting].y==0 then
+			players[playerSelecting].char = players[playerSelecting].char + d
+			if players[playerSelecting].char > #characters then players[playerSelecting].char = 1 end
+			if players[playerSelecting].char < 1 then players[playerSelecting].char = #characters end
+			for i=1,3 do ui[playerSelecting][i] = 1 end
+		elseif not(ui[playerSelecting].y==4) then
+			canWield=false
+			while not canWield do
+				ui[playerSelecting][ui[playerSelecting].y]=ui[playerSelecting][ui[playerSelecting].y]+d
+				if ui[playerSelecting][ui[playerSelecting].y]==0 then ui[playerSelecting][ui[playerSelecting].y] = #moves[ui[playerSelecting].y] end
+				if ui[playerSelecting][ui[playerSelecting].y]>#moves[ui[playerSelecting].y] then ui[playerSelecting][ui[playerSelecting].y] = 1 end
+				char=characters[players[playerSelecting].char]
+				for i=1,#char.bends do
+					if char.bends[i]==moves[ui[playerSelecting].y][ui[playerSelecting][ui[playerSelecting].y]].type then canWield = true end
+				end
 			end
 		end
 	end
 end
 
 function ui.start()
-	if ui[1].y == 4 and ui[2].y == 4 then
-		startGame()
+	if gameState=="menu" then
+		menuStage=menuStage+1
+		if menuStage==3 and menu[2].options[menu[2].selected]=="human" then menuStage=4 end
+		if menuStage>5 or menu[1].options[menu[1].selected]=="online" then 
+			gameState = "characterSelection"
+			selectionMethod = menu[4].options[menu[4].selected]
+		end
+		if menu[1].options[menu[1].selected]=="online" then onlineGame = true end
+	else
+		if ui[1].y == 4 and ui[2].y == 4 then
+			startGame()
+		end
 	end
 end
 
 function ui.draw()
 
+	if gameState == "menu" then
+		love.graphics.setFont(menuFont)
+		love.graphics.draw(menuScreen,0,0,0,love.graphics.getWidth()/menuScreen:getWidth(),love.graphics.getHeight()/menuScreen:getHeight())
+		love.graphics.setColor(150,150,150)
+		love.graphics.printf(menu[menuStage].name,-10,200,700,"center",0,2.8,2.8)
+		love.graphics.setColor(255,255,255)
+		love.graphics.printf(menu[menuStage].options[menu[menuStage].selected],500,800,500,"center",0,2,2)
+	end
+
 	if gameState == "characterSelection" then
+		love.graphics.setFont(impactFont)
 		for i=1,2 do
 			p=players[i]
 			char=characters[p.char]
@@ -88,7 +161,7 @@ function ui.draw()
 						love.graphics.print("Chi Cost: "..move.cost,720,135+textYOffset,0,0.8,0.8) 
 						love.graphics.setFont(descriptionFont)
 						love.graphics.printf(move.desc,710,200+textYOffset,990,"left",0,0.5,0.5)
-						love.graphics.setFont(font)
+						love.graphics.setFont(impactFont)
 					end
 				end
 			end

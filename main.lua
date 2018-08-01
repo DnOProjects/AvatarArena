@@ -8,8 +8,6 @@ require "server"
 
 function love.load()
 
-	onlineGame = false
-
 	math.randomseed(os.time())
 	if not(onlineGame) then
 		love.window.setFullscreen(true)
@@ -26,7 +24,7 @@ function love.load()
 
     server.load()
 
-    gameState = "characterSelection"
+    gameState = "menu"
     projectilesToRemove = {}
     showDescription = 1
 

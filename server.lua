@@ -58,7 +58,11 @@ function server.keyInput(key)
 			end
 		end
 
-		if gameState=="characterSelection" then
+		if gameState=="characterSelection" or gameState=="menu" then
+			if key=="escape" then 
+				gameState="menu" 
+				ui.load()
+			end
 			if(moveSet[1] == 0)then
 				if key=="r" then ui[1].y=ui[1].y-1 end
 				if key=="f" then ui[1].y=ui[1].y+1 end
@@ -82,6 +86,11 @@ function server.keyInput(key)
 			end
 
 			if key=="return" then ui.start() end
+		end
+
+		if key=="escape" and gameState=="winScreen" then
+			ui.load()
+			gameState="menu"
 		end
 
 		if gameState=="winScreen" and key=="return" then 

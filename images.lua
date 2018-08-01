@@ -61,5 +61,6 @@ airGrass = love.graphics.newImage("Images/Grass/airGrass.png")
 earthGrass = love.graphics.newImage("Images/Grass/earthGrass.png")
 normalGrass = love.graphics.newImage("Images/Grass/normalGrass.png")
 
--- Other
-winScreen = love.graphics.newImage("Images/winScreenBackground.png")
+-- Backgrounds
+winScreen = love.graphics.newImage("Images/Backgrounds/winScreenBackground.png")
+menuScreen = love.graphics.newImage("Images/Backgrounds/menuBackground.png")
