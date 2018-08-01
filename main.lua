@@ -79,6 +79,7 @@ function love.draw()
 end
 
 function startGame()
+	projectiles={}
 	gameState = "game" 
 	for i=1,2 do
 		players[i].utility = ui[i][1]

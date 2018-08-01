@@ -134,6 +134,7 @@ end
 			if(players[i].hp <= 0)then
 			    players[i].hp=1
 			    gameState = "winScreen"
+			    pausedSelection=2
 			    projectilesToRemove = {}
 			    loser = i
 			end

@@ -26,6 +26,10 @@ end
 function server.keyInput(key)
 
 		if gameState == "game" then
+			if key=="escape" then
+				gameState="paused"
+				pausedSelection=3
+			end
 			if(moveSet[1] == 0)then
 				if key=="r" then players.move(1,0) end
 				if key=="f" then players.move(1,2) end
@@ -58,8 +62,8 @@ function server.keyInput(key)
 			end
 		end
 
-		if gameState=="characterSelection" or gameState=="menu" then
-			if key=="escape" then 
+		if gameState=="characterSelection" or gameState=="menu" or gameState=="paused" or gameState=="winScreen" then
+			if key=="escape" and (gameState=="menu" or gameState=="characterSelection") then 
 				gameState="menu" 
 				ui.load()
 			end
@@ -88,18 +92,8 @@ function server.keyInput(key)
 			if key=="return" then ui.start() end
 		end
 
-		if key=="escape" and gameState=="winScreen" then
+		if key=="escape" and gameState=="winScreen"then
 			ui.load()
 			gameState="menu"
-		end
-
-		if gameState=="winScreen" and key=="return" then 
-			gameState="characterSelection" 
-			map.load()
-			players.load()
-		    ui.load()
-		    ui[1].y = 0
-		    ui[2].y = 0
-		    projectiles	= {}
 		end
 end

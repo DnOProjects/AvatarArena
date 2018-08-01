@@ -5,6 +5,8 @@ function ui.load()
 
 	selectionMethod = "choice"
 	ui.randomised=false
+
+	pausedSelection=1
 	
 	--onlineGame, opponentType, numOpponents, selectionMethod,gameEvents
 	menu = {{name="Connection",selected=1,options={"local","online"}},
@@ -72,11 +74,18 @@ function ui.update()
 end
 
 function ui.switch(d,playerSelecting)
+	if gameState=="paused" or gameState=="winScreen" then
+		local maxOpt=3
+		if gameState=="winScreen" then maxOpt=2 end
+		pausedSelection = pausedSelection + d
+		if pausedSelection<1 then pausedSelection = maxOpt end
+		if pausedSelection>maxOpt then pausedSelection=1 end
+	end
 	if gameState=="menu" then
 		menu[menuStage].selected = menu[menuStage].selected+1
 		if menu[menuStage].selected > #menu[menuStage].options then menu[menuStage].selected = 1 end
 		if menu[menuStage].selected < 1 then menu[menuStage].selected = #menu[menuStage].options end
-	elseif selectionMethod=="choice" then
+	elseif gameState=="characterSelection" and selectionMethod=="choice" then
 		if ui[playerSelecting].y==0 then
 			players[playerSelecting].char = players[playerSelecting].char + d
 			if players[playerSelecting].char > #characters then players[playerSelecting].char = 1 end
@@ -106,14 +115,62 @@ function ui.start()
 			selectionMethod = menu[4].options[menu[4].selected]
 		end
 		if menu[1].options[menu[1].selected]=="online" then onlineGame = true end
-	else
+	elseif gameState=="characterSelection" then
 		if ui[1].y == 4 and ui[2].y == 4 then
 			startGame()
+		end
+	elseif (gameState=="winScreen" or gameState=="paused") then 
+		if pausedSelection==2 then
+			gameState="characterSelection" 
+			map.load()
+			players.load()
+			ui[1].y = 0
+			ui[2].y = 0
+			projectiles	= {}
+		end
+		if pausedSelection==1 then
+			ui.load()
+			gameState="menu"
+		end
+		if pausedSelection==3 then
+			gameState="game"
 		end
 	end
 end
 
 function ui.draw()
+
+
+	if gameState == "winScreen" or gameState == "paused" then
+		maxOpt=3
+		if loser==1 then winner=2 else winner=1 end
+		love.graphics.draw(winScreen, 0, 0, 0, 1920/winScreen:getWidth(), 1080/winScreen:getHeight())
+		if gameState == "winScreen" then
+			maxOpt=2
+			love.graphics.draw(characters[players[winner].char].portrait,810,200)
+			love.graphics.draw(characters[players[loser].char].portrait,865,800,0,0.5,0.5)
+			love.graphics.setColor(0,0,0)
+			love.graphics.setLineWidth(4)
+			love.graphics.rectangle("line",809,199,252,358,5,5)
+			love.graphics.rectangle("line",864,799,126,179,5,5)
+			love.graphics.print("Winner: Player "..winner,690,125)
+			love.graphics.print("Loser: Player "..loser,770,745,0,0.7)
+		end
+		love.graphics.setColor(0,0,0)
+		if gameState=="paused" then 
+			love.graphics.print("Paused",700,300,0,2,2) 
+		end
+		local offset=0
+		if gameState=="paused" then offset=-100 end
+		for i=1,maxOpt do
+			if pausedSelection==i then love.graphics.setColor(0,0,0) else love.graphics.setColor(100,100,100) end
+			local symbol=backSymbolImg
+			if i==2 then symbol=restartSymbolImg end
+			if i==3 then symbol=playSymbolImg end
+			love.graphics.draw(symbol,offset+540+i*200,580,0,0.7,0.7)
+		end
+		love.graphics.setColor(255,255,255)
+	end
 
 	if gameState == "menu" then
 		love.graphics.setFont(menuFont)
@@ -216,22 +273,5 @@ function ui.draw()
 		love.graphics.rectangle("fill",300,95,600*(players[1].chi/players[1].maxChi),10)
 		love.graphics.rectangle("fill",1620,95,-600*(players[2].chi/players[2].maxChi),10)
 	end
-
-	if gameState == "winScreen" then
-		if loser==1 then winner=2 else winner=1 end
-		love.graphics.draw(winScreen, 0, 0, 0, 1920/winScreen:getWidth(), 1080/winScreen:getHeight())
-		love.graphics.draw(characters[players[winner].char].portrait,810,200)
-		love.graphics.draw(characters[players[loser].char].portrait,865,800,0,0.5,0.5)
-		love.graphics.setColor(0,0,0)
-		love.graphics.setLineWidth(4)
-		love.graphics.rectangle("line",809,199,252,358,5,5)
-		love.graphics.rectangle("line",864,799,126,179,5,5)
-		love.graphics.print("Winner: Player "..winner,690,125)
-		love.graphics.print("Loser: Player "..loser,770,745,0,0.7)
-		love.graphics.setLineWidth(20)
-		love.graphics.circle("line",930,660,50)
-		love.graphics.setColor(255,255,255)
-	end
-
 end
 

@@ -21,6 +21,9 @@ airSymbolImg = love.graphics.newImage("images/symbols/airSymbol.png")
 waterSymbolImg = love.graphics.newImage("images/symbols/waterSymbol.png")
 earthSymbolImg = love.graphics.newImage("images/symbols/earthSymbol.png")
 fireSymbolImg = love.graphics.newImage("images/symbols/fireSymbol.png")
+backSymbolImg = love.graphics.newImage("images/symbols/backSymbol.png")
+restartSymbolImg = love.graphics.newImage("images/symbols/restartSymbol.png")
+playSymbolImg = love.graphics.newImage("images/symbols/playSymbol.png")
 
 -- Moves
 	---- Air
