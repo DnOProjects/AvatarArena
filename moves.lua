@@ -128,7 +128,12 @@ end
 				p.hasSpread = true
 				for x=-1,1 do
 					for y=-1,1 do
-						projectiles[#projectiles+1] = {meltable=true,removesOnHit=false,hasSpread=true,rotate=false,despawn=5,name="lava",damage=20,image=lavaImg,x=p.rx+x,y=p.ry+y,d=p.d,speed = 0,rx=0,ry=0}
+						shouldPlace=true
+						for j=1,#projectiles do
+							local op=projectiles[j]
+							if op.x==p.x+x and op.y==p.y+y and op.name=="lava" then shouldPlace = false end
+						end
+						if shouldPlace then projectiles[#projectiles+1] = {meltable=true,removesOnHit=false,hasSpread=true,rotate=false,despawn=5,name="lava",damage=20,image=lavaImg,x=p.rx+x,y=p.ry+y,d=p.d,speed = 0,rx=0,ry=0} end
 					end
 				end
 			end

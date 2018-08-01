@@ -1,3 +1,4 @@
+require "logic"
 players = {}
 
 players[1] = {beenBlown=false,char=1,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=1,attack=1,power=1}
@@ -9,6 +10,8 @@ function players.load()
 	players.shiftTimer = 0
 	
 	lineOfSightWidth = 5
+
+	elements = {"air","water","earth","fire"}
 
 	characters = {
 {name="Aang",chiRegen=4,img=aangImg,portrait=aangPortrait,moveTimer=0.1,hp=50,bends={"air","earth","fire","water","energy","normal"}},
@@ -40,6 +43,16 @@ end
 		if gameEvent=="sea of chi" then
 			for i=1,2 do
 				players[i].chiRegen = characters[players[i].char].chiRegen*((eventTimer+25)/50)
+			end
+		end
+		if gameEvent=="power cycle" then
+			if eventTimer>=80 then
+				eventTimer=0
+			end
+			local e = math.floor(eventTimer/20)+1
+			for i=1,2 do
+				local p = players[i]
+				if logic.inList(characters[p.char].bends,elements[e]) then players[i].chiRegen = characters[players[i].char].chiRegen*3 else  players[i].chiRegen = characters[players[i].char].chiRegen end
 			end
 		end
 	end
