@@ -12,7 +12,7 @@ function ui.load()
 	menu = {{name="Connection",selected=1,options={"local","online"}},
 	{name="Oppenent",selected=1,options={"human","ai"}},
 	{name="Opponent Count",selected=1,options={1,2,3}},
-	{name="Selection",selected=1,options={"choice","blind duel","random","blind"}},
+	{name="Selection",selected=1,options={"choice","random","random duel","blind","blind duel"}},
 	{name="Events",selected=1,options={"none"}}}
 	menuStage=1
 
@@ -32,12 +32,18 @@ function ui.load()
 end
 
 function ui.randomMove(type,player)
-	c=characters[players[player].char]
-	validMoves={}
-	for i=1,#moves[type] do
-		if logic.inList(c.bends,moves[type][i].type) then validMoves[#validMoves+1] = i end
+	picked = false
+	while not picked do
+		c=characters[players[player].char]
+		validMoves={}
+		for i=1,#moves[type] do
+			if logic.inList(c.bends,moves[type][i].type) then validMoves[#validMoves+1] = i end
+		end
+		mq = validMoves[math.random(1,#validMoves)]
+		picked = true
+		if moves[type][mq].type=="normal" and math.random(1,4)>2 then picked = false end
 	end
-	return validMoves[math.random(1,#validMoves)]
+	return mq
 end
 
 function ui.choose()
@@ -50,7 +56,7 @@ function ui.choose()
 		end
 		ui.randomised=true
 	end
-	if selectionMethod == "blind duel" then
+	if selectionMethod == "blind duel" or (selectionMethod == "random duel" and not ui.randomised) then
 		c=math.random(1,#characters)
 		for i=1,2 do players[i].char=c end
 		m={}
@@ -62,6 +68,7 @@ function ui.choose()
 				ui[i][j]= m[j]
 			end
 		end
+		ui.randomised=true
 	end
 end
 

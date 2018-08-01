@@ -28,8 +28,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="boomerang",type="sokka",cost=6,desc="The boomerang whirls around the edge of the arena before returning to your hand."}},
 
 --Power
-{{name="block",type="normal",cost=40,desc="To-write"},
-{name="gale",type="air",cost=30,desc="A devestating, unpredictable flurry of wind!"},
+{{name="gale",type="air",cost=30,desc="A devestating, unpredictable flurry of wind!"},
 {name="flood",type="water",cost=60,desc="The waters rise up to drown your enemies!"},
 {name="seed",type="water",cost=40,desc="A huge thorny plant begins to grow with you, unharmed at its center."},
 {name="shockwave",type="earth",cost=30,desc="You send seismic waves rippling through the earth, letting it rise up around you!"},
