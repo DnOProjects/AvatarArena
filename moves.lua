@@ -106,7 +106,7 @@ end
 				end
 			end
 		end
-		if p.name == "spike" and p.despawn < 1.98 and p.spawned==false then
+		if p.name == "spike" and p.despawn < 1.48 and p.spawned==false then
 			p.spawned=true
 			projectiles[#projectiles+1] = {meltable=true,spawned=false,rotate=false,despawn=1.5,name=p.name,damage=8,image=earthSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)

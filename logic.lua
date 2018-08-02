@@ -11,3 +11,12 @@ function logic.inList(list,item)
 	end
 	return false
 end
+
+function logic.copyTable(obj)
+  if type(obj) ~= 'table' then return obj end
+  local s = {}
+  local res = setmetatable({}, getmetatable(obj))
+  s[obj] = res
+  for k, v in pairs(obj) do res[logic.copyTable(k, s)] = logic.copyTable(v, s) end
+  return res
+end
