@@ -13,7 +13,7 @@ function ui.load()
 	--onlineGame, opponentType, numOpponents, selectionMethod,gameEvents
 	menu = {{name="Connection",selected=1,options={"local","online"}},
 	{name="Oppenent",selected=1,options={"human","ai"}},
-	{name="Opponent Count",selected=1,options={1,2,3}},
+	{name="Difficulty",selected=2,options={"easy","medium","hard","expert"}},
 	{name="Selection",selected=1,options={"choice","random","random duel","blind","blind duel"}},
 	{name="Events",selected=1,options={"none","sea of chi","power cycle","instablitiy"}}}
 	menuStage=1
@@ -125,6 +125,7 @@ end
 
 function ui.start()
 	if gameState=="menu" then
+		if menuStage==3 and menu[2].options[menu[2].selected]=="ai" then ai.load(1,menu[3].options[menu[3].selected]) end
 		menuStage=menuStage+1
 		if menuStage==3 and menu[2].options[menu[2].selected]=="human" then menuStage=4 end
 		if menuStage>5 or menu[1].options[menu[1].selected]=="online" then 
