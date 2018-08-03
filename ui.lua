@@ -18,9 +18,9 @@ function ui.load()
 	{name="Events",selected=1,options={"none","sea of chi","power cycle","instablitiy"}}}
 	menuStage=1
 
-	impactFont = love.graphics.newFont("fonts/font.ttf",72)
-	descriptionFont = love.graphics.newFont("fonts/descriptionFont.ttf",72)
-	menuFont = love.graphics.newFont("fonts/menuFont.ttf",72)
+	impactFont = love.graphics.newFont("Fonts/font.ttf",72)
+	descriptionFont = love.graphics.newFont("Fonts/descriptionFont.ttf",72)
+	menuFont = love.graphics.newFont("Fonts/menuFont.ttf",72)
 
 	elementSymbols={water=waterSymbolImg,earth=earthSymbolImg,air=airSymbolImg,fire=fireSymbolImg}
 

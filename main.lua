@@ -38,7 +38,7 @@ function love.update(dt)
 	server:update(dt)
 
 	if gameState=="game" then
-		ai.update(dt)
+		if players[2].controler=="ai" then ai.update(dt) end
 		players.update(dt)
 		moves.update(dt)
 		animate.update(dt)

@@ -18,14 +18,14 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="sword block",type="sokka",cost=5,desc="You deflect an enemy's attack, sending it flying away to the side.\n\n"}},
 
 --Attack
-{{name="arrow",type="normal",cost=6,desc="A well-placed arrow can be as effective as any pillar of fire or column of rock!"},
-{name="gust",type="air",cost=6,desc="A ball of whirling air."},
+{{name="arrow",type="normal",cost=5,desc="A well-placed arrow can be as effective as any pillar of fire or column of rock!"},
+{name="gust",type="air",cost=5,desc="A ball of whirling air."},
 {name="spurt",type="water",cost=16,desc="A writhing spray of water, ready to force itself down your enemy's throat and drown their very lungs!"},
-{name="boulder",type="earth",cost=6,desc="A giant rolling boulder - it's a little slow but deals a lot of damage."},
+{name="boulder",type="earth",cost=5,desc="A giant rolling boulder - it's a little slow but deals a lot of damage."},
 {name="spike",type="earth",cost=10,desc="Huge spikes of earth emerge from the ground in a line."},
 {name="blast",type="fire",cost=10,desc="Two glowing embers shoot sideways from each hand."},
-{name="sear",type="fire",cost=18,desc="Four balls of fire radiate inaccurately from your body."},
-{name="boomerang",type="sokka",cost=6,desc="The boomerang whirls around the edge of the arena before returning to your hand."}},
+{name="sear",type="fire",cost=13,desc="Four balls of fire radiate inaccurately from your body."},
+{name="boomerang",type="sokka",cost=7,desc="The boomerang whirls around the edge of the arena before returning to your hand."}},
 
 --Power
 {{name="gale",type="air",cost=30,desc="A devestating, unpredictable flurry of wind!"},

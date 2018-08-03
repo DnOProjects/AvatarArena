@@ -17,13 +17,13 @@ gyatsoPortrait= love.graphics.newImage("Images/Portraits/gyatsoPortrait.png")
 sokkaPortrait = love.graphics.newImage("Images/Portraits/sokkaPortrait.png")
 
 -- Symbols
-airSymbolImg = love.graphics.newImage("images/symbols/airSymbol.png")
-waterSymbolImg = love.graphics.newImage("images/symbols/waterSymbol.png")
-earthSymbolImg = love.graphics.newImage("images/symbols/earthSymbol.png")
-fireSymbolImg = love.graphics.newImage("images/symbols/fireSymbol.png")
-backSymbolImg = love.graphics.newImage("images/symbols/backSymbol.png")
-restartSymbolImg = love.graphics.newImage("images/symbols/restartSymbol.png")
-playSymbolImg = love.graphics.newImage("images/symbols/playSymbol.png")
+airSymbolImg = love.graphics.newImage("Images/Symbols/airSymbol.png")
+waterSymbolImg = love.graphics.newImage("Images/Symbols/waterSymbol.png")
+earthSymbolImg = love.graphics.newImage("Images/Symbols/earthSymbol.png")
+fireSymbolImg = love.graphics.newImage("Images/Symbols/fireSymbol.png")
+backSymbolImg = love.graphics.newImage("Images/Symbols/backSymbol.png")
+restartSymbolImg = love.graphics.newImage("Images/Symbols/restartSymbol.png")
+playSymbolImg = love.graphics.newImage("Images/Symbols/playSymbol.png")
 
 -- Moves
 	---- Air
