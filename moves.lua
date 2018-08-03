@@ -84,7 +84,7 @@ end
 			end
 		end
 		if p.name == "seed" then
-			if math.random(1,100) == 1 then
+			if math.random(1,150) == 1 then
 				projectiles[#projectiles+1] = {despawn=10,blocker="fragileForceField",caster=p.caster,rotate=false,name=p.name,damage=10,image=thornsImg,x=p.x,y=p.y,d=p.d+math.random(-1,1),speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				shouldRemove = (projectiles[#projectiles].x == players[p.caster].x) and (projectiles[#projectiles].y == players[p.caster].y)
@@ -362,7 +362,8 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 			if name == "heal" then
-				projectiles[#projectiles+1] = {freezes=true,name=name,damage=-20,image=healOrbImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {freezes=true,name=name,damage=-10
+				,image=healOrbImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,2)
 			end
 			if name == "shift" then
