@@ -11,7 +11,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="shift",type="air",cost=10,desc="You shift the battle into the spirit-world, rendering all bending ineffective!"},
 {name="freeze",type="water",cost=0,desc="All water in the arena turns to solid ice!"},
 {name="aurora borealis",type="water",cost=8,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
-{name="heal",type="water",cost=15,desc="Healing is a special ability possessed by some waterbenders that enables them to heal those who have been wounded, including themselves."},
+{name="heal",type="water",cost=30,desc="Healing is a special ability possessed by some waterbenders that enables them to heal those who have been wounded, including themselves."},
 {name="wall",type="earth",cost=5,desc="The ground rises up to shield you from harm!"},
 {name="earth wave",type="earth",cost=10,desc="You charge forwards on rolling earth!"},
 {name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
