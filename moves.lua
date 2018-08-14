@@ -379,8 +379,8 @@ function moves.cast(typeNum,num,pn)
 			end
 			if name == "spurt" then
 				for i=1,3 do
-					if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {freezes=true,name=name,damage=10,image=waterOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 2,rx=0,ry=0}
-					else projectiles[#projectiles+1] = {freezes=true,name=name,damage=10,image=waterOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 2,rx=0,ry=0} end
+					if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {freezes=true,name=name,damage=7,image=waterOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 2,rx=0,ry=0}
+					else projectiles[#projectiles+1] = {freezes=true,name=name,damage=7,image=waterOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 2,rx=0,ry=0} end
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end

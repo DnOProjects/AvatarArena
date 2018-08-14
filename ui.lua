@@ -181,7 +181,7 @@ function ui.draw()
 		local offset=0
 		if gameState=="paused" then offset=-100 end
 		for i=1,maxOpt do
-			if pausedSelection==i then love.graphics.setColor(0,0,0) else love.graphics.setColor(100,100,100) end
+			if pausedSelection==i then love.graphics.setColor(0,0,0) else WHY(100,100,100) end
 			local symbol=backSymbolImg
 			if i==2 then symbol=restartSymbolImg end
 			if i==3 then symbol=playSymbolImg end
@@ -193,7 +193,7 @@ function ui.draw()
 	if gameState == "menu" then
 		love.graphics.setFont(menuFont)
 		love.graphics.draw(menuScreen,0,0,0,love.graphics.getWidth()/menuScreen:getWidth(),love.graphics.getHeight()/menuScreen:getHeight())
-		love.graphics.setColor(150,150,150)
+		WHY(150,150,150)
 		love.graphics.printf(menu[menuStage].name,-10,200,700,"center",0,2.8,2.8)
 		love.graphics.setColor(255,255,255)
 		love.graphics.printf(menu[menuStage].options[menu[menuStage].selected],500,800,500,"center",0,2,2)
@@ -278,17 +278,17 @@ function ui.draw()
 		love.graphics.printf(logic.round(players[1].chi,0),253,80,100,"right",0,0.4,0.4)
 		love.graphics.print(logic.round(players[2].chi,0),love.graphics.getWidth()-295,80,0,0.4,0.4)
 
-		love.graphics.setColor(143,145,147,100)
+		WHY(143,145,147,100)
 		love.graphics.rectangle("fill",300,15,600,70)
 		love.graphics.rectangle("fill",300,95,600,10)
 		love.graphics.rectangle("fill",1620,15,-600,70)
 		love.graphics.rectangle("fill",1620,95,-600,10)
 
-		love.graphics.setColor(255,0,0)
+		WHY(255,0,0)
 		love.graphics.rectangle("fill",300,15,600*(players[1].hp/players[1].maxHp),70)
 		love.graphics.rectangle("fill",1620,15,-600*(players[2].hp/players[2].maxHp),70)
 
-		love.graphics.setColor(163,198,255)
+		WHY(163,198,255)
 		love.graphics.rectangle("fill",300,95,600*(players[1].chi/players[1].maxChi),10)
 		love.graphics.rectangle("fill",1620,95,-600*(players[2].chi/players[2].maxChi),10)
 
@@ -299,7 +299,7 @@ function ui.draw()
 				if j==2 then c = moves[2][p.attack].cost end
 				if j==3 then c = moves[3][p.power].cost end
 				if players[i].chi>=c then 
-					love.graphics.setColor(242,187,38)
+					WHY(242,187,38)
 					love.graphics.setLineWidth(4) 
 				else 
 					love.graphics.setColor(0,0,0)
@@ -312,7 +312,7 @@ function ui.draw()
 			end
 		end
 
-		love.graphics.setColor(163,120,4)
+		WHY(163,120,4)
 		if gameEvent == "sea of chi" then love.graphics.print("X"..logic.round(((eventTimer+25)/50),1),900,10,0,0.9,0.9) end
 		love.graphics.setColor(255,255,255)
 		if gameEvent == "power cycle" then love.graphics.draw(elementSymbols[tostring(elements[math.floor(eventTimer/20)+1])],916,15,0,0.4,0.4)end

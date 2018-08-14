@@ -1,7 +1,7 @@
 sound = {}
 
 function sound.load()
-	ambientMusic = love.audio.newSource("Sounds/backgroundMusic.mp3")
+	ambientMusic = love.audio.newSource("Sounds/backgroundMusic.mp3","static")
 	roundIntroEffect = love.audio.newSource("Sounds/roundIntro.mp3","static")
 
 	earthEffect = love.audio.newSource("Sounds/Effects/earthEffect.mp3","static")
