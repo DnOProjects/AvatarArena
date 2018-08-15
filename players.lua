@@ -1,4 +1,3 @@
-require "logic"
 players = {}
 
 local basePlayer={controler="human",beenBlown=false,char=1,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=1,attack=1,power=1}

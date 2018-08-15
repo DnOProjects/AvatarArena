@@ -1,4 +1,3 @@
-require "logic"
 animate = {}
 
 function animate.draw(sprite,x,y,percent,r,spriteLength,continuous,horisontal)

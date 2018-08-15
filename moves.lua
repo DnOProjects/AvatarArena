@@ -1,8 +1,3 @@
-require "logic"
-require "players"
-require "animate"
-require "sound"
-
 moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 
 --Utility

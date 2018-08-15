@@ -1,4 +1,4 @@
-lovernetlib = require('lovernet')
+lovernetlib = require('Server/lovernet')
 server = lovernetlib.new{type=lovernetlib.mode.server}
 
 function server.load()

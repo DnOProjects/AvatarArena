@@ -1,11 +1,13 @@
+require "logic"
 require "map"
 require "players"
 require "moves"
 require "ui"
-require "images"
-require "sound"
-require "server"
 require "ai"
+require "animate"
+require "Images/images"
+require "Sounds/sound"
+require "Server/server"
 
 function love.load()
 
