@@ -3,13 +3,14 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 --Utility
 {{name="shield",type="normal",cost=5,desc="Equip a shield to block any attack!"},
 {name="blow",type="air",cost=8,desc="A funnel of air to propel you forwards or push your opponent back!"},
-{name="shift",type="air",cost=10,desc="You shift the battle into the spirit-world, rendering all bending ineffective!"},
-{name="freeze",type="water",cost=0,desc="All water in the arena turns to solid ice!"},
+{name="shift",type="air",cost=18,desc="You shift the battle into the spirit-world, rendering all bending ineffective!"},
+{name="freeze",type="water",cost=1,desc="All water in the arena turns to solid ice!"},
 {name="aurora borealis",type="water",cost=8,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
-{name="heal",type="water",cost=30,desc="Healing is a special ability possessed by some waterbenders that enables them to heal those who have been wounded, including themselves."},
+{name="heal",type="water",cost=24,desc="Healing is a special ability possessed by some waterbenders that enables them to heal those who have been wounded, including themselves."},
 {name="wall",type="earth",cost=5,desc="The ground rises up to shield you from harm!"},
 {name="earth wave",type="earth",cost=10,desc="You charge forwards on rolling earth!"},
 {name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
+{name="fire jet",type="fire",cost=8,desc="You charge upwards with fire and stuff!"},
 {name="sword block",type="sokka",cost=5,desc="You deflect an enemy's attack, sending it flying away to the side.\n\n"}},
 
 --Attack
@@ -20,7 +21,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="spike",type="earth",cost=10,desc="Huge spikes of earth emerge from the ground in a line."},
 {name="blast",type="fire",cost=10,desc="Two glowing embers shoot sideways from each hand."},
 {name="sear",type="fire",cost=13,desc="Four balls of fire radiate inaccurately from your body."},
-{name="boomerang",type="sokka",cost=7,desc="The boomerang whirls around the edge of the arena before returning to your hand."}},
+{name="boomerang",type="sokka",cost=11,desc="The boomerang whirls around the edge of the arena before returning to your hand."}},
 
 --Power
 {{name="gale",type="air",cost=30,desc="A devestating, unpredictable flurry of wind!"},
@@ -28,7 +29,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="seed",type="water",cost=40,desc="A huge thorny plant begins to grow with you, unharmed at its center."},
 {name="shockwave",type="earth",cost=30,desc="You send seismic waves rippling through the earth, letting it rise up around you!"},
 {name="smelt",type="earth",cost=30,desc="Melt all rocks on the map into flowing lava!"},
-{name="lightning",type="fire",cost=50,desc="\"The energy is both yin and yang, you can separate these energies, creating an imbalance. The energy wants to restore balance and in a moment the positive and negative energy come crashing back together. You provide release and guidance, creating lightning.\""},
+{name="lightning",type="fire",cost=60,desc="\"The energy is both yin and yang, you can separate these energies, creating an imbalance. The energy wants to restore balance and in a moment the positive and negative energy come crashing back together. You provide release and guidance, creating lightning.\""},
 {name="combustion",type="fire",cost=40,desc="SPARKY SPARKY BOOM"},
 {name="sword flurry",type="sokka",cost=60,desc="Swing your sword around you to impale nearby enemies!"}}
 
@@ -101,7 +102,7 @@ end
 				end
 			end
 		end
-		if p.name == "spike" and p.despawn < 1.48 and p.spawned==false then
+		if p.name == "spike" and p.despawn < 1.44 and p.spawned==false then
 			p.spawned=true
 			projectiles[#projectiles+1] = {meltable=true,spawned=false,rotate=false,despawn=1.5,name=p.name,damage=8,image=earthSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
@@ -136,11 +137,10 @@ end
 		if p.name == "redirect" then
 			for i=1,#projectiles do
 				op = projectiles[i]
-				--if op.redirectable then
-					if not(op==p) and op.rx==p.rx and op.ry==p.ry then
-						op.d=p.d
-					end
-				--end
+				if not(op==p) and op.rx==p.rx and op.ry==p.ry then
+					op.d=p.d
+					if op.caster~=nil then op.caster=p.caster end
+				end
 			end
 		end
 		if p.name == "flood" then
@@ -266,6 +266,7 @@ end
 						if (not(op.blocker=="diagonal" or op.blocker=="fragileForceField")) then projectilesToRemove[#projectilesToRemove+1]=i end
 						if (op.blocker=="fragile" or op.blocker=="fragileForceField")  then projectilesToRemove[#projectilesToRemove+1]=j end
 						if op.blocker=="diagonal" and not(p.name=="lightning") then
+							if p.caster	~= nil and op.caster~=nil then p.caster = op.caster end
 							p.d=op.d+5
 							p.despawn=0.7
 							p.rotateAmount=0.785398*(2*p.d-9)
@@ -357,9 +358,8 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 			if name == "heal" then
-				projectiles[#projectiles+1] = {freezes=true,name=name,damage=-10
-				,image=healOrbImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
-				projectiles[#projectiles] = moves.moveProj(#projectiles,2)
+				projectiles[#projectiles+1] = {freezes=true,name=name,damage=-10,image=healOrbImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles] = moves.moveProj(#projectiles,3)
 			end
 			if name == "shift" then
 				players.shiftTimer = 3
@@ -369,7 +369,7 @@ function moves.cast(typeNum,num,pn)
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name=="redirect" then
-				projectiles[#projectiles+1] = {despawn=2,name=name,damage=0,image=redirectIcon,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {caster=pn,despawn=2,name=name,damage=0,image=redirectIcon,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "spurt" then
@@ -410,7 +410,7 @@ function moves.cast(typeNum,num,pn)
 			end
 			if name == "sear" then
 				for i=4,7 do
-					projectiles[#projectiles+1] = {vd=p.d,redirectable=true,percent=0,spriteLength=6,aSpeed=7,name=name,damage=10,image=fireOrbImg,x=p.x,y=p.y,d=i,speed = 2,rx=0,ry=0}
+					projectiles[#projectiles+1] = {vd=p.d,redirectable=true,percent=0,spriteLength=6,aSpeed=7,name=name,damage=20,image=fireOrbImg,x=p.x,y=p.y,d=i,speed = 3,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
@@ -418,7 +418,7 @@ function moves.cast(typeNum,num,pn)
 				for i=0,1 do
 					local d = p.d+1+(i*2)
 					if d>3 then d=d-4 end
-					projectiles[#projectiles+1] = {redirectable=true,percent=0,spriteLength=6,aSpeed=0.7,name=name,damage=10,image=fireOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
+					projectiles[#projectiles+1] = {redirectable=true,percent=0,spriteLength=6,aSpeed=0.7,name=name,damage=1,image=fireOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
@@ -458,13 +458,16 @@ function moves.cast(typeNum,num,pn)
 				players.move(pn,p.d,true)
 			end
 			if name == "smelt" then
+				local useChi = false
 				for i=1,#projectiles do
 					p=projectiles[i]
 					if p.meltable ~= nil then
+						useChi = true
 						projectilesToRemove[#projectilesToRemove+1]=i
 						projectiles[#projectiles+1] = {removesOnHit=false,hasSpread=false,rotate=false,despawn=8,name="lava",damage=20,image=lavaImg,x=p.rx,y=p.ry,d=p.d,speed = 0,rx=0,ry=0}
 					end
 				end
+				if useChi == false then players[pn].chi = players[pn].chi + 30 end
 			end
 			if name == "boomerang" then
 				projectiles[#projectiles+1] = {caster=pn,removesOnHitCaster=true,damagesCaster=false,bounces=0,name=name,damage=10,image=boomerangImg,x=p.x,y=p.y,d=p.d,speed = 10,rx=0,ry=0}

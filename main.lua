@@ -40,7 +40,7 @@ function love.update(dt)
 	server:update(dt)
 
 	if gameState=="game" then
-		if players[2].controler=="ai" then ai.update(dt) end
+		if players[2].controller=="ai" then ai.update(dt) end
 		players.update(dt)
 		moves.update(dt)
 		animate.update(dt)
@@ -104,7 +104,7 @@ function startGame()
 
 	arenaType = characters[players[1].char].bends[1]
 	sound.play("roundIntro")
-	if menu[2].options[menu[2].selected]=="ai" then ai.load(1,menu[3].options[menu[3].selected]) else players[2].controler = "human" end
+	if menu[2].options[menu[2].selected]=="ai" then ai.load(1,menu[3].options[menu[3].selected]) else players[2].controller = "human" end
 end
 
 function love.keypressed(key)

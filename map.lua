@@ -16,8 +16,8 @@ function map.draw()
 	for x=1,16 do
 		for y=1,8 do
 			local tileDiff = grasses[arenaType].diff
-			if (x+y)%2==0 then love.graphics.setColor(128-tileDiff,128-tileDiff,128-tileDiff) else love.graphics.setColor(128+tileDiff,128+tileDiff,128+tileDiff) end
-			if players.world == "spiritual" then love.graphics.setColor(155,255,155) end
+			if (x+y)%2==0 then WHY(128-tileDiff,128-tileDiff,128-tileDiff) else WHY(128+tileDiff,128+tileDiff,128+tileDiff) end
+			if players.world == "spiritual" then WHY(155,255,155) end
 			love.graphics.draw(grasses[arenaType].image,x*120-120,y*120)
 		end
 	end

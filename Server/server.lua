@@ -30,7 +30,7 @@ function server.keyInput(key,source)
 				gameState="paused"
 				pausedSelection=3
 			end
-			if players[1].controler=="human" or source=="ai" then
+			if players[1].controller=="human" or source=="ai" then
 				if(moveSet[1] == 0)then
 					if key=="r" then players.move(1,0) end
 					if key=="f" then players.move(1,2) end
@@ -52,7 +52,7 @@ function server.keyInput(key,source)
 				end
 			end
 
-			if players[2].controler=="human" or source=="ai" then
+			if players[2].controller=="human" or source=="ai" then
 				if(moveSet[2] == 0)then
 					if key=="up" then players.move(2,0) end
 					if key=="down" then players.move(2,2) end

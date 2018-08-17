@@ -1,6 +1,6 @@
 players = {}
 
-local basePlayer={controler="human",beenBlown=false,char=1,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=1,attack=1,power=1}
+local basePlayer={controller="human",beenBlown=false,char=1,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=1,attack=1,power=1}
 for i=1,2 do
 	players[i]=logic.copyTable(basePlayer)
 end
@@ -16,7 +16,7 @@ function players.load()
 	elements = {"air","water","earth","fire"}
 
 	characters = {
-{name="Aang",chiRegen=4,img=aangImg,portrait=aangPortrait,moveTimer=0.1,hp=50,bends={"air","earth","fire","water","energy","normal"}},
+{name="Aang",chiRegen=4,img=aangImg,portrait=aangPortrait,moveTimer=0.1,hp=64,bends={"air","earth","fire","water","energy","normal"}},
 {name="Katara",chiRegen=4,img=kataraImg,portrait=kataraPortrait,moveTimer=0.15,hp=120,bends={"water","normal"}},
 {name="Iroh",chiRegen=8,img=irohImg,portrait=irohPortrait,moveTimer=0.15,hp=80,bends={"fire","normal"}},
 {name="Toph",chiRegen=4,img=tophImg,portrait=tophPortrait,moveTimer=0.15,hp=130,bends={"earth","normal"}},
@@ -26,8 +26,8 @@ function players.load()
 
 	p1 = players[1]
 	p2 = players[2]
-	players[1] = {controler="human",lineOfSight={},deflecting=false,beenBlown=false,char=p1.char,x=1,y=1,d=0,vd=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
-	players[2] = {controler="human",lineOfSight={},deflecting=false,beenBlown=false,char=p2.char,x=16,y=8,d=0,vd=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
+	players[1] = {controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p1.char,x=1,y=1,d=0,vd=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
+	players[2] = {controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p2.char,x=16,y=8,d=0,vd=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
 
 end
 
@@ -171,7 +171,7 @@ function players.draw()
 		p = players[i]
 		love.graphics.setColor(255,255,255)
 		if p.invulnerability>0 then
-			love.graphics.setColor(255,255,255,(math.sin(p.invulnerability)+1)*100)
+			WHY(255,255,255,(math.sin(p.invulnerability)+1)*100)
 		end
 		if logic.round(players[i].vd) == 0 then
 			love.graphics.draw(characters[p.char].img,p.x*120-60,p.y*120+60,math.pi*p.d/2,1,1,60,60)

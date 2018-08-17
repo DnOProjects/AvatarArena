@@ -42,7 +42,7 @@ function ui.randomMove(type,player)
 		end
 		mq = validMoves[math.random(1,#validMoves)]
 		picked = true
-		if moves[type][mq].type=="normal" and math.random(1,4)>2 then picked = false end
+		if moves[type][mq].type=="normal" and math.random(1,4)>1 then picked = false end
 	end
 	return mq --I am very sorry for using 2 meaningles letters - have an apology semicolon - (;) - there, much better
 end
