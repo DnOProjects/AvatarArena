@@ -26,8 +26,19 @@ function players.load()
 
 	p1 = players[1]
 	p2 = players[2]
-	players[1] = {controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p1.char,x=1,y=1,d=0,vd=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
-	players[2] = {controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p2.char,x=16,y=8,d=0,vd=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
+	players[1] = {flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p1.char,x=1,y=1,d=0,vd=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
+	players[2] = {flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p2.char,x=16,y=8,d=0,vd=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
+
+	img=love.graphics.newImage("images/abilities/particle.png")
+	fireParicles = love.graphics.newParticleSystem(img, 10000)
+	fireParicles:setParticleLifetime(1, 1.5)
+	fireParicles:setEmissionRate(1000)
+	fireParicles:setSizeVariation(1)
+	fireParicles:setLinearAcceleration(-30, 6, 30, 120)
+	fireParicles:setColors(0, 0.34, 0.85, 255, 0, 0.018, 0.065, 100)
+	fireParicles:setSpread(2)
+	fireParicles:setSizes(4,2,1)
+	fireParicles:setSpin(10)
 
 end
 
@@ -39,6 +50,7 @@ function players.update(dt)
 	players.checkForLineOfSight()
 	players.poolChi(dt)
 	players.die()
+	fireParicles:update(dt)
 end
 
 	function players.updateGameEvents(dt)
@@ -77,6 +89,8 @@ end
 			p = players[i]
 			p.timer = p.timer - dt
 			p.invulnerability = p.invulnerability - dt*10
+			if p.flying~=false then p.flying=p.flying-dt end
+			if p.flying~=false and p.flying<0 then p.flying,p.fireJet=false,false end
 			if p.timer < 0 then p.timer = 0 end
 			if p.invulnerability < 0 then p.invulnerability = 0 end
 		end
@@ -122,9 +136,18 @@ end
 
 	function players.checkForHits()
 		for i=1,2 do
+
+			local p=players[i]
+			local op=players[1]
+			if i==1 then op=players[2] end
+			if p.x==op.x and p.y==op.y and op.fireJet and players[i].invulnerability==0 and players[i].deflecting == false and players[i].hp > 0 then --jetpack burning
+				players[i].hp=players[i].hp-4
+				players[i].invulnerability = 10
+			end
+
 			for j=1,#projectiles do
 
-				if not(logic.inList(projectilesToRemove,i)) then
+				if not(logic.inList(projectilesToRemove,i) or players[i].flying~=false) then
 
 					if projectiles[j].damage>0 and projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 and players[i].deflecting == false and players[i].hp > 0 then
 						if not(projectiles[j].name=="seed" and projectiles[j].caster==i) and not(projectiles[j].damagesCaster == false and projectiles[j].caster==i) then
@@ -167,19 +190,31 @@ end
 	end
 
 function players.draw()
+
+	local drawOrder={1,1}--so the player not flying goes under the other
+	if players[2].flying~=false then drawOrder[2]=2 else drawOrder[1]=2 end
+
 	for i=1,2 do
-		p = players[i]
+		p = players[drawOrder[i]]
 		love.graphics.setColor(255,255,255)
 		if p.invulnerability>0 then
 			WHY(255,255,255,(math.sin(p.invulnerability)+1)*100)
 		end
+		local yOffset=0
+		if p.flying ~= false then 
+			yOffset=-50
+			local flameYOffset=0 --so when iroh is looking down it doesn't look like he is breathing fire
+			if p.d==2 then flameYOffset=-10 end 
+			if p.fireJet then love.graphics.draw(fireParicles, p.x*120-60,p.y*120+60+yOffset+flameYOffset) end
+		end
 		if logic.round(players[i].vd) == 0 then
-			love.graphics.draw(characters[p.char].img,p.x*120-60,p.y*120+60,math.pi*p.d/2,1,1,60,60)
+			love.graphics.draw(characters[p.char].img,p.x*120-60,p.y*120+60+yOffset,math.pi*p.d/2,1,1,60,60)
 		else
-			love.graphics.draw(characters[p.char].img,p.x*120-60,p.y*120+60,math.pi*p.vd/2,1,1,60,60)
+			love.graphics.draw(characters[p.char].img,p.x*120-60,p.y*120+60+yOffset,math.pi*p.vd/2,1,1,60,60)
 		end
 		love.graphics.setColor(255,255,255)
 	end
+
 end
 
 function players.move(p,d,unconditional)
@@ -236,7 +271,7 @@ end
 		op=players[on]
 
 		if p.x<1 or p.x>16 or p.y<1 or p.y>8
-		or (p.x==op.x and p.y==op.y) then return false end
+		or (p.x==op.x and p.y==op.y and ((p.flying==false and op.flying==false)or(p.flying~=false and op.flying~=false))) then return false end
 
 		for i=1,#projectiles do
 			pr=projectiles[i]

@@ -83,6 +83,7 @@ function love.draw()
 end
 
 function startGame()
+	players.load()
 	projectiles = {}
 	gameEvent = menu[5].options[menu[5].selected]
 	gameState = "game" 

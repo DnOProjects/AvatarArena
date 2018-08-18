@@ -21,7 +21,7 @@ end
 function animate.updateAnimations(dt)
 	for i=1,#projectiles do
 		p=projectiles[i]
-		if p.percent then 
+		if p.percent and not(p.aRepeats==false and p.percent>95) then 
 			p.percent = p.percent + dt*100*p.aSpeed
 			if p.percent > 100 then p.percent = p.percent-100 end
 		end

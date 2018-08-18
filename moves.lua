@@ -3,6 +3,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 --Utility
 {{name="shield",type="normal",cost=5,desc="Equip a shield to block any attack!"},
 {name="blow",type="air",cost=8,desc="A funnel of air to propel you forwards or push your opponent back!"},
+{name="fly",type="air",cost=20,desc="You use the air currents around you to hover just above the ground!"},
 {name="shift",type="air",cost=18,desc="You shift the battle into the spirit-world, rendering all bending ineffective!"},
 {name="freeze",type="water",cost=1,desc="All water in the arena turns to solid ice!"},
 {name="aurora borealis",type="water",cost=8,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
@@ -10,7 +11,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="wall",type="earth",cost=5,desc="The ground rises up to shield you from harm!"},
 {name="earth wave",type="earth",cost=10,desc="You charge forwards on rolling earth!"},
 {name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
-{name="fire jet",type="fire",cost=8,desc="You charge upwards with fire and stuff!"},
+{name="fire jet",type="fire",cost=12,desc="You use sizzling blue flame to propell yourself above the arena, singeing those who pass under you!"},
 {name="sword block",type="sokka",cost=5,desc="You deflect an enemy's attack, sending it flying away to the side.\n\n"}},
 
 --Attack
@@ -296,6 +297,15 @@ end
 	end
 
 function moves.draw()
+
+	for i=1,2 do --draw player shadows
+		p = players[i]
+		if p.flying~=false then
+			WHY(0,0,0,100)
+			love.graphics.circle("fill",p.x*120-60,p.y*120+60,50,50)
+		end
+	end
+
 	for i=1,#projectiles do
 		p=projectiles[i]
 		if (not p.despawn) or p.despawn > 0.5 then love.graphics.setColor(255,255,255)
@@ -328,11 +338,20 @@ function moves.draw()
 end
 
 function moves.cast(typeNum,num,pn)
-	if players.world == "physical" or moves[typeNum][num].type == "normal" or moves[typeNum][num].type == "sokka" then
+	if players[pn].flying==false and (players.world == "physical" or moves[typeNum][num].type == "normal" or moves[typeNum][num].type == "sokka") then
 		p=players[pn]
 		if p.chi >= moves[typeNum][num].cost and players.canCast(p) then
 			p.chi=p.chi-moves[typeNum][num].cost
 			local name = moves[typeNum][num].name
+
+			if name == "fly" then
+				players[pn].flying=4
+			end
+
+			if name == "fire jet" then
+				players[pn].fireJet=true
+				players[pn].flying=2
+			end
 			
 			if name == "shield" then
 				projectiles[#projectiles+1] = {caster=pn,movesWithCaster=true,blocker="shield",despawn=1,name=name,damage=0,image=shieldImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
@@ -410,7 +429,7 @@ function moves.cast(typeNum,num,pn)
 			end
 			if name == "sear" then
 				for i=4,7 do
-					projectiles[#projectiles+1] = {vd=p.d,redirectable=true,percent=0,spriteLength=6,aSpeed=7,name=name,damage=20,image=fireOrbImg,x=p.x,y=p.y,d=i,speed = 3,rx=0,ry=0}
+					projectiles[#projectiles+1] = {aRepeats=false,vd=p.d,redirectable=true,percent=0,spriteLength=4,aSpeed=1,name=name,damage=20,image=fireOrbImg,x=p.x,y=p.y,d=i,speed = 3,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
@@ -418,7 +437,7 @@ function moves.cast(typeNum,num,pn)
 				for i=0,1 do
 					local d = p.d+1+(i*2)
 					if d>3 then d=d-4 end
-					projectiles[#projectiles+1] = {redirectable=true,percent=0,spriteLength=6,aSpeed=0.7,name=name,damage=1,image=fireOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
+					projectiles[#projectiles+1] = {aRepeats=false,redirectable=true,percent=0,spriteLength=4,aSpeed=1,name=name,damage=1,image=fireOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
