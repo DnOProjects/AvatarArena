@@ -223,6 +223,14 @@ end
 				end
 			end
 		end
+		if p.name == "tornadoCentre" then
+			local enemy = 1
+			if p.caster == 1 then enemy = 2 end
+			pl = players[enemy]
+			if pl.x == p.rx and pl.y == p.ry then
+				pl.slideTimer = 0
+			end
+		end
 		if p.name == "tornado" then
 			local enemy = 1
 			if p.caster == 1 then enemy = 2 end
@@ -234,23 +242,6 @@ end
 				if pl.y > cen.ry then pl.y = pl.y - 1 end
 				if pl.x < cen.rx then pl.x = pl.x + 1 end
 				if pl.y < cen.ry then pl.y = pl.y + 1 end 
-			end
-		end
-		if p.name == "tornadoCentre" then
-			if p.x < 0 or p.x > 16 or p.y < 0 or p.y > 8 then
-				for i=1,#projectiles do
-					if projectiles[i].name == "tornado" and projectiles[i].centre == p.id then
- 						projectilesToRemove[#projectilesToRemove+1] = i
-					end
-				end
-				projectilesToRemove[#projectilesToRemove+1] = p.id
-				players[p.caster].chi = players[p.caster].chi + 30
-			end
-			local enemy = 1
-			if p.caster == 1 then enemy = 2 end
-			pl = players[enemy]
-			if pl.x == p.rx and pl.y == p.ry then
-				pl.slideTimer = 0
 			end
 		end
 		if p.name == "sword flurry" or p.name == "swinging sword" then
@@ -477,13 +468,26 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 			if name == "tornado" then
-				local centre = #projectiles+13
-				for x=-2,2 do
-					for y=-2,2 do
-						if x==0 and y==0 then projectiles[#projectiles+1] = {id=#projectiles+1,caster=pn,name="tornadoCentre",despawn=3,damage=0,image=tornadoCentreImg,x=p.x+x,y=p.y+y,d=p.d,speed=0,rx=0,ry=0}
-						else projectiles[#projectiles+1] = {caster=pn,centre=centre,name=name,despawn=3,damage=0,image=tornadoImg,x=p.x+x,y=p.y+y,d=p.d,speed=0,rx=0,ry=0} end
-						projectiles[#projectiles] = moves.moveProj(#projectiles,5)
+				local centre = #projectiles+1
+				projectiles[centre] = {id=#projectiles+1,caster=pn,name="tornadoCentre",despawn=3,damage=0,image=tornadoCentreImg,x=p.x,y=p.y,d=p.d,speed=0,rx=0,ry=0}
+				projectiles[centre] = moves.moveProj(#projectiles,5)
+				cen = projectiles[centre]
+				local createTornado = true
+				if cen.x < 1 or cen.x > 16 or cen.y < 1 or cen.y > 8 then createTornado = false	end
+				for i=1,#projectiles do if projectiles[i].name == "tornadoCentre" and projectiles[i].id ~= cen.id then createTornado = false end end
+				for x=1,16 do for y=1,8 do if map[x][y]==0 and cen.x == x and cen.y == y then createTornado = false end end end
+				if createTornado == true then
+					for x=-2,2 do
+						for y=-2,2 do
+							if not(x==0 and y==0) then
+								projectiles[#projectiles+1] = {caster=pn,centre=centre,name=name,walkOver=true,despawn=3,damage=0,image=tornadoImg,x=p.x+x,y=p.y+y,d=p.d,speed=0,rx=0,ry=0}
+								projectiles[#projectiles] = moves.moveProj(#projectiles,5)
+							end
+						end
 					end
+				else
+					projectilesToRemove[#projectilesToRemove+1]=centre
+					refund=true
 				end
 			end
 			if name=="shockwave" then
