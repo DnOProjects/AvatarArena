@@ -85,7 +85,7 @@ end
 		end
 		if p.name == "seed" then
 			if math.random(1,150) == 1 then
-				projectiles[#projectiles+1] = {despawn=10,blocker="fragileForceField",caster=p.caster,rotate=false,name=p.name,damage=10,image=thornsImg,x=p.x,y=p.y,d=p.d+math.random(-1,1),speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {despawn=10,blocker="fragileField",caster=p.caster,rotate=false,name=p.name,damage=10,image=thornsImg,x=p.x,y=p.y,d=p.d+math.random(-1,1),speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				shouldRemove = (projectiles[#projectiles].x == players[p.caster].x) and (projectiles[#projectiles].y == players[p.caster].y)
 				for i=1,#projectiles-1 do
@@ -264,10 +264,10 @@ end
 							if p.d == op.d+2 or p.d == op.d-2 then
 								projectilesToRemove[#projectilesToRemove+1]=i
 								projectilesToRemove[#projectilesToRemove+1]=j
-							else op.blocker = "fragileForceField" end
+							else op.blocker = "fragileField" end
 						end
-						if (not(op.blocker=="diagonal" or op.blocker=="fragileForceField")) then projectilesToRemove[#projectilesToRemove+1]=i end
-						if (op.blocker=="fragile" or op.blocker=="fragileForceField")  then projectilesToRemove[#projectilesToRemove+1]=j end
+						if (not(op.blocker=="diagonal" or op.blocker=="fragileField")) then projectilesToRemove[#projectilesToRemove+1]=i end
+						if (op.blocker=="fragile" or op.blocker=="fragileField" or op.blocker=="fragileForceField") then projectilesToRemove[#projectilesToRemove+1]=j end
 						if op.blocker=="diagonal" and not(p.name=="lightning") then
 							if p.caster	~= nil and op.caster~=nil then p.caster = op.caster end
 							p.d=op.d+5
@@ -388,7 +388,7 @@ function moves.cast(typeNum,num,pn)
 			end
 			if name == "seed" then
 				for i=0,3 do
-					projectiles[#projectiles+1] = {despawn=10,blocker="fragileForceField",caster=pn,rotate=false,name=name,damage=10,image=thornsImg,x=p.x,y=p.y,d=i,speed = 0,rx=0,ry=0}
+					projectiles[#projectiles+1] = {despawn=10,blocker="fragileField",caster=pn,rotate=false,name=name,damage=10,image=thornsImg,x=p.x,y=p.y,d=i,speed = 0,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
