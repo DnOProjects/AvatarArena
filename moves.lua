@@ -244,6 +244,7 @@ end
 					end
 				end
 				projectilesToRemove[#projectilesToRemove+1] = p.id
+				players[p.caster].chi = players[p.caster].chi + 30
 			end
 			local enemy = 1
 			if p.caster == 1 then enemy = 2 end
@@ -479,7 +480,7 @@ function moves.cast(typeNum,num,pn)
 				local centre = #projectiles+13
 				for x=-2,2 do
 					for y=-2,2 do
-						if x==0 and y==0 then projectiles[#projectiles+1] = {id=#projectiles+1,name="tornadoCentre",despawn=3,damage=0,image=tornadoCentreImg,x=p.x+x,y=p.y+y,d=p.d,speed=0,rx=0,ry=0}
+						if x==0 and y==0 then projectiles[#projectiles+1] = {id=#projectiles+1,caster=pn,name="tornadoCentre",despawn=3,damage=0,image=tornadoCentreImg,x=p.x+x,y=p.y+y,d=p.d,speed=0,rx=0,ry=0}
 						else projectiles[#projectiles+1] = {caster=pn,centre=centre,name=name,despawn=3,damage=0,image=tornadoImg,x=p.x+x,y=p.y+y,d=p.d,speed=0,rx=0,ry=0} end
 						projectiles[#projectiles] = moves.moveProj(#projectiles,5)
 					end
