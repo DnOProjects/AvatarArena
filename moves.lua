@@ -3,14 +3,14 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 --Utility
 {{name="shield",type="normal",cost=5,desc="Equip a shield to block any attack!"},
 {name="blow",type="air",cost=8,desc="A funnel of air to propel you forwards or push your opponent back!"},
-{name="fly",type="air",cost=20,desc="You use the air currents around you to hover just above the ground!"},
+{name="fly",type="air",cost=25,desc="You use the air currents around you to hover just above the ground!"},
 {name="shift",type="air",cost=18,desc="You shift the battle into the spirit-world, rendering all bending ineffective!"},
 {name="freeze",type="water",cost=1,desc="All water in the arena turns to solid ice!"},
 {name="aurora borealis",type="water",cost=8,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
 {name="heal",type="water",cost=24,desc="Healing is a special ability possessed by some waterbenders that enables them to heal those who have been wounded, including themselves."},
 {name="wall",type="earth",cost=5,desc="The ground rises up to shield you from harm!"},
 {name="earth wave",type="earth",cost=10,desc="You charge forwards on rolling earth!"},
-{name="terraform",type="earth",cost=14,desc="Shape the world to your will!"},
+{name="terraform",type="earth",cost=13,desc="Shape the world to your will!"},
 {name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
 {name="fire jet",type="fire",cost=12,desc="You use sizzling blue flame to propell yourself above the arena, singeing those who pass under you!"},
 {name="sword block",type="sokka",cost=5,desc="You deflect an enemy's attack, sending it flying away to the side.\n\n"}},
@@ -360,12 +360,12 @@ function moves.cast(typeNum,num,pn)
 			end
 
 			if name == "fly" then
-				players[pn].flying=4
+				players[pn].flying=3
 			end
 
 			if name == "fire jet" then
 				players[pn].fireJet=true
-				players[pn].flying=2
+				players[pn].flying=1.4
 			end
 			
 			if name == "shield" then
