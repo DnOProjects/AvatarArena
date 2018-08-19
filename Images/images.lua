@@ -30,6 +30,8 @@ playSymbolImg = love.graphics.newImage("Images/Symbols/playSymbol.png")
 	airOrbImg = love.graphics.newImage("Images/Abilities/airSprite.png")
 	gustOrbImg = love.graphics.newImage("Images/Abilities/gustSprite.png")
 	windImg = love.graphics.newImage("Images/Abilities/windSprite.png")
+	tornadoCentreImg = love.graphics.newImage("Images/Abilities/tornadoCentre.png")
+	tornadoImg = love.graphics.newImage("Images/Abilities/tornado.png")
 
 	---- Water
 	waterOrbImg = love.graphics.newImage("Images/Abilities/water.png")

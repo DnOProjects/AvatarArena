@@ -26,8 +26,8 @@ function players.load()
 
 	p1 = players[1]
 	p2 = players[2]
-	players[1] = {flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p1.char,x=1,y=1,d=0,vd=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
-	players[2] = {flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p2.char,x=16,y=8,d=0,vd=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
+	players[1] = {flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p1.char,x=1,y=1,d=0,vd=0,timer=0,slideTimer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
+	players[2] = {flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p2.char,x=16,y=8,d=0,vd=0,timer=0,slideTimer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
 
 	img=love.graphics.newImage("images/abilities/particle.png")
 	fireParicles = love.graphics.newParticleSystem(img, 10000)
@@ -135,10 +135,12 @@ end
 		for i=1,2 do
 			p = players[i]
 			p.timer = p.timer - dt
+			p.slideTimer = p.slideTimer - dt
 			p.invulnerability = p.invulnerability - dt*10
 			if p.flying~=false then p.flying=p.flying-dt end
 			if p.flying~=false and p.flying<0 then p.flying,p.fireJet=false,false end
 			if p.timer < 0 then p.timer = 0 end
+			if p.slideTimer < 0 then p.slideTimer = 0 end
 			if p.invulnerability < 0 then p.invulnerability = 0 end
 		end
 	end
