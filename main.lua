@@ -106,7 +106,14 @@ function startGame()
 
 	arenaType = characters[players[1].char].bends[1]
 	sound.play("roundIntro")
-	if menu[2].options[menu[2].selected]=="ai" then ai.load(1,menu[3].options[menu[3].selected]) else players[2].controller = "human" end
+	if menu[2].options[menu[2].selected]=="ai" then 
+		ai.load(1,menu[3].options[menu[3].selected]) 
+		players[1].controller = "human"  
+		players[2].controller = "ai"
+	else
+		players[1].controller = "human"  
+		players[2].controller = "human" 
+	end
 end
 
 function love.keypressed(key)
