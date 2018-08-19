@@ -57,7 +57,12 @@ end
 	function players.fall()
 		for i=1,2 do
 			local p=players[i]
-			if map[p.x][p.y]==0 and p.flying==false then
+			local walkOver = false
+			for i=1,#projectiles do
+				pr=projectiles[i]
+				if p.x == pr.rx and p.y == pr.ry and pr.walkOver == true then walkOver = true end
+			end
+			if map[p.x][p.y]==0 and p.flying==false and walkOver==false then
 				p.hp=0
 			end
 		end
@@ -315,7 +320,13 @@ end
 		if p.x<1 or p.x>16 or p.y<1 or p.y>8
 		or (p.x==op.x and p.y==op.y and ((p.flying==false and op.flying==false)or(p.flying~=false and op.flying~=false))) then return false end
 
-		if map[p.x][p.y]==0 and p.flying==false then return false end
+		local walkOver = false
+		for i=1,#projectiles do
+			pr=projectiles[i]
+			if p.x == pr.rx and p.y == pr.ry and pr.walkOver == true then walkOver = true end
+		end
+
+		if map[p.x][p.y]==0 and p.flying==false and walkOver==false then return false end
 
 		for i=1,#projectiles do
 			pr=projectiles[i]
