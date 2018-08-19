@@ -64,6 +64,14 @@ airGrass = love.graphics.newImage("Images/Grass/airGrass.png")
 earthGrass = love.graphics.newImage("Images/Grass/earthGrass.png")
 normalGrass = love.graphics.newImage("Images/Grass/normalGrass.png")
 
+fireEdge = love.graphics.newImage("Images/Grass/fireEdge.png")
+waterEdge = love.graphics.newImage("Images/Grass/waterEdge.png")
+airEdge = love.graphics.newImage("Images/Grass/airEdge.png")
+earthEdge = love.graphics.newImage("Images/Grass/earthEdge.png")
+normalEdge = love.graphics.newImage("Images/Grass/normalEdge.png")
+
+void = love.graphics.newImage("Images/Grass/void.png")
+
 -- Backgrounds
 winScreen = love.graphics.newImage("Images/Backgrounds/winScreenBackground.png")
 menuScreen = love.graphics.newImage("Images/Backgrounds/menuBackground.png")

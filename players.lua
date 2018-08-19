@@ -49,9 +49,19 @@ function players.update(dt)
 	players.checkForHits()
 	players.checkForLineOfSight()
 	players.poolChi(dt)
+	players.fall()
 	players.die()
 	fireParicles:update(dt)
 end
+
+	function players.fall()
+		for i=1,2 do
+			local p=players[i]
+			if map[p.x][p.y]==0 and p.flying==false then
+				p.hp=0
+			end
+		end
+	end
 
 	function players.updateGameEvents(dt)
 		if gameEvent=="sea of chi" then
@@ -69,6 +79,38 @@ end
 				if logic.inList(characters[p.char].bends,elements[e]) then players[i].chiRegen = characters[players[i].char].chiRegen*3 else  players[i].chiRegen = characters[players[i].char].chiRegen end
 			end
 		end
+		if gameEvent=="instablitiy" then
+			if eventTimer > 1 then
+				eventTimer=0
+				local numTiles=0
+				for x=1,16 do
+					for y=1,8 do
+						if map[x][y]==1 then numTiles=numTiles+1 end
+					end
+				end
+				local tileRemoved=false
+				if numTiles>10 then
+					while not tileRemoved do
+						local x = math.random(1,16)
+						local y = math.random(1,8)
+						if map[x][y]==1 then
+							if not players.playerOnTile(x,y) then
+								map[x][y]=0
+								tileRemoved=true
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+
+	function players.playerOnTile(x,y)
+		for i=1,2 do
+			local p=players[i]
+			if p.x==x and p.y==y then return true end
+		end
+		return false
 	end
 
 	function players.poolChi(dt)
@@ -272,6 +314,8 @@ end
 
 		if p.x<1 or p.x>16 or p.y<1 or p.y>8
 		or (p.x==op.x and p.y==op.y and ((p.flying==false and op.flying==false)or(p.flying~=false and op.flying~=false))) then return false end
+
+		if map[p.x][p.y]==0 and p.flying==false then return false end
 
 		for i=1,#projectiles do
 			pr=projectiles[i]

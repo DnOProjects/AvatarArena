@@ -10,6 +10,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="heal",type="water",cost=24,desc="Healing is a special ability possessed by some waterbenders that enables them to heal those who have been wounded, including themselves."},
 {name="wall",type="earth",cost=5,desc="The ground rises up to shield you from harm!"},
 {name="earth wave",type="earth",cost=10,desc="You charge forwards on rolling earth!"},
+{name="terraform",type="earth",cost=14,desc="Shape the world to your will!"},
 {name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
 {name="fire jet",type="fire",cost=12,desc="You use sizzling blue flame to propell yourself above the arena, singeing those who pass under you!"},
 {name="sword block",type="sokka",cost=5,desc="You deflect an enemy's attack, sending it flying away to the side.\n\n"}},
@@ -341,8 +342,22 @@ function moves.cast(typeNum,num,pn)
 	if players[pn].flying==false and (players.world == "physical" or moves[typeNum][num].type == "normal" or moves[typeNum][num].type == "sokka") then
 		p=players[pn]
 		if p.chi >= moves[typeNum][num].cost and players.canCast(p) then
+			local refund=false
 			p.chi=p.chi-moves[typeNum][num].cost
 			local name = moves[typeNum][num].name
+
+			if name == "terraform" then
+				local x=p.x
+				local y=p.y
+				if p.d==0 then y=y-1
+				elseif p.d==1 then x=x+1
+				elseif p.d==2 then y=y+1
+				else x=x-1 end
+				if not players.playerOnTile(x,y) then 
+					map[x][y]=map[x][y]+1 
+					if map[x][y]==2 then map[x][y]=0 end
+				else refund=true end
+			end
 
 			if name == "fly" then
 				players[pn].flying=4
@@ -486,7 +501,7 @@ function moves.cast(typeNum,num,pn)
 						projectiles[#projectiles+1] = {removesOnHit=false,hasSpread=false,rotate=false,despawn=8,name="lava",damage=20,image=lavaImg,x=p.rx,y=p.ry,d=p.d,speed = 0,rx=0,ry=0}
 					end
 				end
-				if useChi == false then players[pn].chi = players[pn].chi + 30 end
+				if useChi == false then refund=true end
 			end
 			if name == "boomerang" then
 				projectiles[#projectiles+1] = {caster=pn,removesOnHitCaster=true,damagesCaster=false,bounces=0,name=name,damage=10,image=boomerangImg,x=p.x,y=p.y,d=p.d,speed = 10,rx=0,ry=0}
@@ -505,7 +520,12 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 
-			moves.playMoveSound(moves[typeNum][num].type)
+			if refund==true then 
+				p.chi=p.chi+moves[typeNum][num].cost 
+			else
+				moves.playMoveSound(moves[typeNum][num].type)
+			end
+
 		end
 	end
 end

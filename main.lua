@@ -84,6 +84,7 @@ end
 
 function startGame()
 	players.load()
+	map.load()
 	projectiles = {}
 	gameEvent = menu[5].options[menu[5].selected]
 	gameState = "game" 
