@@ -298,6 +298,21 @@ function players.move(p,d,unconditional)
 		if d==2 then players[p].y=players[p].y+1 end
 		if d==3 then players[p].x=players[p].x-1 end
 	end
+
+	--sliding
+	willSlide=false
+	for i=1,#projectiles do
+		local pr = projectiles[i]
+		if pr.name=="ice" then 
+			if players[p].x==pr.x and players[p].y==pr.y then
+				willSlide=true
+			end
+		end
+	end
+	if willSlide then
+		players.move(p,d,true)
+	end
+
 	if not(players.canBeHere(p)) then 
 		players[p].x = ox
 		players[p].y = oy
@@ -309,6 +324,7 @@ function players.move(p,d,unconditional)
 			end
 		end
 	end
+
 end	
 
 	function players.canBeHere(n)
