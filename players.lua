@@ -26,8 +26,8 @@ function players.load()
 
 	p1 = players[1]
 	p2 = players[2]
-	players[1] = {flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p1.char,x=1,y=1,d=0,vd=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
-	players[2] = {flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p2.char,x=16,y=8,d=0,vd=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
+	players[1] = {flameTrail=false,flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p1.char,x=1,y=1,d=0,vd=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
+	players[2] = {flameTrail=false,flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p2.char,x=16,y=8,d=0,vd=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
 
 	img=love.graphics.newImage("images/abilities/particle.png")
 	fireParicles = love.graphics.newParticleSystem(img, 10000)
@@ -138,6 +138,8 @@ end
 			p.invulnerability = p.invulnerability - dt*10
 			if p.flying~=false then p.flying=p.flying-dt end
 			if p.flying~=false and p.flying<0 then p.flying,p.fireJet=false,false end
+			if p.flameTrail~=false then p.flameTrail=p.flameTrail-dt end
+			if p.flameTrail~=false and p.flameTrail<0 then p.flameTrail=false end
 			if p.timer < 0 then p.timer = 0 end
 			if p.invulnerability < 0 then p.invulnerability = 0 end
 		end
@@ -322,6 +324,12 @@ function players.move(p,d,unconditional)
 				pr.x = pr.ox
 				pr.y = pr.oy
 			end
+		end
+	end
+
+	if players[p].x~=ox or players[p].y~=oy then --if they moved
+		if players[p].flameTrail~=false then
+			projectiles[#projectiles+1] = {despawn=2,percent=0,spriteLength=4,aSpeed=4,name="burningGround",damage=20,image=stillFlameImg,x=ox,y=oy,d=0,speed = 0,rx=0,ry=0}
 		end
 	end
 

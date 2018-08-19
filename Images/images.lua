@@ -51,6 +51,7 @@ playSymbolImg = love.graphics.newImage("Images/Symbols/playSymbol.png")
 	lightningImg = love.graphics.newImage("Images/Abilities/lightning.png")
 	combustionBlastImg = love.graphics.newImage("Images/Abilities/combustionBlast.png")
 	explosionImg = love.graphics.newImage("Images/Abilities/explosion.png")
+	stillFlameImg = love.graphics.newImage("Images/Abilities/stillFlame.png")
 	
 	----Normal/Sokka
 	arrowImg = love.graphics.newImage("Images/Abilities/arrow.png")

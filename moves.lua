@@ -32,9 +32,10 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="flood",type="water",cost=60,desc="The waters rise up to drown your enemies!"},
 {name="seed",type="water",cost=40,desc="A huge thorny plant begins to grow with you, unharmed at its center."},
 {name="shockwave",type="earth",cost=30,desc="You send seismic waves rippling through the earth, letting it rise up around you!"},
-{name="smelt",type="earth",cost=30,desc="Melt all rocks on the map into flowing lava!"},
+{name="melt",type="earth",cost=30,desc="Melt all rocks on the map into flowing lava!"},
 {name="lightning",type="fire",cost=60,desc="\"The energy is both yin and yang, you can separate these energies, creating an imbalance. The energy wants to restore balance and in a moment the positive and negative energy come crashing back together. You provide release and guidance, creating lightning.\""},
 {name="combustion",type="fire",cost=40,desc="SPARKY SPARKY BOOM"},
+{name="flame trail",type="fire",cost=70,desc="Don't touch your tail!"},
 {name="sword flurry",type="sokka",cost=60,desc="Swing your sword around you to impale nearby enemies!"}}
 
 }
@@ -347,6 +348,10 @@ function moves.cast(typeNum,num,pn)
 			p.chi=p.chi-moves[typeNum][num].cost
 			local name = moves[typeNum][num].name
 
+			if name == "flame trail" then
+				players[pn].flameTrail=10
+			end
+
 			if name == "terraform" then
 				local x=p.x
 				local y=p.y
@@ -466,7 +471,7 @@ function moves.cast(typeNum,num,pn)
 				for i=0,1 do
 					local d = p.d+1+(i*2)
 					if d>3 then d=d-4 end
-					projectiles[#projectiles+1] = {aRepeats=false,redirectable=true,percent=0,spriteLength=4,aSpeed=1,name=name,damage=1,image=fireOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
+					projectiles[#projectiles+1] = {aRepeats=false,redirectable=true,percent=0,spriteLength=4,aSpeed=1,name=name,damage=10,image=fireOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
@@ -505,7 +510,7 @@ function moves.cast(typeNum,num,pn)
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				players.move(pn,p.d,true)
 			end
-			if name == "smelt" then
+			if name == "melt" then
 				local useChi = false
 				for i=1,#projectiles do
 					p=projectiles[i]
