@@ -5,7 +5,7 @@ function logic.round(num, numDecimalPlaces)
   return math.floor(num * mult + 0.5) / mult
 end
 
-function WHY(r,b,g,a) 
+function rgb(r,b,g,a) 
   local a=a or 255
   love.graphics.setColor(r/255,b/255,g/255,a/255) 
 end

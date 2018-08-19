@@ -249,7 +249,7 @@ function players.draw()
 		p = players[drawOrder[i]]
 		love.graphics.setColor(255,255,255)
 		if p.invulnerability>0 then
-			WHY(255,255,255,(math.sin(p.invulnerability)+1)*100)
+			rgb(255,255,255,(math.sin(p.invulnerability)+1)*100)
 		end
 		local yOffset=0
 		if p.flying ~= false then 

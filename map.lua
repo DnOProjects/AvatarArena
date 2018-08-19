@@ -16,9 +16,9 @@ function map.draw()
 	for x=1,16 do
 		for y=1,8 do
 			local tileDiff = grasses[arenaType].diff
-			WHY(128-tileDiff,128-tileDiff,128-tileDiff)
-			if ((x+y)%2~=0) and map[x][y]==1 then WHY(128+tileDiff,128+tileDiff,128+tileDiff) end
-			if players.world == "spiritual" then WHY(155,255,155) end
+			rgb(128-tileDiff,128-tileDiff,128-tileDiff)
+			if ((x+y)%2~=0) and map[x][y]==1 then rgb(128+tileDiff,128+tileDiff,128+tileDiff) end
+			if players.world == "spiritual" then rgb(155,255,155) end
 			local tile = grasses[arenaType].image
 			if map[x][y]==0 then
 				if map[x][y-1]==1 then

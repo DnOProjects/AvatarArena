@@ -326,7 +326,7 @@ function moves.draw()
 	for i=1,2 do --draw player shadows
 		p = players[i]
 		if p.flying~=false then
-			WHY(0,0,0,100)
+			rgb(0,0,0,100)
 			love.graphics.circle("fill",p.x*120-60,p.y*120+60,50,50)
 		end
 	end
