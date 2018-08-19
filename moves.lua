@@ -416,8 +416,8 @@ function moves.cast(typeNum,num,pn)
 			end
 			if name == "spout" then
 				for i=1,3 do
-					projectiles[#projectiles+1] = {freezes=true,name=name,damage=7,image=waterOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
-					projectiles[#projectiles] = moves.moveProj(#projectiles,i*2-2)
+					projectiles[#projectiles+1] = {freezes=true,name=name,damage=7,image=waterOrbImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
+					projectiles[#projectiles] = moves.moveProj(#projectiles,i)
 				end
 			end
 			if name == "gust" then
