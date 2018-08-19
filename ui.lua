@@ -73,8 +73,20 @@ function ui.choose()
 	end
 end
 
+function ui.menuY()
+	local oy = menuStage
+	menuStage = ui[2].y+1
+	if menuStage==3 and menu[2].options[menu[2].selected]=="ai" then ai.load(1,menu[3].options[menu[3].selected]) end
+	if menuStage==3 and menu[2].options[menu[2].selected]=="human" then
+		if oy == 2 then ui[2].y = 3 end
+		if oy == 4 then ui[2].y = 1 end
+	end
+	if menu[1].options[menu[1].selected]=="online" then ui[2].y = 0 end
+end
+
 function ui.update()
 	if gameState == "characterSelection" then ui.choose() end
+	if gameState == "menu" then ui.menuY() end
 	for playerSelecting=1,2 do
 		if ui[playerSelecting].y<0 then ui[playerSelecting].y=0 end
 		if ui[playerSelecting].y>4 then ui[playerSelecting].y=4 end
@@ -124,14 +136,14 @@ end
 
 function ui.start()
 	if gameState=="menu" then
-		if menuStage==3 and menu[2].options[menu[2].selected]=="ai" then ai.load(1,menu[3].options[menu[3].selected]) end
-		menuStage=menuStage+1
-		if menuStage==3 and menu[2].options[menu[2].selected]=="human" then menuStage=4 end
-		if menuStage>5 or menu[1].options[menu[1].selected]=="online" then 
+		if menu[1].options[menu[1].selected]=="online" then
+			onlineGame = true
+		else
 			gameState = "characterSelection"
 			selectionMethod = menu[4].options[menu[4].selected]
+			ui[1].y = 0
+			ui[2].y = 0
 		end
-		if menu[1].options[menu[1].selected]=="online" then onlineGame = true end
 	elseif gameState=="characterSelection" then
 		if ui[1].y == 4 and ui[2].y == 4 then
 			startGame()
@@ -156,8 +168,6 @@ function ui.start()
 end
 
 function ui.draw()
-
-
 	if gameState == "winScreen" or gameState == "paused" then
 		maxOpt=3
 		if loser==1 then winner=2 else winner=1 end
@@ -192,10 +202,15 @@ function ui.draw()
 	if gameState == "menu" then
 		love.graphics.setFont(menuFont)
 		love.graphics.draw(menuScreen,0,0,0,love.graphics.getWidth()/menuScreen:getWidth(),love.graphics.getHeight()/menuScreen:getHeight())
-		WHY(150,150,150)
-		love.graphics.printf(menu[menuStage].name,-10,200,700,"center",0,2.8,2.8)
-		love.graphics.setColor(255,255,255)
-		love.graphics.printf(menu[menuStage].options[menu[menuStage].selected],500,800,500,"center",0,2,2)
+		love.graphics.printf("Menu",-10,20,700,"center",0,2.8,2.8)
+		for i=1,#menu do
+			if not(i == 3 and menu[2].options[menu[2].selected] == "human") and not(i ~= 1 and menu[1].options[menu[1].selected] == "online") then
+				if menuStage == i then WHY(209, 63, 37) else WHY(150,150,150) end
+				love.graphics.printf(menu[i].name,55,150*i+100,500,"right",0,1.8,1.8)
+				love.graphics.setColor(255,255,255)
+				love.graphics.printf(menu[i].options[menu[i].selected],1000,150*i+100,500,"left",0,1.8,1.8)
+			end
+		end
 	end
 
 	if gameState == "characterSelection" then
