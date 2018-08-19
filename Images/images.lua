@@ -28,6 +28,7 @@ playSymbolImg = love.graphics.newImage("Images/Symbols/playSymbol.png")
 -- Moves
 	---- Air
 	airOrbImg = love.graphics.newImage("Images/Abilities/airSprite.png")
+	gustOrbImg = love.graphics.newImage("Images/Abilities/gustSprite.png")
 	windImg = love.graphics.newImage("Images/Abilities/windSprite.png")
 
 	---- Water

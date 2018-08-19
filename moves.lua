@@ -426,8 +426,8 @@ function moves.cast(typeNum,num,pn)
 			end
 			if name == "air flurry" then
 				for i=1,4 do
-					if p.d == 0 or p.d==2 then projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=2,name=name,damage=10,image=airOrbImg,x=p.x-3+logic.round(i*1.2),y=p.y,d=p.d,speed = 7,rx=0,ry=0}
-					else projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=2,name=name,damage=10,image=airOrbImg,x=p.x,y=p.y-3+logic.round(i*1.2),d=p.d,speed = 7,rx=0,ry=0} end
+					if p.d == 0 or p.d==2 then projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=2,name=name,damage=8,image=airOrbImg,x=p.x-3+logic.round(i*1.2),y=p.y,d=p.d,speed = 7,rx=0,ry=0}
+					else projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=2,name=name,damage=8,image=airOrbImg,x=p.x,y=p.y-3+logic.round(i*1.2),d=p.d,speed = 7,rx=0,ry=0} end
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
