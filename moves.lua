@@ -20,6 +20,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="gust",type="air",cost=4,desc="A ball of whirling air."},
 {name="air flurry",type="air",cost=15,desc="Release strands over air to trap your opponent!"},
 {name="spurt",type="water",cost=16,desc="A writhing spray of water, ready to force itself down your enemy's throat and drown their very lungs!"},
+{name="spout",type="water",cost=9,desc="Shoot a line of well-placed water out in front of you, blocking your enemy's path."},
 {name="boulder",type="earth",cost=5,desc="A giant rolling boulder - it's a little slow but deals a lot of damage."},
 {name="spike",type="earth",cost=10,desc="Huge spikes of earth emerge from the ground in a line."},
 {name="blast",type="fire",cost=10,desc="Two glowing embers shoot sideways from each hand."},
@@ -411,6 +412,12 @@ function moves.cast(typeNum,num,pn)
 					if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {freezes=true,name=name,damage=7,image=waterOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 2,rx=0,ry=0}
 					else projectiles[#projectiles+1] = {freezes=true,name=name,damage=7,image=waterOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 2,rx=0,ry=0} end
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+				end
+			end
+			if name == "spout" then
+				for i=1,3 do
+					projectiles[#projectiles+1] = {freezes=true,name=name,damage=7,image=waterOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
+					projectiles[#projectiles] = moves.moveProj(#projectiles,i*2-2)
 				end
 			end
 			if name == "gust" then
