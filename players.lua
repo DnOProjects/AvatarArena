@@ -356,7 +356,7 @@ end
 
 		for i=1,#projectiles do
 			pr=projectiles[i]
-			if pr.blocker and p.x==pr.rx and p.y==pr.ry and not(pr.blocker=="forceField" or pr.blocker=="fragileForceField") then return false  end
+			if pr.blocker and p.x==pr.rx and p.y==pr.ry and not(pr.blocker=="forceField" or pr.blocker=="fragileForceField" or pr.blocker=="fragileField") then return false  end
 		end
 
 		return true
