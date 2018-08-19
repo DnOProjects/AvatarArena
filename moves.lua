@@ -258,7 +258,6 @@ end
 				if not(i==j) then --a blocker cannot block itself
 					op=projectiles[j]
 					if op.blocker and op.rx==p.rx and op.ry==p.ry and p.blocker==nil and not(logic.inList(projectilesToRemove,i)) and not(logic.inList(projectilesToRemove,j)) then --blockers cannot be blocked and projectiles about to be removed cannot be blocked
-
 						if op.blocker=="shield" then
 							if p.d == op.d+2 or p.d == op.d-2 then
 								projectilesToRemove[#projectilesToRemove+1]=i
@@ -378,7 +377,7 @@ function moves.cast(typeNum,num,pn)
 						for j=1,#players[pn].lineOfSight do
 							if players[pn].lineOfSight[j].x == p.rx and players[pn].lineOfSight[j].y == p.ry then
 								projectilesToRemove[#projectilesToRemove+1]=i
-								projectiles[#projectiles+1] = {rotate=false,blocker="fragile",despawn=4,name="ice",damage=0,image=iceImg,x=p.rx,y=p.ry,d=p.d,speed = 0,rx=0,ry=0}
+								projectiles[#projectiles+1] = {rotate=false,blocker="fragileForceField",walkOver=true,despawn=4,name="ice",damage=0,image=iceImg,x=p.rx,y=p.ry,d=p.d,speed = 0,rx=0,ry=0}
 								break
 							end
 						end
