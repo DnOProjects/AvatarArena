@@ -299,7 +299,7 @@ function players.move(p,d,unconditional)
 		if d==3 then players[p].x=players[p].x-1 end
 	end
 
-	--sliding
+	--[[sliding
 	willSlide=false
 	for i=1,#projectiles do
 		local pr = projectiles[i]
@@ -311,7 +311,7 @@ function players.move(p,d,unconditional)
 	end
 	if willSlide then
 		players.move(p,d,true)
-	end
+	end]]
 
 	if not(players.canBeHere(p)) then 
 		players[p].x = ox
