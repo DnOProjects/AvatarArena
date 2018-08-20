@@ -59,7 +59,7 @@ end
 			local p=players[i]
 			local walkOver = false
 			for i=1,#projectiles do
-				pr=projectiles[i]
+				local pr=projectiles[i]
 				if p.x == pr.rx and p.y == pr.ry and pr.walkOver == true then walkOver = true end
 			end
 			if map[p.x][p.y]==0 and p.flying==false and walkOver==false then
@@ -99,7 +99,14 @@ end
 						local x = math.random(1,16)
 						local y = math.random(1,8)
 						if map[x][y]==1 then
-							if not players.playerOnTile(x,y) then
+							local isOnTornado=false
+							for i=1,#projectiles do
+								pr=projectiles[i]
+								if pr.x==x and pr.y==y and pr.name=="tornadoCentre" then
+									isOnTornado=true
+								end
+							end
+							if (not players.playerOnTile(x,y)) and (not isOnTornado) then
 								map[x][y]=0
 								tileRemoved=true
 							end
@@ -348,14 +355,14 @@ end
 
 		local walkOver = false
 		for i=1,#projectiles do
-			pr=projectiles[i]
+			local pr=projectiles[i]
 			if p.x == pr.rx and p.y == pr.ry and pr.walkOver == true then walkOver = true end
 		end
 
 		if map[p.x][p.y]==0 and p.flying==false and walkOver==false then return false end
 
 		for i=1,#projectiles do
-			pr=projectiles[i]
+			local pr=projectiles[i]
 			if pr.blocker and p.x==pr.rx and p.y==pr.ry and not(pr.blocker=="forceField" or pr.blocker=="fragileForceField" or pr.blocker=="fragileField") then return false  end
 		end
 
@@ -364,7 +371,7 @@ end
 
 	function players.canCast(p)
 		for i=1,#projectiles do
-			pr=projectiles[i]
+			local pr=projectiles[i]
 			if pr.rx==p.x and pr.ry==p.y then
 				if pr.name == "aurora borealis" then return false end
 			end

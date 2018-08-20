@@ -65,7 +65,7 @@ function ai.perfect(p,op,hard)
 	local keys = {"up","down","left","right"}
 	avoidKey=nil
 	for i=1,#projectiles do
-		pr=projectiles[i]
+		local pr=projectiles[i]
 		if pr.d==0 and pr.x==p.x and pr.y>p.y then avoidKey,danger=keys[math.random(3,4)],pr.y-p.y end
 		if pr.d==1 and pr.y==p.y and pr.x<p.x then avoidKey,danger=keys[math.random(1,2)],p.x-pr.x end
 		if pr.d==2 and pr.x==p.x and pr.y<p.y then avoidKey,danger=keys[math.random(3,4)],p.y-pr.y end

@@ -80,6 +80,10 @@ function love.draw()
 		love.graphics.print("Running server..")
 	end
 
+	love.graphics.setColor(0,0,0)
+	love.graphics.print(love.timer.getFPS())
+	love.graphics.setColor(1,1,1)
+
 end
 
 function startGame()

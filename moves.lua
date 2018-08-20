@@ -235,8 +235,13 @@ end
 			local enemy = 1
 			if p.caster == 1 then enemy = 2 end
 			pl = players[enemy]
-			cen = projectiles[p.centre]
-			if pl.x == p.rx and pl.y == p.ry and pl.slideTimer == 0 then
+			local cen=nil
+			for i=1,#projectiles do --finding the corresponding center
+				if projectiles[i].id==p.centreID then 
+					cen=projectiles[i]
+				end
+			end
+			if cen~=nil and pl.x == p.rx and pl.y == p.ry and pl.slideTimer == 0 then
 				pl.slideTimer = 0.22
 				if pl.x > cen.rx then pl.x = pl.x - 1 end
 				if pl.y > cen.ry then pl.y = pl.y - 1 end
@@ -468,25 +473,26 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 			if name == "tornado" then
-				local centre = #projectiles+1
-				projectiles[centre] = {id=#projectiles+1,caster=pn,name="tornadoCentre",despawn=3,damage=0,image=tornadoCentreImg,x=p.x,y=p.y,d=p.d,speed=0,rx=0,ry=0}
-				projectiles[centre] = moves.moveProj(#projectiles,5)
-				cen = projectiles[centre]
+				local centreIndex = #projectiles+1
+				local centreID = math.random(1,10000)
+				projectiles[centreIndex] = {vd=p.d,id=centreID,caster=pn,name="tornadoCentre",despawn=3,damage=0,image=tornadoCentreImg,x=p.x,y=p.y,d=p.d,speed=0,rx=0,ry=0}
+				projectiles[centreIndex] = moves.moveProj(#projectiles,5)
+				local cen = projectiles[centreIndex]
 				local createTornado = true
 				if cen.x < 1 or cen.x > 16 or cen.y < 1 or cen.y > 8 then createTornado = false	end
-				for i=1,#projectiles do if projectiles[i].name == "tornadoCentre" and projectiles[i].id ~= cen.id then createTornado = false end end
+				--(OPTIONAL: 2 CENTERS CANNOT BE WITHIN EACH-OTHER)--for i=1,#projectiles do if projectiles[i].name == "tornadoCentre" and projectiles[i].x==cen.x and projectiles[i].y==cen.y and projectiles[i].id ~= cen.id then createTornado = false end end
 				for x=1,16 do for y=1,8 do if map[x][y]==0 and cen.x == x and cen.y == y then createTornado = false end end end
 				if createTornado == true then
 					for x=-2,2 do
 						for y=-2,2 do
 							if not(x==0 and y==0) then
-								projectiles[#projectiles+1] = {caster=pn,centre=centre,name=name,walkOver=true,despawn=3,damage=0,image=tornadoImg,x=p.x+x,y=p.y+y,d=p.d,speed=0,rx=0,ry=0}
+								projectiles[#projectiles+1] = {vd=p.d,caster=pn,centreID=centreID,name=name,walkOver=true,despawn=3,damage=0,image=tornadoImg,x=p.x+x,y=p.y+y,d=p.d,speed=0,rx=0,ry=0}
 								projectiles[#projectiles] = moves.moveProj(#projectiles,5)
 							end
 						end
 					end
 				else
-					projectilesToRemove[#projectilesToRemove+1]=centre
+					projectilesToRemove[#projectilesToRemove+1]=centreIndex
 					refund=true
 				end
 			end
