@@ -37,6 +37,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="lightning",type="fire",cost=60,desc="\"The energy is both yin and yang, you can separate these energies, creating an imbalance. The energy wants to restore balance and in a moment the positive and negative energy come crashing back together. You provide release and guidance, creating lightning.\""},
 {name="combustion",type="fire",cost=40,desc="SPARKY SPARKY BOOM"},
 {name="flame trail",type="fire",cost=70,desc="Don't touch your tail!"},
+{name="crystalise",type="water",cost=35,desc="A snowflake of razor sharp ice spikes"},
 {name="sword flurry",type="sokka",cost=60,desc="Swing your sword around you to impale nearby enemies!"}}
 
 }
@@ -107,6 +108,11 @@ end
 					pl.beenBlown=0.1
 				end
 			end
+		end
+		if p.name == "ice spike" and p.despawn < 1.7 and p.spawned==false then
+			p.spawned=true
+			projectiles[#projectiles+1] = {spawned=false,rotate=false,name="ice spike",despawn=2,damage=14,image=iceSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}			
+			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 		end
 		if p.name == "spike" and p.despawn < 1.44 and p.spawned==false then
 			p.spawned=true
@@ -494,6 +500,13 @@ function moves.cast(typeNum,num,pn)
 				else
 					projectilesToRemove[#projectilesToRemove+1]=centreIndex
 					refund=true
+				end
+			end
+			if name=="crystalise" then
+				for i=1,8 do
+					local d=i-1
+					projectiles[#projectiles+1] = {spawned=false,rotate=false,name="ice spike",despawn=2,damage=14,image=iceSpikeImg,x=p.x,y=p.y,d=d,speed = 0,rx=0,ry=0}
+					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
 			if name=="shockwave" then
