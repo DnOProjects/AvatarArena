@@ -39,6 +39,8 @@ end
 
 function love.update(dt)
 
+	if players.timeSlowTimer>0 then dt=dt/5 end
+
 	server:update(dt)
 
 	if gameState=="game" then
@@ -127,7 +129,7 @@ function startGame()
 end
 
 function love.keypressed(key)
-	if key=="`" then 
+	if key=="9" then 
 		if debugMode then ambientMusic:play() else ambientMusic:pause() end
 		debugMode=not debugMode 
 	end

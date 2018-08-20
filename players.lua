@@ -10,6 +10,7 @@ function players.load()
 
 	players.world = "physical"
 	players.shiftTimer = 0
+	players.timeSlowTimer = 0
 	
 	lineOfSightWidth = 5
 
@@ -139,6 +140,9 @@ end
 		players.shiftTimer = players.shiftTimer - dt
 		if players.shiftTimer < 0 then players.shiftTimer = 0 end
 		if players.shiftTimer==0 then players.world="physical" else players.world="spiritual" end
+		
+		players.timeSlowTimer = players.timeSlowTimer - dt
+		if players.timeSlowTimer < 0 then players.timeSlowTimer = 0 end
 
 		for i=1,2 do
 			p = players[i]
