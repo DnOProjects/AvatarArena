@@ -22,6 +22,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="spurt",type="water",cost=16,desc="A writhing spray of water, ready to force itself down your enemy's throat and drown their very lungs!"},
 {name="spout",type="water",cost=9,desc="Shoot a line of well-placed water out in front of you, blocking your enemy's path."},
 {name="boulder",type="earth",cost=5,desc="A giant rolling boulder - it's a little slow but deals a lot of damage."},
+{name="bullet",type="earth",cost=15,desc="You bend the metal in the bullet to propell it to very high speeds."},
 {name="spike",type="earth",cost=10,desc="Huge spikes of earth emerge from the ground in a line."},
 {name="blast",type="fire",cost=10,desc="Two glowing embers shoot sideways from each hand."},
 {name="sear",type="fire",cost=13,desc="Four balls of fire radiate inaccurately from your body."},
@@ -541,6 +542,10 @@ function moves.cast(typeNum,num,pn)
 			end
 			if name == "boulder" then
 				projectiles[#projectiles+1] = {meltable=true,name=name,damage=20,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 6,rx=0,ry=0}
+				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+			end
+			if name == "bullet" then
+				projectiles[#projectiles+1] = {meltable=true,name=name,damage=20,image=bulletImg,x=p.x,y=p.y,d=p.d,speed = 15,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "wall" then
