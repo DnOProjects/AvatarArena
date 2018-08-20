@@ -43,6 +43,7 @@ function players.load()
 end
 
 function players.update(dt)
+	if debugMode then for i=1,2 do players[i].chi=100 end end
 	players.updateGameEvents(dt)
 	players.updateTimer(dt)
 	players.checkForBlock()
@@ -338,7 +339,7 @@ function players.move(p,d,unconditional)
 
 	if players[p].x~=ox or players[p].y~=oy then --if they moved
 		if players[p].flameTrail~=false then
-			projectiles[#projectiles+1] = {despawn=2,percent=0,spriteLength=4,aSpeed=4,name="burningGround",damage=20,image=stillFlameImg,x=ox,y=oy,d=0,speed = 0,rx=0,ry=0}
+			projectiles[#projectiles+1] = {despawn=4,percent=0,spriteLength=4,aSpeed=4,name="burningGround",damage=20,image=stillFlameImg,x=ox,y=oy,d=0,speed = 0,rx=0,ry=0}
 		end
 	end
 

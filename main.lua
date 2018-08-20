@@ -11,6 +11,8 @@ require "Server/server"
 
 function love.load()
 
+	debugMode=false
+
 	math.randomseed(os.time())
 	if not(onlineGame) then
 		love.window.setFullscreen(true)
@@ -80,9 +82,13 @@ function love.draw()
 		love.graphics.print("Running server..")
 	end
 
-	love.graphics.setColor(0,0,0)
-	love.graphics.print(love.timer.getFPS())
-	love.graphics.setColor(1,1,1)
+	if debugMode then
+		love.graphics.setColor(0,1,0)
+		love.graphics.print("Debug Mode:",0,0,0,0.6,0.6)
+		love.graphics.print("FPS:  "..love.timer.getFPS(),0,50,0,0.4,0.4)
+		love.graphics.print("# Projectiles:  "..#projectiles,0,80,0,0.4,0.4)
+		love.graphics.setColor(1,1,1)
+	end
 
 end
 
@@ -121,5 +127,9 @@ function startGame()
 end
 
 function love.keypressed(key)
+	if key=="`" then 
+		if debugMode then ambientMusic:play() else ambientMusic:pause() end
+		debugMode=not debugMode 
+	end
 	if not onlineGame then server.keyInput(key) end
 end
