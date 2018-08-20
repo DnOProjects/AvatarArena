@@ -10,7 +10,6 @@ function players.load()
 
 	players.world = "physical"
 	players.shiftTimer = 0
-	players.timeSlowTimer = 0
 	
 	lineOfSightWidth = 5
 
@@ -86,6 +85,10 @@ end
 				if logic.inList(characters[p.char].bends,elements[e]) then players[i].chiRegen = characters[players[i].char].chiRegen*3 else  players[i].chiRegen = characters[players[i].char].chiRegen end
 			end
 		end
+		if gameEvent=="time warp" then
+			if eventTimer>100 then eventTimer=100 end
+			dtMultiplier=eventTimer/10
+		end
 		if gameEvent=="instablitiy" then
 			if eventTimer > 1 then
 				eventTimer=0
@@ -140,9 +143,6 @@ end
 		players.shiftTimer = players.shiftTimer - dt
 		if players.shiftTimer < 0 then players.shiftTimer = 0 end
 		if players.shiftTimer==0 then players.world="physical" else players.world="spiritual" end
-		
-		players.timeSlowTimer = players.timeSlowTimer - dt
-		if players.timeSlowTimer < 0 then players.timeSlowTimer = 0 end
 
 		for i=1,2 do
 			p = players[i]

@@ -28,8 +28,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="boomerang",type="sokka",cost=11,desc="The boomerang whirls around the edge of the arena before returning to your hand."}},
 
 --Power
-{{name="time slow",type="air",cost=60,desc="Time travels 3x slower!"},
-{name="gale",type="air",cost=30,desc="A devestating, unpredictable flurry of wind!"},
+{{name="gale",type="air",cost=30,desc="A devestating, unpredictable flurry of wind!"},
 {name="tornado",type="air",cost=30,desc="Pull your enemies to the centre of a tornado and attack them while they cannot move!"},
 {name="flood",type="water",cost=60,desc="The waters rise up to drown your enemies!"},
 {name="seed",type="water",cost=40,desc="A huge thorny plant begins to grow with you, unharmed at its center."},
@@ -375,10 +374,6 @@ function moves.cast(typeNum,num,pn)
 			local refund=false
 			p.chi=p.chi-moves[typeNum][num].cost
 			local name = moves[typeNum][num].name
-
-			if name == "time slow" then
-				players.timeSlowTimer=1
-			end
 
 			if name == "flame trail" then
 				players[pn].flameTrail=10

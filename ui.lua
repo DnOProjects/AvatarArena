@@ -14,7 +14,7 @@ function ui.load()
 	{name="Oppenent",selected=1,options={"human","ai"}},
 	{name="Difficulty",selected=2,options={"easy","medium","hard","expert"}},
 	{name="Selection",selected=1,options={"choice","random","random duel","blind","blind duel"}},
-	{name="Events",selected=1,options={"none","sea of chi","power cycle","instablitiy"}}}
+	{name="Events",selected=1,options={"none","sea of chi","power cycle","instablitiy","time warp"}}}
 	menuStage=1
 
 	impactFont = love.graphics.newFont("Fonts/font.ttf",72)
@@ -339,6 +339,7 @@ function ui.draw()
 
 		rgb(163,120,4)
 		if gameEvent == "sea of chi" then love.graphics.print("X"..logic.round(((eventTimer+25)/50),1),900,10,0,0.9,0.9) end
+		if gameEvent == "time warp" then love.graphics.print("X"..logic.round(((eventTimer)/10),1),900,10,0,0.9,0.9) end		
 		love.graphics.setColor(255,255,255)
 		if gameEvent == "power cycle" then love.graphics.draw(elementSymbols[tostring(elements[math.floor(eventTimer/20)+1])],916,15,0,0.4,0.4)end
 

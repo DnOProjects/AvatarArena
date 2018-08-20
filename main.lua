@@ -39,7 +39,7 @@ end
 
 function love.update(dt)
 
-	if players.timeSlowTimer>0 then dt=dt/5 end
+	if gameEvent=="time warp" then dt=dt*dtMultiplier end
 
 	server:update(dt)
 
@@ -96,12 +96,14 @@ function love.draw()
 end
 
 function startGame()
+	dtMultiplier=1
 	players.load()
 	map.load()
 	projectiles = {}
 	gameEvent = menu[5].options[menu[5].selected]
 	gameState = "game" 
 	eventTimer=0
+	if gameEvent=="time warp" then eventTimer=1 end
 	for i=1,2 do
 		players[i].utility = ui[i][1]
 		players[i].attack = ui[i][2]
