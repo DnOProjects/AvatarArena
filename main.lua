@@ -42,6 +42,7 @@ function love.load()
 	math.randomseed(os.time())
 	if not(onlineGame) then
 		love.window.setFullscreen(true)
+		love.window.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {borderless=true,display=1})
 	end
 
 	love.mouse.setVisible(false)
@@ -69,6 +70,7 @@ function love.update(dt)
 
 		if onlineGame and startServer then
 			startServer = false
+			love.window.setMode(1000, 700, {resizable=true,borderless=false,minwidth=650,minheight=400})
 			require "Online/server"
 			server.load()
 		end
@@ -103,30 +105,23 @@ function love.draw()
 
 	if onlineClient == false then
 		if onlineGame then
-			canvas = love.graphics.newCanvas(1920,1080)
-			love.graphics.setCanvas(canvas)
-		end
-
-		if gameState=="game" then
-			map.draw()
-			moves.draw()
-			players.draw()
-		end
-
-		ui.draw()
-
-		if onlineGame then
-			love.graphics.setCanvas()
-			love.window.setFullscreen(false)
 			love.graphics.print("Running server..")
-		end
+		else
+			if gameState=="game" then
+				map.draw()
+				moves.draw()
+				players.draw()
+			end
 
-		if debugMode then
-			love.graphics.setColor(0,1,0)
-			love.graphics.print("Debug Mode:",0,0,0,0.6,0.6)
-			love.graphics.print("FPS:  "..love.timer.getFPS(),0,50,0,0.4,0.4)
-			love.graphics.print("# Projectiles:  "..#projectiles,0,80,0,0.4,0.4)
-			love.graphics.setColor(1,1,1)
+			ui.draw()
+
+			if debugMode then
+				love.graphics.setColor(0,1,0)
+				love.graphics.print("Debug Mode:",0,0,0,0.6,0.6)
+				love.graphics.print("FPS:  "..love.timer.getFPS(),0,50,0,0.4,0.4)
+				love.graphics.print("# Projectiles:  "..#projectiles,0,80,0,0.4,0.4)
+				love.graphics.setColor(1,1,1)
+			end
 		end
 	else
 		client.draw(dt)
