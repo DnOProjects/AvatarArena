@@ -564,7 +564,7 @@ function moves.cast(typeNum,num,pn)
 			if name == "melt" then
 				refund = true
 				for i=1,#projectiles do
-					p=projectiles[i]
+					local p=projectiles[i]
 					if p.meltable ~= nil then
 						refund = false
 						projectilesToRemove[#projectilesToRemove+1]=i
@@ -590,9 +590,7 @@ function moves.cast(typeNum,num,pn)
 			end
 
 			if refund==true then 
-				if p.chi~=nil then
-					p.chi=p.chi+moves[typeNum][num].cost 
-				end
+				p.chi=p.chi+moves[typeNum][num].cost 
 			else
 				moves.playMoveSound(moves[typeNum][num].type)
 			end
