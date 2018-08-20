@@ -104,8 +104,8 @@ function ui.update(dt)
 		else
 			ui.gameStartCountdown=3
 		end
-		if ui.gameStartCountdown<0.5 then startGame() end
 		ui.choose() 
+		if ui.gameStartCountdown<0.5 then startGame() end
 	end
 	if gameState == "menu" then ui.menuY() end
 	for playerSelecting=1,2 do

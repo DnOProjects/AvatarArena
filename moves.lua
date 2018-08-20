@@ -562,16 +562,15 @@ function moves.cast(typeNum,num,pn)
 				players.move(pn,p.d,true)
 			end
 			if name == "melt" then
-				local useChi = false
+				refund = true
 				for i=1,#projectiles do
 					p=projectiles[i]
 					if p.meltable ~= nil then
-						useChi = true
+						refund = false
 						projectilesToRemove[#projectilesToRemove+1]=i
 						projectiles[#projectiles+1] = {removesOnHit=false,hasSpread=false,rotate=false,despawn=8,name="lava",damage=20,image=lavaImg,x=p.rx,y=p.ry,d=p.d,speed = 0,rx=0,ry=0}
 					end
 				end
-				if useChi == false then refund=true end
 			end
 			if name == "boomerang" then
 				projectiles[#projectiles+1] = {caster=pn,removesOnHitCaster=true,damagesCaster=false,bounces=0,name=name,damage=10,image=boomerangImg,x=p.x,y=p.y,d=p.d,speed = 10,rx=0,ry=0}
@@ -591,7 +590,9 @@ function moves.cast(typeNum,num,pn)
 			end
 
 			if refund==true then 
-				p.chi=p.chi+moves[typeNum][num].cost 
+				if p.chi~=nil then
+					p.chi=p.chi+moves[typeNum][num].cost 
+				end
 			else
 				moves.playMoveSound(moves[typeNum][num].type)
 			end
