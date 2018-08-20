@@ -9,30 +9,6 @@ require "animate"
 require "Images/images"
 require "Sounds/sound"
 
-function findWhatMoveToMake()
-	local mostNeededMoveType=""
-	if #moves[1]<#moves[2] and #moves[1]<#moves[3] then mostNeededMoveType="utility" end
-	if #moves[2]<#moves[1] and #moves[2]<#moves[3] then mostNeededMoveType="attack" end
-	if #moves[3]<#moves[1] and #moves[3]<#moves[2] then mostNeededMoveType="power" end
-	local mostNeededElement=""
-	local elements={"air","water","earth","fire","",air=1,water=2,earth=3,fire=4}
-	local neededElements={0,0,0,0}
-	for i=1,3 do
-		for j=1,#moves[i] do
-			if moves[i][j].type~="sokka" and moves[i][j].type~="normal" then 
-				neededElements[elements[moves[i][j].type]]=neededElements[elements[moves[i][j].type]]+1
-			end
-		end
-	end
-	local smallestElement={5,10000}
-	for i=1,4 do
-		if neededElements[i]<smallestElement[2] then smallestElement={i,neededElements[i]}
-		elseif neededElements[i]==smallestElement[2] then smallestElement={5,neededElements[i]} end
-	end
-	mostNeededElement=elements[smallestElement[1]]
-	print("Make a "..mostNeededElement.." "..mostNeededMoveType.." move!")
-end
-
 function love.load()
 
 	startServer = true
@@ -59,7 +35,6 @@ function love.load()
     showDescription = 1
 
     moveSet = {0,0}
-	findWhatMoveToMake()
 
 end
 

@@ -47,6 +47,7 @@ playSymbolImg = love.graphics.newImage("Images/Symbols/playSymbol.png")
 	earthOrbImg = love.graphics.newImage("Images/Abilities/earth.png")
 	earthSpikeImg = love.graphics.newImage("Images/Abilities/earthSpike.png")
 	lavaImg = love.graphics.newImage("Images/Abilities/lava.png")
+	bulletImg = love.graphics.newImage("Images/Abilities/bullet.png")
 
 	---- Fire
 	fireOrbImg = love.graphics.newImage("Images/Abilities/fireSprite.png")
