@@ -1,6 +1,6 @@
-keyPress = {}
+input = {}
 
-function keyPress.keyInput(key,source)
+function input.keyInput(key,source)
 
 	if gameState == "game" then
 		if key=="escape" then

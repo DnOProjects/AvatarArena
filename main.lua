@@ -1,5 +1,5 @@
 require "logic"
-require "keyPress"
+require "input"
 require "map"
 require "players"
 require "moves"
@@ -63,7 +63,7 @@ function love.update(dt)
 
 		removeProjectiles()
 	else
-		client.update(dt)
+		client.updateData(dt)
 	end
 
 end
@@ -79,27 +79,35 @@ end
 function love.draw()
 
 	if onlineClient == false then
+
 		if onlineGame then
-			love.graphics.print("Running server..")
-		else
-			if gameState=="game" then
-				map.draw()
-				moves.draw()
-				players.draw()
-			end
-
-			ui.draw()
-
-			if debugMode then
-				love.graphics.setColor(0,1,0)
-				love.graphics.print("Debug Mode:",0,0,0,0.6,0.6)
-				love.graphics.print("FPS:  "..love.timer.getFPS(),0,50,0,0.4,0.4)
-				love.graphics.print("# Projectiles:  "..#projectiles,0,80,0,0.4,0.4)
-				love.graphics.setColor(1,1,1)
-			end
+			clientCanvas = love.graphics.newCanvas(1920,1080)
+			love.graphics.setCanvas(clientCanvas)
 		end
+		
+		if gameState=="game" then
+			map.draw()
+			moves.draw()
+			players.draw()
+		end
+
+		ui.draw()
+
+		if debugMode then
+			love.graphics.setColor(0,1,0)
+			love.graphics.print("Debug Mode:",0,0,0,0.6,0.6)
+			love.graphics.print("FPS:  "..love.timer.getFPS(),0,50,0,0.4,0.4)
+			love.graphics.print("# Projectiles:  "..#projectiles,0,80,0,0.4,0.4)
+			love.graphics.setColor(1,1,1)
+		end
+
+		if onlineGame then
+			love.graphics.setCanvas()
+			love.graphics.print("Running server..")
+		end
+
 	else
-		client.draw(dt)
+		client.draw()
 	end
 
 end
@@ -146,7 +154,7 @@ function love.keypressed(key)
 			if debugMode then ambientMusic:play() else ambientMusic:pause() end
 			debugMode=not debugMode 
 		end
-		if not onlineGame then keyPress.keyInput(key) end
+		if not onlineGame then input.keyInput(key) end
 	else
 		client.keyInput(key)
 	end

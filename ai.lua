@@ -45,7 +45,7 @@ function ai.update(dt)
 			end
 		end
 
-		keyPress.keyInput(key,"ai")	
+		input.keyInput(key,"ai")	
 
 	end
 end
