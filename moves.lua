@@ -377,7 +377,7 @@ function moves.cast(typeNum,num,pn)
 			local name = moves[typeNum][num].name
 
 			if name == "time slow" then
-				players.timeSlowTimer=6
+				players.timeSlowTimer=1
 			end
 
 			if name == "flame trail" then
