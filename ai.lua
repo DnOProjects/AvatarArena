@@ -45,7 +45,7 @@ function ai.update(dt)
 			end
 		end
 
-		server.keyInput(key,"ai")	
+		keyPress.keyInput(key,"ai")	
 
 	end
 end

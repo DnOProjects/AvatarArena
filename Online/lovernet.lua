@@ -72,7 +72,7 @@ function lovernet.new(init)
   self._enet = init.enet or require "enet"
   assert(self._enet)
 
-  self._serdes = init.serdes or require "Server/bitser"
+  self._serdes = init.serdes or require "Online/bitser"
   assert(self._serdes)
 
   self.hasOp = lovernet.hasOp
