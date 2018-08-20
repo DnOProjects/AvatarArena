@@ -75,13 +75,24 @@ end
 
 function ui.menuY()
 	local oy = menuStage
-	menuStage = ui[2].y+1
+	local changer = 1
+	for i=1,2 do
+		local ny = ui[i].y+1
+		if ny ~= oy then
+			changer = i
+			local other = 1
+			if changer == 1 then other = 2 end
+			ui[other].y = ui[changer].y
+			break
+		end
+	end
+	menuStage = ui[changer].y+1
 	if menuStage==3 and menu[2].options[menu[2].selected]=="ai" then ai.load(1,menu[3].options[menu[3].selected]) end
 	if menuStage==3 and menu[2].options[menu[2].selected]=="human" then
-		if oy == 2 then ui[2].y = 3 end
-		if oy == 4 then ui[2].y = 1 end
+		if oy == 2 then ui[changer].y = 3 end
+		if oy == 4 then ui[changer].y = 1 end
 	end
-	if menu[1].options[menu[1].selected]=="online" then ui[2].y = 0 end
+	if menu[1].options[menu[1].selected]=="online" then ui[changer].y = 0 end
 end
 
 function ui.update()
@@ -102,7 +113,7 @@ function ui.switch(d,playerSelecting)
 		if pausedSelection>maxOpt then pausedSelection=1 end
 	end
 	if gameState=="menu" then
-		menu[menuStage].selected = menu[menuStage].selected+1
+		menu[menuStage].selected = menu[menuStage].selected+d
 		if menu[menuStage].selected > #menu[menuStage].options then menu[menuStage].selected = 1 end
 		if menu[menuStage].selected < 1 then menu[menuStage].selected = #menu[menuStage].options end
 	elseif gameState=="characterSelection" and selectionMethod=="choice" then
