@@ -49,7 +49,7 @@ function love.update(dt)
 		moves.update(dt)
 		animate.update(dt)
 	end
-	ui.update()
+	ui.update(dt)
 	sound.update(dt)
 
 	removeProjectiles()

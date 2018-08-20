@@ -30,6 +30,8 @@ function ui.load()
 		end
 	end
 
+	ui.gameStartCountdown=3
+
 end
 
 function ui.randomMove(type,player)
@@ -95,8 +97,16 @@ function ui.menuY()
 	if menu[1].options[menu[1].selected]=="online" then ui[changer].y = 0 end
 end
 
-function ui.update()
-	if gameState == "characterSelection" then ui.choose() end
+function ui.update(dt)
+	if gameState == "characterSelection" then 
+		if ui[1].y == 4 and ui[2].y == 4 then
+			ui.gameStartCountdown=ui.gameStartCountdown-dt
+		else
+			ui.gameStartCountdown=3
+		end
+		if ui.gameStartCountdown<0.5 then startGame() end
+		ui.choose() 
+	end
 	if gameState == "menu" then ui.menuY() end
 	for playerSelecting=1,2 do
 		if ui[playerSelecting].y<0 then ui[playerSelecting].y=0 end
@@ -157,7 +167,7 @@ function ui.start()
 		end
 	elseif gameState=="characterSelection" then
 		if ui[1].y == 4 and ui[2].y == 4 then
-			startGame()
+			startGame() --<--SHOULD CHANGE AT SOME POINT SO STARTING IS MORE FAIR
 		end
 	elseif (gameState=="winScreen" or gameState=="paused") then 
 		if pausedSelection==2 then
@@ -290,6 +300,12 @@ function ui.draw()
 			if ui[i].y==4 then love.graphics.setLineWidth(20) end
 			love.graphics.circle("line",(i-1)*1260+260,1000,50)
 			love.graphics.setLineWidth(2)
+		end
+
+		if ui[1].y == 4 and ui[2].y == 4 then
+			love.graphics.setColor(1,0,0)
+			love.graphics.print(logic.round(ui.gameStartCountdown,0),850,350,0,4,4)
+			love.graphics.setColor(1,1,1)
 		end
 	end
 
