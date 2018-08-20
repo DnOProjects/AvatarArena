@@ -81,6 +81,7 @@ function love.draw()
 
 	if onlineGame then
 		love.graphics.setCanvas()
+		love.window.setFullscreen(false)
 		love.graphics.print("Running server..")
 	end
 
