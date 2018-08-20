@@ -8,6 +8,9 @@ function ui.load()
 	ui.randomised=false
 
 	pausedSelection=1
+
+	flashingAlpha = 1
+	flashDirection = "falling"
 	
 	--onlineGame, opponentType, numOpponents, selectionMethod,gameEvents
 	menu = {{name="Connection",selected=1,options={"local","online"}},
@@ -97,7 +100,15 @@ function ui.menuY()
 	if menu[1].options[menu[1].selected]=="online" then ui[changer].y = 0 end
 end
 
+function ui.flashAlpha(dt)
+	if flashingAlpha <= 0 then flashingAlpha = 0; flashDirection = "rising" end
+	if flashingAlpha >= 1 then flashingAlpha = 1; flashDirection = "falling" end
+	if flashDirection == "falling" then flashingAlpha = flashingAlpha - dt end
+	if flashDirection == "rising" then flashingAlpha = flashingAlpha + dt end
+end
+
 function ui.update(dt)
+	ui.flashAlpha(dt)
 	if gameState == "characterSelection" then 
 		if ui[1].y == 4 and ui[2].y == 4 then
 			ui.gameStartCountdown=ui.gameStartCountdown-dt
@@ -223,7 +234,9 @@ function ui.draw()
 	if gameState == "menu" then
 		love.graphics.setFont(menuFont)
 		love.graphics.draw(menuScreen,0,0,0,love.graphics.getWidth()/menuScreen:getWidth(),love.graphics.getHeight()/menuScreen:getHeight())
-		love.graphics.printf("Menu",-10,20,700,"center",0,2.8,2.8)
+		love.graphics.printf("Avatar Arena",-30,20,700,"center",0,2.8,2.8)
+		rgb(200,200,200,flashingAlpha*255)
+		love.graphics.print("Press ENTER to start",1360,1000,0,0.7,0.7)
 		for i=1,#menu do
 			if not(i == 3 and menu[2].options[menu[2].selected] == "human") and not(i ~= 1 and menu[1].options[menu[1].selected] == "online") then
 				if menuStage == i then rgb(209, 63, 37) else rgb(150,150,150) end
