@@ -1,4 +1,5 @@
 require "logic"
+require "keyPress"
 require "map"
 require "players"
 require "moves"
@@ -7,11 +8,12 @@ require "ai"
 require "animate"
 require "Images/images"
 require "Sounds/sound"
-require "Server/server"
 
 function love.load()
 
-	debugMode=false
+	startServer = true
+
+	debugMode = false
 
 	math.randomseed(os.time())
 	if not(onlineGame) then
@@ -27,8 +29,6 @@ function love.load()
     ui.load()
     sound.load()
 
-    server.load()
-
     gameState = "menu"
     projectilesToRemove = {}
     showDescription = 1
@@ -39,20 +39,30 @@ end
 
 function love.update(dt)
 
-	if gameEvent=="time warp" then dt=dt*dtMultiplier end
+	if onlineClient == false then
+		if gameEvent=="time warp" then dt=dt*dtMultiplier end
 
-	server:update(dt)
+		if onlineGame and startServer then
+			startServer = false
+			require "Online/server"
+			server.load()
+		end
 
-	if gameState=="game" then
-		if players[2].controller=="ai" then ai.update(dt) end
-		players.update(dt)
-		moves.update(dt)
-		animate.update(dt)
+		if onlineGame then server:update(dt) end
+
+		if gameState=="game" then
+			if players[2].controller=="ai" then ai.update(dt) end
+			players.update(dt)
+			moves.update(dt)
+			animate.update(dt)
+		end
+		ui.update(dt)
+		sound.update(dt)
+
+		removeProjectiles()
+	else
+		client.update(dt)
 	end
-	ui.update(dt)
-	sound.update(dt)
-
-	removeProjectiles()
 
 end
 
@@ -66,31 +76,35 @@ end
 
 function love.draw()
 
-	if onlineGame then
-		canvas = love.graphics.newCanvas(1920,1080)
-		love.graphics.setCanvas(canvas)
-	end
+	if onlineClient == false then
+		if onlineGame then
+			canvas = love.graphics.newCanvas(1920,1080)
+			love.graphics.setCanvas(canvas)
+		end
 
-	if gameState=="game" then
-		map.draw()
-		moves.draw()
-		players.draw()
-	end
+		if gameState=="game" then
+			map.draw()
+			moves.draw()
+			players.draw()
+		end
 
-	ui.draw()
+		ui.draw()
 
-	if onlineGame then
-		love.graphics.setCanvas()
-		love.window.setFullscreen(false)
-		love.graphics.print("Running server..")
-	end
+		if onlineGame then
+			love.graphics.setCanvas()
+			love.window.setFullscreen(false)
+			love.graphics.print("Running server..")
+		end
 
-	if debugMode then
-		love.graphics.setColor(0,1,0)
-		love.graphics.print("Debug Mode:",0,0,0,0.6,0.6)
-		love.graphics.print("FPS:  "..love.timer.getFPS(),0,50,0,0.4,0.4)
-		love.graphics.print("# Projectiles:  "..#projectiles,0,80,0,0.4,0.4)
-		love.graphics.setColor(1,1,1)
+		if debugMode then
+			love.graphics.setColor(0,1,0)
+			love.graphics.print("Debug Mode:",0,0,0,0.6,0.6)
+			love.graphics.print("FPS:  "..love.timer.getFPS(),0,50,0,0.4,0.4)
+			love.graphics.print("# Projectiles:  "..#projectiles,0,80,0,0.4,0.4)
+			love.graphics.setColor(1,1,1)
+		end
+	else
+		client.draw(dt)
 	end
 
 end
@@ -132,9 +146,13 @@ function startGame()
 end
 
 function love.keypressed(key)
-	if key=="9" then 
-		if debugMode then ambientMusic:play() else ambientMusic:pause() end
-		debugMode=not debugMode 
+	if onlineClient == false then
+		if key=="9" then 
+			if debugMode then ambientMusic:play() else ambientMusic:pause() end
+			debugMode=not debugMode 
+		end
+		if not onlineGame then keyPress.keyInput(key) end
+	else
+		client.keyInput(key)
 	end
-	if not onlineGame then server.keyInput(key) end
 end

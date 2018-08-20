@@ -1,7 +1,7 @@
 love.window.setFullscreen(true)
 love.mouse.setVisible(false)
 
-lovernetlib = require('lovernet')
+lovernetlib = require('Online/lovernet')
 client = lovernetlib.new()
 
 client:addOp('p')
@@ -9,7 +9,7 @@ client:addOp('q')
 
 client.pushTimer = 0
 
-function love.update(dt)
+function client.update(dt)
 
   client.pushTimer = client.pushTimer - dt
 
@@ -22,7 +22,7 @@ function love.update(dt)
 
 end
 
-function love.draw()
+function client.draw()
   if client:getCache('q') then
     local encoded = client:getCache('q')
     local decoded = love.image.newImageData(love.graphics.getWidth(),love.graphics.getHeight(),encoded)
@@ -31,7 +31,7 @@ function love.draw()
   end
 end
 
-function love.keypressed(key)
+function client.keyInput(key)
    client:sendData('p',{
     key=key
   })

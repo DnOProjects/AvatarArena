@@ -1,4 +1,4 @@
---require "Client/main"
+require "Online/client"
 
 ui = {{y=0},{y=0}}
 
@@ -10,6 +10,9 @@ function ui.load()
 	ui.randomised=false
 
 	pausedSelection=1
+
+	onlineGame = false
+	onlineClient = false
 
 	flashingAlpha = 1
 	flashDirection = "falling"
@@ -178,7 +181,7 @@ function ui.start()
 	if gameState=="menu" then
 		if menu[1].options[menu[1].selected]=="online" then
 			if menu[2].options[menu[2].selected]=="server" then onlineGame = true
-			else print("Starting Client") end
+			else onlineClient = true end
 		else
 			gameState = "characterSelection"
 			selectionMethod = menu[4].options[menu[4].selected]
