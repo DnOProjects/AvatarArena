@@ -1,3 +1,5 @@
+--require "Client/main"
+
 ui = {{y=0},{y=0}}
 
 function ui.load()
@@ -18,6 +20,7 @@ function ui.load()
 	{name="Difficulty",selected=2,options={"easy","medium","hard","expert"}},
 	{name="Selection",selected=1,options={"choice","random","random duel","blind","blind duel"}},
 	{name="Events",selected=1,options={"none","sea of chi","power cycle","instablitiy","time warp"}}}
+	menu2Options = {{name="Oppenent",selected=1,options={"human","ai"}},{name="Role",selected=1,options={"client","server"}}}
 	menuStage=1
 
 	impactFont = love.graphics.newFont("Fonts/font.ttf",72)
@@ -97,7 +100,12 @@ function ui.menuY()
 		if oy == 2 then ui[changer].y = 3 end
 		if oy == 4 then ui[changer].y = 1 end
 	end
-	if menu[1].options[menu[1].selected]=="online" then ui[changer].y = 0 end
+	if menu[1].options[menu[1].selected]=="online" then
+		if ui[changer].y > 1 then ui[changer].y = 1 end
+		menu[2] = menu2Options[2]
+	else
+		menu[2] = menu2Options[1]
+	end
 end
 
 function ui.flashAlpha(dt)
@@ -108,7 +116,7 @@ function ui.flashAlpha(dt)
 end
 
 function ui.update(dt)
-	ui.flashAlpha(dt)
+	ui.flashAlpha(dt/1.2)
 	if gameState == "characterSelection" then 
 		if ui[1].y == 4 and ui[2].y == 4 then
 			ui.gameStartCountdown=ui.gameStartCountdown-dt
@@ -169,7 +177,8 @@ end
 function ui.start()
 	if gameState=="menu" then
 		if menu[1].options[menu[1].selected]=="online" then
-			onlineGame = true
+			if menu[2].options[menu[2].selected]=="server" then onlineGame = true
+			else print("Starting Client") end
 		else
 			gameState = "characterSelection"
 			selectionMethod = menu[4].options[menu[4].selected]
@@ -238,7 +247,7 @@ function ui.draw()
 		rgb(200,200,200,flashingAlpha*255)
 		love.graphics.print("Press ENTER to start",1360,1000,0,0.7,0.7)
 		for i=1,#menu do
-			if not(i == 3 and menu[2].options[menu[2].selected] == "human") and not(i ~= 1 and menu[1].options[menu[1].selected] == "online") then
+			if not(i == 3 and menu[2].options[menu[2].selected] == "human") and not(i ~= 1 and i ~= 2 and menu[1].options[menu[1].selected] == "online") then
 				if menuStage == i then rgb(209, 63, 37) else rgb(150,150,150) end
 				love.graphics.printf(menu[i].name,55,150*i+100,500,"right",0,1.8,1.8)
 				love.graphics.setColor(255,255,255)
