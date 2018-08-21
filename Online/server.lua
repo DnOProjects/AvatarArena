@@ -2,23 +2,21 @@ lovernetlib = require('Online/lovernet')
 server = lovernetlib.new{type=lovernetlib.mode.server}
 
 function server.load()
-
 	server:addOp('q') --query (send gameState to client)
 	server:addOp('p') --point (recieve keyPresses)
 
 	if onlineGame then
 		server:addProcessOnServer('q',function(self,peer,arg,storage)
-		  return canvas:newImageData():getString( )
+			--return canvas:newImageData():getString()
+			return {x=players[1].x,y=players[1].y}
 		end)
 	end
 
 	server:addValidateOnServer('p',{key='string'})
 
 	server:addProcessOnServer('p',function(self,peer,arg,storage)
-	  user = self:getUser(peer)
-
-	  server.keyInput(arg.key)
-
+	  	user = self:getUser(peer)
+	  	server.keyInput(arg.key)
 	end)
 
 end
@@ -92,7 +90,8 @@ function server.keyInput(key,source)
 			if key=="up" or key=="down" or key=="left" or key=="right" then showDescription = 2 end
 		end
 
-		if key=="return" then ui.start() end
+		if key=="return" then ui.start() 
+		end
 	end
 
 	if key=="escape" and gameState=="winScreen"then

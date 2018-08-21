@@ -180,8 +180,12 @@ end
 function ui.start()
 	if gameState=="menu" then
 		if menu[1].options[menu[1].selected]=="online" then
-			if menu[2].options[menu[2].selected]=="server" then onlineGame = true
-			else onlineClient = true end
+			if menu[2].options[menu[2].selected]=="server" then 
+				onlineGame = true
+				startGame()
+			else 
+				onlineClient = true 
+			end
 		else
 			gameState = "characterSelection"
 			selectionMethod = menu[4].options[menu[4].selected]
