@@ -114,7 +114,7 @@ function addToDrawCanvas()
 		ui.draw()
 
 		if gameEndFade~=false then
-			love.graphics.setColor(1,1,1,1/gameEndFade-0.142857143)
+			love.graphics.setColor(1,1,1,1/gameEndFade-0.25)
 			love.graphics.rectangle("fill",0,0,love.graphics.getWidth(),love.graphics.getHeight())
 		end
 
