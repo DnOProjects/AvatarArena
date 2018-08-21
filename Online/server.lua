@@ -2,7 +2,7 @@ lovernetlib = require('Online/lovernet')
 server = lovernetlib.new{type=lovernetlib.mode.server}
 
 function server.load()
-
+	
 	server:addOp('q') --query (send gameState to client)
 	server:addOp('p') --point (recieve keyPresses)
 	

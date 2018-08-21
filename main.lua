@@ -16,8 +16,10 @@ function love.load()
 	debugMode = false
 
 	math.randomseed(os.time())
-	love.window.setFullscreen(true)
-	love.window.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {fullscreen=false,borderless=true,display=1})
+	if not(onlineGame) then
+		love.window.setFullscreen(true)
+		love.window.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {borderless=true,display=1})
+	end
 
 	love.mouse.setVisible(false)
     love.graphics.setDefaultFilter("nearest","linear", 100 )
@@ -36,6 +38,8 @@ function love.load()
 
     gameEndFade=false
 
+    canvas=love.graphics.newCanvas(1920,1080)
+
 end
 
 function love.update(dt)
@@ -49,15 +53,15 @@ function love.update(dt)
 		if onlineGame then
 			if startServer then
 				startServer = false
-				canvas = love.graphics.newCanvas(1920,1080)
+				clientCanvas = love.graphics.newCanvas(1920,1080)
 				love.window.setMode(1000, 700, {resizable=true,borderless=false,minwidth=650,minheight=400})
 				require "Online/server"
 				server.load()
 			end
-			love.graphics.setCanvas(canvas)
+			love.graphics.setCanvas(clientCanvas)
 			addToDrawCanvas()
 			love.graphics.setCanvas()
-			server:setStorage(canvas)
+			server:setStorage(clientCanvas)
 			server:update(dt)
 		end
 
@@ -77,19 +81,33 @@ function love.update(dt)
 
 end
 
+	function removeProjectiles()
+		table.sort(projectilesToRemove)
+		for i=#projectilesToRemove,1,-1 do
+			table.remove(projectiles,projectilesToRemove[i])
+			table.remove(projectilesToRemove,i)
+		end
+	end
+
+function fadeGameEnd(dt)
+	if gameEndFade~=false and gameEndFade < 1 then
+		gameState = "winScreen"
+		pausedSelection=2
+		projectilesToRemove = {}
+		gameEndFade = false 
+	end
+	if gameEndFade~=false then gameEndFade=gameEndFade-dt end
+end
+
 function love.draw()
 
-	if onlineGame == false then
-		addToDrawCanvas()
-	elseif onlineGame == true then
-		love.graphics.print("Running server..")
-	end
+	addToDrawCanvas()
 
 end
 
 function addToDrawCanvas()
 
-	if onlineClient == false then
+	if onlineClient == false and onlineGame == false then
 		if gameState=="game" then
 			map.draw()
 			moves.draw()
@@ -114,26 +132,10 @@ function addToDrawCanvas()
 		end
 	elseif onlineClient == true then
 		client.draw()
+	elseif onlineGame == true then
+		love.graphics.print("Running server..")
 	end
 
-end
-
-function removeProjectiles()
-		table.sort(projectilesToRemove)
-		for i=#projectilesToRemove,1,-1 do
-			table.remove(projectiles,projectilesToRemove[i])
-			table.remove(projectilesToRemove,i)
-		end
-	end
-
-function fadeGameEnd(dt)
-	if gameEndFade~=false and gameEndFade < 1 then
-		gameState = "winScreen"
-		pausedSelection=2
-		projectilesToRemove = {}
-		gameEndFade = false 
-	end
-	if gameEndFade~=false then gameEndFade=gameEndFade-dt end
 end
 
 function startGame()
