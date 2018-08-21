@@ -1,0 +1,1 @@
+"D:\Program Files\LOVE\love.exe" "D:\Ori-2.0\Non-ARK\My Code\LOVE\AvatarArena"
