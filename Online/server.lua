@@ -5,12 +5,9 @@ function server.load()
 	server:addOp('q') --query (send gameState to client)
 	server:addOp('p') --point (recieve keyPresses)
 	print("loaded")
-	if onlineGame then
-		server:addProcessOnServer('q',function(self,peer,arg,storage)
-			print("here")
-			return canvas:newImageData():getString()
-		end)
-	end
+	server:addProcessOnServer('q',function(self,peer,arg,storage)
+		return clientCanvas:newImageData():getString()
+	end)
 
 	server:addValidateOnServer('p',{key='string'})
 

@@ -44,7 +44,6 @@ end
 
 function love.update(dt)
 
-
 	if onlineClient == false then
 
 		fadeGameEnd(dt)
@@ -58,7 +57,9 @@ function love.update(dt)
 			server.load()
 		end
 
-		if onlineGame then server:update(dt) end
+		if onlineGame then server:update(dt) 
+			print(clientCanvas:newImageData():getString())--works on just printing the canvas DUN DUN DAAAAAAA
+		end
 
 		if gameState=="game" then
 			if players[2].controller=="ai" then ai.update(dt) end
