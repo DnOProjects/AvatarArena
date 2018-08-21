@@ -16,10 +16,8 @@ function love.load()
 	debugMode = false
 
 	math.randomseed(os.time())
-	if not(onlineGame) then
-		love.window.setFullscreen(true)
-		love.window.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {borderless=true,display=1})
-	end
+	love.window.setFullscreen(true)
+	love.window.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {borderless=true,display=1})
 
 	love.mouse.setVisible(false)
     love.graphics.setDefaultFilter("nearest","linear", 100 )
@@ -38,8 +36,6 @@ function love.load()
 
     gameEndFade=false
 
-    canvas=love.graphics.newCanvas(1920,1080)
-
 end
 
 function love.update(dt)
@@ -53,15 +49,15 @@ function love.update(dt)
 		if onlineGame then
 			if startServer then
 				startServer = false
-				clientCanvas = love.graphics.newCanvas(1920,1080)
+				canvas = love.graphics.newCanvas(1920,1080)
 				love.window.setMode(1000, 700, {resizable=true,borderless=false,minwidth=650,minheight=400})
 				require "Online/server"
 				server.load()
 			end
-			love.graphics.setCanvas(clientCanvas)
+			love.graphics.setCanvas(canvas)
 			addToDrawCanvas()
 			love.graphics.setCanvas()
-			server:setStorage(clientCanvas)
+			server:setStorage(canvas)
 			server:update(dt)
 		end
 
