@@ -76,4 +76,6 @@ function input.keyInput(key,source)
 		gameState="menu"
 	end
 
+	if key==";" and gameState=="menu" then love.system.openURL("https://github.com/DnOProjects/AvatarArena/wiki") end
+
 end

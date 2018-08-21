@@ -257,6 +257,7 @@ function ui.draw()
 		love.graphics.printf("Avatar Arena",-30,20,700,"center",0,2.8,2.8)
 		rgb(200,200,200,flashingAlpha*255)
 		love.graphics.print("Press ENTER to start",1360,1000,0,0.7,0.7)
+		love.graphics.print("Press ; to\nread the wiki",1640,40,0,0.5,0.5)
 		for i=1,#menu do
 			if not(i == 3 and menu[2].options[menu[2].selected] == "human") and not(i ~= 1 and i ~= 2 and menu[1].options[menu[1].selected] == "online") then
 				if menuStage == i then rgb(209, 63, 37) else rgb(150,150,150) end
