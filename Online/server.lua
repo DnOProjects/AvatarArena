@@ -6,7 +6,7 @@ function server.load()
 	server:addOp('p') --point (recieve keyPresses)
 	
 	server:addProcessOnServer('q',function(self,peer,arg,storage)
-		return storage
+		return storage:newImageData():getString()
 	end)
 
 	server:addValidateOnServer('p',{key='string'})

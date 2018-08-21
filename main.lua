@@ -61,7 +61,7 @@ function love.update(dt)
 			love.graphics.setCanvas(clientCanvas)
 			addToDrawCanvas()
 			love.graphics.setCanvas()
-			server:setStorage(clientCanvas:newImageData():getString())
+			server:setStorage(clientCanvas)
 			server:update(dt)
 		end
 

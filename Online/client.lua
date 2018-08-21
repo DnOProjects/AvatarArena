@@ -22,10 +22,10 @@ function client.updateData(dt)
 end
 
 function client.draw()
+    
     if client:getCache('q') then
-        print(client:getCache('q'))
         local encoded = client:getCache('q')
-        local decoded = love.image.newImageData(love.graphics.getWidth(),love.graphics.getHeight(),encoded)
+        local decoded = love.image.newImageData(love.graphics.getWidth(),love.graphics.getHeight(),"rgba8",encoded)
         love.graphics.setColor(255,255,255)
         love.graphics.draw(love.graphics.newImage(decoded))
 
