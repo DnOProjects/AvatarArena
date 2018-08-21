@@ -7,8 +7,8 @@ function server.load()
 
 	if onlineGame then
 		server:addProcessOnServer('q',function(self,peer,arg,storage)
-			return canvas:newImageData():getString()
-			--return {x=players[1].x,y=players[1].y}
+			--return canvas:newImageData():getString()
+			return {x=players[1].x,y=players[1].y}
 		end)
 	end
 

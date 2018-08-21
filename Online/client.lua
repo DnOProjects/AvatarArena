@@ -25,10 +25,10 @@ function client.draw()
 
     if client:getCache('q') then
 
-        local encoded = client:getCache('q')
+        --[[local encoded = client:getCache('q')
         local decoded = love.image.newImageData(love.graphics.getWidth(),love.graphics.getHeight(),encoded)
         love.graphics.setColor(255,255,255)
-        love.graphics.draw(love.graphics.newImage(decoded))
+        love.graphics.draw(love.graphics.newImage(decoded))]]
 
         clientData=client:getCache('q')
         love.graphics.setColor(1,1,1)
