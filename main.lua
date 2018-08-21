@@ -49,13 +49,18 @@ function love.update(dt)
 		if gameEvent=="time warp" then dt=dt*dtMultiplier end
 
 		if onlineGame and startServer then
-			startServer = false
-			love.window.setMode(1000, 700, {resizable=true,borderless=false,minwidth=650,minheight=400})
-			require "Online/server"
-			server.load()
+			if startServer then
+				startServer = false
+				clientCanvas = love.graphics.newCanvas(1920,1080)
+				love.window.setMode(1000, 700, {resizable=true,borderless=false,minwidth=650,minheight=400})
+				require "Online/server"
+				server.load()
+			end
+			love.graphics.setCanvas(clientCanvas)
+			addToDrawCanvas()
+			love.graphics.setCanvas()
+			server:update(dt)
 		end
-
-		if onlineGame then server:update(dt) end
 
 		if gameState=="game" then
 			if players[2].controller=="ai" then ai.update(dt) end
@@ -93,13 +98,13 @@ end
 
 function love.draw()
 
-	if onlineClient == false then
+	addToDrawCanvas()
 
-		if onlineGame then
-			clientCanvas = love.graphics.newCanvas(1920,1080)
-			love.graphics.setCanvas(clientCanvas)
-		end
-		
+end
+
+function addToDrawCanvas()
+
+	if onlineClient == false and onlineGame == false then
 		if gameState=="game" then
 			map.draw()
 			moves.draw()
@@ -122,14 +127,10 @@ function love.draw()
 			love.graphics.print("# Projectiles:  "..#projectiles,0,80,0,0.4,0.4)
 			love.graphics.setColor(1,1,1)
 		end
-
-		if onlineGame then
-			love.graphics.setCanvas()
-			love.graphics.print("Running server..")
-		end
-
-	else
+	elseif onlineClient == true then
 		client.draw()
+	elseif onlineGame == true then
+		love.graphics.print("Running server..")
 	end
 
 end
