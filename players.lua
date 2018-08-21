@@ -247,11 +247,11 @@ end
 				local p=players[i]
 				if i==1 then op=players[2] end
 				if p.hp <= 0 and op.hp>0 then
-				    gameEndFade=7
+				    gameEndFade=4
 				    loser = i
 				end
 				if p.hp <= 0 and op.hp <= 0 then
-					gameEndFade=7
+					gameEndFade=4
 					loser="draw"
 				end
 			end
