@@ -4,9 +4,9 @@ server = lovernetlib.new{type=lovernetlib.mode.server}
 function server.load()
 	server:addOp('q') --query (send gameState to client)
 	server:addOp('p') --point (recieve keyPresses)
-	print("loaded")
+	
 	server:addProcessOnServer('q',function(self,peer,arg,storage)
-		return clientCanvas:newImageData():getString()
+		return storage
 	end)
 
 	server:addValidateOnServer('p',{key='string'})

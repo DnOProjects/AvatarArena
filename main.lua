@@ -50,7 +50,7 @@ function love.update(dt)
 
 		if gameEvent=="time warp" then dt=dt*dtMultiplier end
 
-		if onlineGame and startServer then
+		if onlineGame then
 			if startServer then
 				startServer = false
 				clientCanvas = love.graphics.newCanvas(1920,1080)
@@ -61,11 +61,8 @@ function love.update(dt)
 			love.graphics.setCanvas(clientCanvas)
 			addToDrawCanvas()
 			love.graphics.setCanvas()
+			server:setStorage(clientCanvas:newImageData():getString())
 			server:update(dt)
-		end
-
-		if onlineGame then server:update(dt) 
-			print(clientCanvas:newImageData():getString())--works on just printing the canvas DUN DUN DAAAAAAA
 		end
 
 		if gameState=="game" then
