@@ -26,6 +26,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="spike",type="earth",cost=10,desc="Huge spikes of earth emerge from the ground in a line."},
 {name="blast",type="fire",cost=10,desc="Two glowing embers shoot sideways from each hand."},
 {name="sear",type="fire",cost=13,desc="Four balls of fire radiate inaccurately from your body."},
+{name="fire breath",type="fire",cost=13,desc="Breath out fire, searing any enemies in front of you."},
 {name="boomerang",type="sokka",cost=11,desc="The boomerang whirls around the edge of the arena before returning to your hand."}},
 
 --Power
