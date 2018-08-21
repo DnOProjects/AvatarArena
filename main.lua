@@ -36,11 +36,16 @@ function love.load()
 
     moveSet = {0,0}
 
+    gameEndFade=false
+
 end
 
 function love.update(dt)
 
 	if onlineClient == false then
+
+		fadeGameEnd(dt)
+
 		if gameEvent=="time warp" then dt=dt*dtMultiplier end
 
 		if onlineGame and startServer then
@@ -76,6 +81,16 @@ end
 		end
 	end
 
+function fadeGameEnd(dt)
+	if gameEndFade~=false and gameEndFade < 1 then
+		gameState = "winScreen"
+		pausedSelection=2
+		projectilesToRemove = {}
+		gameEndFade = false 
+	end
+	if gameEndFade~=false then gameEndFade=gameEndFade-dt end
+end
+
 function love.draw()
 
 	if onlineClient == false then
@@ -92,6 +107,11 @@ function love.draw()
 		end
 
 		ui.draw()
+
+		if gameEndFade~=false then
+			love.graphics.setColor(1,1,1,1/gameEndFade-0.142857143)
+			love.graphics.rectangle("fill",0,0,love.graphics.getWidth(),love.graphics.getHeight())
+		end
 
 		if debugMode then
 			love.graphics.setColor(0,1,0)

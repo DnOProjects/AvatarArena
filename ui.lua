@@ -218,14 +218,19 @@ function ui.draw()
 		love.graphics.draw(winScreen, 0, 0, 0, 1920/winScreen:getWidth(), 1080/winScreen:getHeight())
 		if gameState == "winScreen" then
 			maxOpt=2
-			love.graphics.draw(characters[players[winner].char].portrait,810,200)
-			love.graphics.draw(characters[players[loser].char].portrait,865,800,0,0.5,0.5)
-			love.graphics.setColor(0,0,0)
-			love.graphics.setLineWidth(4)
-			love.graphics.rectangle("line",809,199,252,358,5,5)
-			love.graphics.rectangle("line",864,799,126,179,5,5)
-			love.graphics.print("Winner: Player "..winner,690,125)
-			love.graphics.print("Loser: Player "..loser,770,745,0,0.7)
+			if loser~="draw" then
+				love.graphics.draw(characters[players[winner].char].portrait,810,200)
+				love.graphics.draw(characters[players[loser].char].portrait,865,800,0,0.5,0.5)
+				love.graphics.setColor(0,0,0)
+				love.graphics.setLineWidth(4)
+				love.graphics.rectangle("line",809,199,252,358,5,5)
+				love.graphics.rectangle("line",864,799,126,179,5,5)
+				love.graphics.print("Winner: Player "..winner,690,125)
+				love.graphics.print("Loser: Player "..loser,770,745,0,0.7)
+			else
+				love.graphics.setColor(0,0,0)
+				love.graphics.print("It's a draw!",750,400)
+			end
 		end
 		love.graphics.setColor(0,0,0)
 		if gameState=="paused" then 

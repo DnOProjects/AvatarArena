@@ -47,7 +47,7 @@ function players.update(dt)
 	players.updateGameEvents(dt)
 	players.updateTimer(dt)
 	players.checkForBlock()
-	players.checkForHits()
+	if gameEndFade==false then players.checkForHits() end --So you can't take damage during the fade out
 	players.checkForLineOfSight()
 	players.poolChi(dt)
 	players.fall()
@@ -241,13 +241,19 @@ end
 	end
 
 	function players.die()
-		for i=1,2 do
-			if(players[i].hp <= 0)then
-			    players[i].hp=1
-			    gameState = "winScreen"
-			    pausedSelection=2
-			    projectilesToRemove = {}
-			    loser = i
+		if gameEndFade==false then
+			for i=1,2 do
+				local op=players[1]
+				local p=players[i]
+				if i==1 then op=players[2] end
+				if p.hp <= 0 and op.hp>0 then
+				    gameEndFade=7
+				    loser = i
+				end
+				if p.hp <= 0 and op.hp <= 0 then
+					gameEndFade=7
+					loser="draw"
+				end
 			end
 		end
 	end

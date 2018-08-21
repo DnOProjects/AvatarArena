@@ -2,7 +2,7 @@ input = {}
 
 function input.keyInput(key,source)
 
-	if gameState == "game" then
+	if gameState == "game" and gameEndFade==false then
 		if key=="escape" then
 			gameState="paused"
 			pausedSelection=3
