@@ -114,6 +114,8 @@ function addToDrawCanvas()
 		ui.draw()
 
 		if gameEndFade~=false then
+			love.graphics.setColor(1,0.5,0)
+			love.graphics.printf("Player "..winner.." wins!",0,300,1000,"center",0,2,2)
 			love.graphics.setColor(1,1,1,1/gameEndFade-0.25)
 			love.graphics.rectangle("fill",0,0,love.graphics.getWidth(),love.graphics.getHeight())
 		end

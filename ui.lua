@@ -218,7 +218,6 @@ end
 function ui.draw()
 	if gameState == "winScreen" or gameState == "paused" then
 		maxOpt=3
-		if loser==1 then winner=2 else winner=1 end
 		love.graphics.draw(winScreen, 0, 0, 0, 1920/winScreen:getWidth(), 1080/winScreen:getHeight())
 		if gameState == "winScreen" then
 			maxOpt=2

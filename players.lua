@@ -249,6 +249,7 @@ end
 				if p.hp <= 0 and op.hp>0 then
 				    gameEndFade=4
 				    loser = i
+				    if loser==1 then winner=2 else winner=1 end
 				end
 				if p.hp <= 0 and op.hp <= 0 then
 					gameEndFade=4
