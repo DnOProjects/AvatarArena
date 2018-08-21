@@ -38,9 +38,12 @@ function love.load()
 
     gameEndFade=false
 
+    canvas=love.graphics.newCanvas(1920,1080)
+
 end
 
 function love.update(dt)
+
 
 	if onlineClient == false then
 

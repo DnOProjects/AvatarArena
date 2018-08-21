@@ -4,11 +4,16 @@ server = lovernetlib.new{type=lovernetlib.mode.server}
 function server.load()
 	server:addOp('q') --query (send gameState to client)
 	server:addOp('p') --point (recieve keyPresses)
-
+	print("loaded")
 	if onlineGame then
 		server:addProcessOnServer('q',function(self,peer,arg,storage)
+<<<<<<< HEAD
 			return canvas:newImageData():getString()
 			--return {x=players[1].x,y=players[1].y}
+=======
+			print("here")
+			return canvas:newImageData():getString()
+>>>>>>> 257b35e2c92029bbe2226e51659079989962e384
 		end)
 	end
 
