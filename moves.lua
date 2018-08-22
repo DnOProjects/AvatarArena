@@ -17,7 +17,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 
 --Attack
 {{name="arrow",type="normal",cost=5,desc="A well-placed arrow can be as effective as any pillar of fire or column of rock!"},
-{name="gust",type="air",cost=4,desc="A ball of whirling air."},
+{name="hurricane",type="air",cost=4,desc="A ball of whirling air."},
 {name="air ball",type="air",cost=8,desc="A compressed sphere of air that bounces from wall to wall."},
 {name="air flurry",type="air",cost=15,desc="Release strands over air to trap your opponent!"},
 {name="spurt",type="water",cost=16,desc="A writhing spray of water, ready to force itself down your enemy's throat and drown their very lungs!"},
@@ -461,7 +461,7 @@ function moves.cast(typeNum,num,pn)
 					projectiles[#projectiles] = moves.moveProj(#projectiles,i)
 				end
 			end
-			if name == "gust" then
+			if name == "hurricane" then
 				projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=2,name=name,damage=15,image=airOrbImg,x=p.x,y=p.y,d=p.d,speed = 8,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
