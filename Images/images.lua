@@ -28,6 +28,7 @@ playSymbolImg = love.graphics.newImage("Images/Symbols/playSymbol.png")
 -- Moves
 	---- Air
 	airOrbImg = love.graphics.newImage("Images/Abilities/airSprite.png")
+	bouncyAirOrbImg = love.graphics.newImage("Images/Abilities/airSpriteBouncing.png")
 	gustOrbImg = love.graphics.newImage("Images/Abilities/gustSprite.png")
 	windImg = love.graphics.newImage("Images/Abilities/windSprite.png")
 	tornadoCentreImg = love.graphics.newImage("Images/Abilities/tornadoCentre.png")

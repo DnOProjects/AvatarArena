@@ -18,6 +18,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 --Attack
 {{name="arrow",type="normal",cost=5,desc="A well-placed arrow can be as effective as any pillar of fire or column of rock!"},
 {name="gust",type="air",cost=4,desc="A ball of whirling air."},
+{name="bounce",type="air",cost=8,desc="A ball of whirling air."},
 {name="air flurry",type="air",cost=15,desc="Release strands over air to trap your opponent!"},
 {name="spurt",type="water",cost=16,desc="A writhing spray of water, ready to force itself down your enemy's throat and drown their very lungs!"},
 {name="spout",type="water",cost=9,desc="Shoot a line of well-placed water out in front of you, blocking your enemy's path."},
@@ -110,6 +111,12 @@ end
 					pl.beenBlown=0.1
 				end
 			end
+		end
+		if p.name == "bounce" then
+			if p.x>16.1 and p.d==1 then p.d=3 end
+			if p.x<0.9 and p.d==3 then p.d=1 end
+			if p.y>8.1 and p.d==2 then p.d=0 end
+			if p.y<0.9 and p.d==0 then p.d=2 end
 		end
 		if p.name == "ice spike" and p.despawn < 1.7 and p.spawned==false then
 			p.spawned=true
@@ -462,6 +469,10 @@ function moves.cast(typeNum,num,pn)
 			end
 			if name == "gust" then
 				projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=2,name=name,damage=15,image=airOrbImg,x=p.x,y=p.y,d=p.d,speed = 8,rx=0,ry=0}
+				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+			end
+			if name == "bounce" then
+				projectiles[#projectiles+1] = {despawn=10,percent=0,spriteLength=6,aSpeed=1.5,name=name,damage=15,image=bouncyAirOrbImg,x=p.x,y=p.y,d=p.d,speed = 8,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "air flurry" then
