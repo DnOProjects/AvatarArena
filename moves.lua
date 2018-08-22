@@ -17,7 +17,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 
 --Attack
 {{name="arrow",type="normal",cost=5,desc="A well-placed arrow can be as effective as any pillar of fire or column of rock!"},
-{name="hurricane",type="air",cost=4,desc="A ball of whirling air."},
+{name="gust",type="air",cost=4,desc="A ball of whirling air."},
 {name="air ball",type="air",cost=8,desc="A compressed sphere of air that bounces from wall to wall."},
 {name="air flurry",type="air",cost=15,desc="Release strands over air to trap your opponent!"},
 {name="spurt",type="water",cost=16,desc="A writhing spray of water, ready to force itself down your enemy's throat and drown their very lungs!"},
@@ -31,7 +31,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="boomerang",type="sokka",cost=11,desc="The boomerang whirls around the edge of the arena before returning to your hand."}},
 
 --Power
-{{name="gale",type="air",cost=30,desc="A devestating, unpredictable flurry of wind!"},
+{{name="hurricane",type="air",cost=30,desc="A devestating, unpredictable flurry of wind!"},
 {name="tornado",type="air",cost=30,desc="Pull your enemies to the centre of a tornado and attack them while they cannot move!"},
 {name="flood",type="water",cost=60,desc="The waters rise up to drown your enemies!"},
 {name="seed",type="water",cost=40,desc="A huge thorny plant begins to grow with you, unharmed at its center."},
@@ -461,7 +461,7 @@ function moves.cast(typeNum,num,pn)
 					projectiles[#projectiles] = moves.moveProj(#projectiles,i)
 				end
 			end
-			if name == "hurricane" then
+			if name == "gust" then
 				projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=2,name=name,damage=15,image=airOrbImg,x=p.x,y=p.y,d=p.d,speed = 8,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
@@ -476,7 +476,7 @@ function moves.cast(typeNum,num,pn)
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
-			if name == "gale" then
+			if name == "hurricane" then
 				for j=1,3 do
 					for i=1,3 do
 						if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=j*i,name=name,damage=10,image=airOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed=j*i,rx=0,ry=0}
