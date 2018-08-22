@@ -32,6 +32,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 
 --Power
 {{name="hurricane",type="air",cost=30,desc="A devestating, unpredictable flurry of wind!"},
+{name="gale",type="air",cost=30,desc="Blow away incoming projectiles!"},
 {name="tornado",type="air",cost=30,desc="Pull your enemies to the centre of a tornado and attack them while they cannot move!"},
 {name="flood",type="water",cost=60,desc="The waters rise up to drown your enemies!"},
 {name="seed",type="water",cost=40,desc="A huge thorny plant begins to grow with you, unharmed at its center."},
@@ -166,7 +167,7 @@ end
 					for x=1,16 do
 						local willSpawn = false
 						if x==1 then willSpawn = true end
-						projectiles[#projectiles+1]={freezes=true,rotate=false,willSpawn=willSpawn,layer=p.layer-1,despawn=1.3^p.layer-1,name=p.name,damage=50,image=floodTopImg,x=x,y=p.layer-1,d=p.d,speed = 0,rx=0,ry=0}
+						projectiles[#projectiles+1]={removesOnHit=false,freezes=true,rotate=false,willSpawn=willSpawn,layer=p.layer-1,despawn=1.3^p.layer-1,name=p.name,damage=50,image=floodTopImg,x=x,y=p.layer-1,d=p.d,speed = 0,rx=0,ry=0}
 					end
 				else
 					p.image=floodImg
@@ -384,6 +385,15 @@ function moves.cast(typeNum,num,pn)
 			p.chi=p.chi-moves[typeNum][num].cost
 			local name = moves[typeNum][num].name
 
+			if name == "gale" then
+				for i=1,#projectiles do
+					if projectiles[i].speed>0 then
+						projectiles[i].d=p.d
+						projectiles[i].speed=10
+					end
+				end
+			end
+
 			if name == "flame trail" then
 				players[pn].flameTrail=10
 			end
@@ -573,7 +583,7 @@ function moves.cast(typeNum,num,pn)
 				for x=1,16 do
 					willSpawn=false
 					if x==1 then willSpawn=true end
-					projectiles[#projectiles+1] = {freezes=true,rotate=false,willSpawn=willSpawn,layer=8,despawn=1.3^9,name=name,damage=50,image=floodTopImg,x=x,y=8,d=0,speed = 0,rx=0,ry=0}
+					projectiles[#projectiles+1] = {removesOnHit=false,freezes=true,rotate=false,willSpawn=willSpawn,layer=8,despawn=1.3^9,name=name,damage=50,image=floodTopImg,x=x,y=8,d=0,speed = 0,rx=0,ry=0}
 				end
 			end
 			if name == "spike" then
