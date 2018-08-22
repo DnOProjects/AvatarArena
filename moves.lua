@@ -112,12 +112,6 @@ end
 				end
 			end
 		end
-		if p.name == "bounce" then
-			if p.x>16.1 and p.d==1 then p.d=3 end
-			if p.x<0.9 and p.d==3 then p.d=1 end
-			if p.y>8.1 and p.d==2 then p.d=0 end
-			if p.y<0.9 and p.d==0 then p.d=2 end
-		end
 		if p.name == "ice spike" and p.despawn < 1.7 and p.spawned==false then
 			p.spawned=true
 			projectiles[#projectiles+1] = {spawned=false,rotate=false,name="ice spike",despawn=2,damage=14,image=iceSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}			
@@ -472,7 +466,7 @@ function moves.cast(typeNum,num,pn)
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "bounce" then
-				projectiles[#projectiles+1] = {despawn=10,percent=0,spriteLength=6,aSpeed=1.5,name=name,damage=15,image=bouncyAirOrbImg,x=p.x,y=p.y,d=p.d,speed = 8,rx=0,ry=0}
+				projectiles[#projectiles+1] = {doesBounce=true,despawn=10,percent=0,spriteLength=6,aSpeed=1.5,name=name,damage=15,image=bouncyAirOrbImg,x=p.x,y=p.y,d=p.d,speed = 8,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "air flurry" then
@@ -652,6 +646,13 @@ function moves.moveProj(n,num)
 	if p.d==7 then 
 		p.x=p.x-num 
 		p.y=p.y+num 
+	end
+
+	if p.doesBounce then
+		if p.x>=16.5 and p.d==1 then p.d,p.x=3,16 end
+		if p.x<=0.5 and p.d==3 then p.d,p.x=1,1 end
+		if p.y>=8.5 and p.d==2 then p.d,p.y=0,8 end
+		if p.y<=0.5 and p.d==0 then p.d,p.y=2,1 end
 	end
 
 	return p
