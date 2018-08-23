@@ -232,7 +232,7 @@ function ui.draw()
 				love.graphics.print("Loser: Player "..loser,770,745,0,0.7)
 			else
 				love.graphics.setColor(0,0,0)
-				love.graphics.print("It's a draw!",750,400)
+				love.graphics.print("It's a draw!",600,300,0,2,2)
 			end
 		end
 		love.graphics.setColor(0,0,0)
