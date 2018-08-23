@@ -380,6 +380,9 @@ function moves.draw()
 			love.graphics.setColor(255,255,255,p.despawn/0.5*255) 
 		end
 
+		local splits = 1
+		if p.splits ~= nil and p.splits ~= 0 then splits = (p.splits+1)/1.5 end
+
 		if not(p.image == nil)then
 
 			if p.percent then
@@ -388,16 +391,16 @@ function moves.draw()
 				animate.draw(p.image,p.rx*120-60,p.ry*120+60,p.percent,r,p.spriteLength,p.continuous,p.horisontal)
 			else
 				if p.rotate==false then
-						love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,0,1,1,60,60)
+						love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,0,1/splits,1/splits,60,60)
 				else
 				if p.rotateAmount == nil then
 					if p.vd == nil then --vd=visual direction
-						love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.d/2,1,1,60,60)
+						love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.d/2,1/splits,1/splits,60,60)
 					else
-						love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.vd/2,1,1,60,60)
+						love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.vd/2,1/splits,1/splits,60,60)
 					end
 				else
-					love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,p.rotateAmount,1,1,60,60)
+					love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,p.rotateAmount,1/splits,1/splits,60,60)
 				end
 			end
 
@@ -413,8 +416,6 @@ function moves.draw()
 					if not(p.vd==nil) then r=math.pi*p.vd/2 end
 						animate.draw(p.image,p.rx*120-60,p.ry*120+60,p.percent,r,p.spriteLength,p.continuous,p.horisontal)
 					else
-						local splits = 1
-						if p.splits ~= nil and p.splits ~= 0 then splits = (p.splits+1)/1.5 end
 						if p.rotate==false then
 							love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,0,1/splits,1/splits,60,60)
 						else
