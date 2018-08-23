@@ -386,10 +386,12 @@ function moves.cast(typeNum,num,pn)
 			local name = moves[typeNum][num].name
 
 			if name == "gale" then
+				refund=true
 				for i=1,#projectiles do
-					if projectiles[i].speed>0 then
+					if projectiles[i].speed>0 and (projectiles[i].d~=p.d or projectiles[i].speed<10) then
+						refund=false
 						projectiles[i].d=p.d
-						projectiles[i].speed=10
+						if projectiles[i].speed<10 then projectiles[i].speed=10 end
 					end
 				end
 			end
