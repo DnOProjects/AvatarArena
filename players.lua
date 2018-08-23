@@ -199,7 +199,7 @@ end
 
 	function players.removeOnHit(pr,n1,n2)
 		if pr.removesOnHit == nil or pr.removesOnHit==true then
-			if pr.removesOnHitCaster == nil or (pr.removesOnHitCaster == false and pr.caster ~= n2) or (pr.removesOnHitCaster == true and pr.caster == n2) then
+			if pr.removesOnHitCaster == nil or (pr.removesOnHitCaster == false and pr.caster ~= n2) or (pr.removesOnHitCaster == true and pr.caster == n2a) then
 				projectilesToRemove[#projectilesToRemove+1] = n1
 			end
 		end
@@ -274,7 +274,7 @@ function players.draw()
 			if p.d==2 then flameYOffset=-10 end 
 			if p.fireJet then love.graphics.draw(fireParicles, p.x*120-60,p.y*120+60+yOffset+flameYOffset) end
 		end
-		if logic.round(players[i].vd) == 0 then
+		if logic.round(p.vd) == 0 then
 			love.graphics.draw(characters[p.char].img,p.x*120-60,p.y*120+60+yOffset,math.pi*p.d/2,1,1,60,60)
 		else
 			love.graphics.draw(characters[p.char].img,p.x*120-60,p.y*120+60+yOffset,math.pi*p.vd/2,1,1,60,60)

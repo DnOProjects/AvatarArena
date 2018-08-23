@@ -265,13 +265,13 @@ end
 			p.d = players[p.caster].d
 			if p.name == "swinging sword" then
 				p.vd=p.vd+10*dt
-				players[p.caster].vd=players[p.caster].vd+10*dt
+				players[p.caster].vd=p.vd
 			end
 		end
 		if p.name == "ice shard" then
 			local collidingShards = 0
 			for i=1,#projectiles do
-				if projectiles[i].rx == p.rx and projectiles[i].ry == p.ry and projectiles[i].name ~= "ice shard" then
+				if projectiles[i].rx == p.rx and projectiles[i].ry == p.ry and projectiles[i].name ~= "ice shard" and projectiles[i].damages ~= 0 then
 					if p.splits <= 10 then
 						for i=-1,1,2 do
 							if p.d == 0 or p.d == 2 then projectiles[#projectiles+1] = {splits=p.splits+1,name=p.name,damage=10,image=iceShardImg,x=p.x+i,y=p.y,d=p.d,speed = 5,rx=0,ry=0}
@@ -292,11 +292,9 @@ end
 			if p.despawn then
 				p.despawn = p.despawn - dt
 				if p.despawn < 0 then
+					projectilesToRemove[#projectilesToRemove+1]=i
 					if p.name == "swinging sword" then
-						projectilesToRemove[#projectilesToRemove+1]=i
 						players[p.caster].vd = 0
-					else
-						projectilesToRemove[#projectilesToRemove+1]=i
 					end
 				end
 			end
@@ -593,6 +591,9 @@ function moves.cast(typeNum,num,pn)
 					projectiles[#projectiles+1] = {aRepeats=false,redirectable=true,percent=0,spriteLength=4,aSpeed=1,name=name,damage=10,image=fireOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
+			end
+			if name == "fire breath" then
+				
 			end
 			if name == "boulder" then
 				projectiles[#projectiles+1] = {meltable=true,name=name,damage=20,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 6,rx=0,ry=0}
