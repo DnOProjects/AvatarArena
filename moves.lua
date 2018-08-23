@@ -309,7 +309,7 @@ end
 				if p.despawn < 0 then
 					projectilesToRemove[#projectilesToRemove+1]=i
 					if p.name == "swinging sword" then
-						players[p.caster].vd = 0
+						players[p.caster].vd = false
 					end
 				end
 			end

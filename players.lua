@@ -325,7 +325,7 @@ function players.draw()
 		if breathingFire then love.graphics.draw(fireBreathParticles, p.x*120-60,p.y*120+60+yOffset,(p.d+2)*0.5*math.pi) end
 		if players[drawOrder[i]].blinking ~= false then love.graphics.draw(blinkParticles, p.x*120-60,p.y*120+60+yOffset,(p.d)*0.5*math.pi) end
 		
-		if logic.round(p.vd) == 0 then
+		if p.vd == false or p.vd == nil or logic.round(p.vd) == 0 then
 			love.graphics.draw(characters[p.char].img,p.x*120-60,p.y*120+60+yOffset,math.pi*p.d/2,1,1,60,60)
 		else
 			love.graphics.draw(characters[p.char].img,p.x*120-60,p.y*120+60+yOffset,math.pi*p.vd/2,1,1,60,60)

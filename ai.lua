@@ -18,7 +18,7 @@ function ai.update(dt)
 		local p=players[aiPlayer]
 		local op=players[humanPlayer]
 		local key=nil
-		local keys={"up","down","left","right",",",".","/"}
+		keys={"up","down","left","right",",",".","/"}
 		if aiPlayer == 1 then keys={"r","f","d","g","`","1","2"} end
 
 		if ai.diff=="easy" then
@@ -64,10 +64,8 @@ end
 function ai.perfect(p,op,hard)
 
 	danger=false
-	local keys={"up","down","left","right",",",".","/"}
-	if aiPlayer == 1 then keys={"r","f","d","g","`","1","2"} end
 	avoidKey=nil
-	for i=1,#projectiles do
+	for i=1,#projectiles do -- Decides which key to press to avoid an incoming attack
 		local pr=projectiles[i]
 		if pr.d==0 and pr.x==p.x and pr.y>p.y then avoidKey,danger=keys[math.random(3,4)],pr.y-p.y end
 		if pr.d==1 and pr.y==p.y and pr.x<p.x then avoidKey,danger=keys[math.random(1,2)],p.x-pr.x end
@@ -90,7 +88,7 @@ function ai.perfect(p,op,hard)
 				if p.d==1 then p.d=3 else p.d=1 end
 			end
 		else
-			if hard and not(danger==false) then
+			if hard and danger~=false then -- Cast utility if you are in danger and playing on expert
 				if danger<2 and math.random(1,5)==1 then key=keys[5] else key=avoidKey end
 			else
 				if not ai.saving then
