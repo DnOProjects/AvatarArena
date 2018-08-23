@@ -8,10 +8,10 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="freeze",type="water",cost=1,desc="All water in the arena turns to solid ice!"},
 {name="aurora borealis",type="water",cost=8,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
 {name="heal",type="water",cost=24,desc="Healing is a special ability possessed by some waterbenders that enables them to heal those who have been wounded, including themselves."},
-{name="wall",type="earth",cost=5,desc="The ground rises up to shield you from harm!"},
 {name="earth wave",type="earth",cost=10,desc="You charge forwards on rolling earth!"},
 {name="seismic sense",type="earth",cost=5,desc="Use seismic waves to sense your opponent's position."},
 {name="terraform",type="earth",cost=7,desc="Shape the world to your will!"},
+{name="flame wall",type="fire",cost=5,desc="Flames rise up to shield you from harm."},
 {name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
 {name="fire jet",type="fire",cost=12,desc="You use sizzling blue flame to propell yourself above the arena, singeing those who pass under you!"},
 {name="sword block",type="sokka",cost=5,desc="You deflect an enemy's attack, sending it flying away to the side.\n\n"}},
@@ -20,7 +20,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {{name="arrow",type="normal",cost=5,desc="A well-placed arrow can be as effective as any pillar of fire or column of rock!"},
 {name="gust",type="air",cost=4,desc="A ball of whirling air."},
 {name="air ball",type="air",cost=8,desc="A compressed sphere of air that bounces from wall to wall."},
-{name="air flurry",type="air",cost=15,desc="Release strands over air to trap your opponent!"},
+{name="air flurry",type="air",cost=15,desc="Release strands of air to trap your opponent!"},
 {name="spurt",type="water",cost=16,desc="A writhing spray of water, ready to force itself down your enemy's throat and drown their very lungs!"},
 {name="spout",type="water",cost=9,desc="Shoot a line of well-placed water out in front of you, blocking your enemy's path."},
 {name="boulder",type="earth",cost=5,desc="A giant rolling boulder - it's a little slow but deals a lot of damage."},
@@ -28,7 +28,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="spike",type="earth",cost=10,desc="Huge spikes of earth emerge from the ground in a line."},
 {name="blast",type="fire",cost=10,desc="Two glowing embers shoot sideways from each hand."},
 {name="sear",type="fire",cost=13,desc="Four balls of fire radiate inaccurately from your body."},
-{name="fire breath",type="fire",cost=13,desc="Breath out fire, searing any enemies in front of you."},
+{name="fire breath",type="fire",cost=13,desc="Breath out fire, searing any enemies in front of you!"},
 {name="boomerang",type="sokka",cost=11,desc="The boomerang whirls around the edge of the arena before returning to your hand."}},
 
 --Power
@@ -124,7 +124,7 @@ end
 			projectiles[#projectiles+1] = {meltable=true,spawned=false,rotate=false,despawn=1.5,name=p.name,damage=8,image=earthSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 		end
-		if p.name == "earth wave" and p.despawn < 0.4 and p.moved == false then
+		if p.name == "earth wave" and p.despawn < 0.02 and p.moved == false then
 			p.moved = true
 			local rider = nil
 			for i=1,2 do
@@ -132,7 +132,7 @@ end
 					rider = i
 				end
 			end
-			projectiles[#projectiles+1] = {rider=rider,meltable=true,removeOnHit=false,moved=false,despawn=0.5,name=p.name,damage=0,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+			projectiles[#projectiles+1] = {rider=rider,meltable=true,removeOnHit=false,moved=false,despawn=0.11,name=p.name,damage=0,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			if rider then players.move(projectiles[#projectiles].rider,projectiles[#projectiles].d,true) end
 		end
@@ -581,10 +581,10 @@ function moves.cast(typeNum,num,pn)
 				projectiles[#projectiles+1] = {meltable=true,name=name,damage=20,image=bulletImg,x=p.x,y=p.y,d=p.d,speed = 15,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
-			if name == "wall" then
+			if name == "flame wall" then
 				for i=1,3 do
-					if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {meltable=true,name=name,despawn=1,blocker="fragile",damage=0,image=earthOrbImg,x=p.x-2+i,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
-						else projectiles[#projectiles+1] = {meltable=true,name=name,damage=0,despawn=2,blocker="fragile",image=earthOrbImg,x=p.x,y=p.y-2+i,d=p.d,speed = 0,rx=0,ry=0} end
+					if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {caster=pn,removesOnHitCaster=false,damagesCaster=false,percent=0,spriteLength=4,aSpeed=4,name=name,despawn=1,blocker="fragileForceField",damage=4,image=stillFlameImg,x=p.x-2+i,y=p.y,vd=0,d=p.d,speed = 0,rx=0,ry=0}
+					else projectiles[#projectiles+1] = {caster=pn,removesOnHitCaster=false,damagesCaster=false,percent=0,spriteLength=4,aSpeed=4,name=name,despawn=1,blocker="fragileForceField",damage=4,image=stillFlameImg,x=p.x,y=p.y-2+i,vd=0,d=p.d,speed = 0,rx=0,ry=0} end
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
@@ -608,7 +608,7 @@ function moves.cast(typeNum,num,pn)
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "earth wave" then
-				projectiles[#projectiles+1] = {rider=pn,meltable=true,moved=false,removeOnHit=false,despawn=0.5,name=name,damage=0,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {rider=pn,meltable=true,moved=false,removeOnHit=false,despawn=0.11,name=name,damage=0,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				players.move(pn,p.d,true)
 			end

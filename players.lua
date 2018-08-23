@@ -197,9 +197,16 @@ end
 		end
 	end
 
+	function players.removeOnHit(pr,n1,n2)
+		if pr.removesOnHit == nil or pr.removesOnHit==true then
+			if pr.removesOnHitCaster == nil or (pr.removesOnHitCaster == false and pr.caster ~= n2) or (pr.removesOnHitCaster == true and pr.caster == n2) then
+				projectilesToRemove[#projectilesToRemove+1] = n1
+			end
+		end
+	end
+
 	function players.checkForHits()
 		for i=1,2 do
-
 			local p=players[i]
 			local op=players[1]
 			if i==1 then op=players[2] end
@@ -209,27 +216,17 @@ end
 			end
 
 			for j=1,#projectiles do
-
 				if not(logic.inList(projectilesToRemove,i) or players[i].flying~=false) then
-
 					if projectiles[j].damage>0 and projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 and players[i].deflecting == false and players[i].hp > 0 then
 						if not(projectiles[j].name=="seed" and projectiles[j].caster==i) and not(projectiles[j].damagesCaster == false and projectiles[j].caster==i) then
 							players[i].hp=players[i].hp-projectiles[j].damage
 							players[i].invulnerability = 10
 						end
-						if projectiles[j].removesOnHit == nil or projectiles[j].removesOnHit==true then
-							if projectiles[j].removesOnHitCaster == nil or (projectiles[j].removesOnHitCaster == true and projectiles[j].caster == i) then
-								projectilesToRemove[#projectilesToRemove+1] = j
-							end
-						end
+						players.removeOnHit(projectiles[j],j,i)
 					elseif projectiles[j].damage < 0 and projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].hp < players[i].maxHp then
 						players[i].hp=players[i].hp-projectiles[j].damage
 						if players[i].hp > players[i].maxHp then players[i].hp = players[i].maxHp end
-						if projectiles[j].removesOnHit == nil or projectiles[j].removesOnHit==true then
-							if projectiles[j].removesOnHitCaster == nil or (projectiles[j].removesOnHitCaster == false and projectiles[j].caster == i) then
-								projectilesToRemove[#projectilesToRemove+1] = j
-							end
-						end
+						players.removeOnHit(projectiles[j],j,i)
 					end
 
 				end
