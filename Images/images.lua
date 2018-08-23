@@ -43,6 +43,7 @@ playSymbolImg = love.graphics.newImage("Images/Symbols/playSymbol.png")
 	floodTopImg = love.graphics.newImage("Images/Abilities/floodTop.png")
 	thornsImg = love.graphics.newImage("Images/Abilities/thorns.png")
 	iceSpikeImg = love.graphics.newImage("Images/Abilities/iceSpike.png")
+	iceShardImg = love.graphics.newImage("Images/Abilities/iceShard.png")
 
 	---- Earth
 	earthOrbImg = love.graphics.newImage("Images/Abilities/earth.png")

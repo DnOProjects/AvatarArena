@@ -23,7 +23,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="air flurry",type="air",cost=15,desc="Release strands of air to trap your opponent!"},
 {name="spurt",type="water",cost=16,desc="A writhing spray of water, ready to force itself down your enemy's throat and drown their very lungs!"},
 {name="spout",type="water",cost=9,desc="Shoot a line of well-placed water out in front of you, blocking your enemy's path."},
-{name="ice shard",type="water",cost=12,desc="Send a shard of ice at your opponent that splits on contact with anything."},
+{name="ice shard",type="water",cost=8,desc="Send a shard of ice at your opponent that splits on contact with projectiles."},
 {name="boulder",type="earth",cost=5,desc="A giant rolling boulder - it's a little slow but deals a lot of damage."},
 {name="spike",type="earth",cost=10,desc="Huge spikes of earth emerge from the ground in a line."},
 {name="bullet",type="earth",cost=15,desc="You bend the metal in the bullet to propell it to very high speeds."},
@@ -274,8 +274,8 @@ end
 				if projectiles[i].rx == p.rx and projectiles[i].ry == p.ry and projectiles[i].name ~= "ice shard" then
 					if p.splits <= 10 then
 						for i=-1,1,2 do
-							if p.d == 0 or p.d == 2 then projectiles[#projectiles+1] = {splits=p.splits+1,name=p.name,damage=10,image=iceSpikeImg,x=p.x+i,y=p.y,d=p.d,speed = 5,rx=0,ry=0}
-							else projectiles[#projectiles+1] = {splits=p.splits+1,name=p.name,damage=10,image=iceSpikeImg,x=p.x,y=p.y+i,d=p.d,speed = 5,rx=0,ry=0} end
+							if p.d == 0 or p.d == 2 then projectiles[#projectiles+1] = {splits=p.splits+1,name=p.name,damage=10,image=iceShardImg,x=p.x+i,y=p.y,d=p.d,speed = 5,rx=0,ry=0}
+							else projectiles[#projectiles+1] = {splits=p.splits+1,name=p.name,damage=10,image=iceShardImg,x=p.x,y=p.y+i,d=p.d,speed = 5,rx=0,ry=0} end
 						end
 					end
 					projectilesToRemove[#projectilesToRemove+1] = pn
@@ -506,7 +506,7 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 			if name == "ice shard" then
-				projectiles[#projectiles+1] = {splits=0,name=name,damage=10,image=iceSpikeImg,x=p.x,y=p.y,d=p.d,speed = 5,rx=0,ry=0}
+				projectiles[#projectiles+1] = {splits=0,name=name,damage=10,image=iceShardImg,x=p.x,y=p.y,d=p.d,speed = 5,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "gust" then
