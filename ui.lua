@@ -24,6 +24,12 @@ function ui.load()
 	{name="Selection",selected=1,options={"choice","random","random duel","blind","blind duel"}},
 	{name="Events",selected=1,options={"none","sea of chi","power cycle","instablitiy","time warp"}}}
 	menu2Options = {{name="Oppenent",selected=1,options={"human","ai"}},{name="Role",selected=1,options={"client","server"}}}
+
+	controller = {{name="Input Device",selected=1,options={"keyboard","controller"}},
+	{name="Player",selected=1,options={"1 (left)","2 (right)"}},
+	{name="Move Set 1",selected=1,options={"RDFG + ` 1 2","WASD + 4 5 6"}},
+	{name="Move Set 2",selected=1,options={"Arrow keys + , . /"}}}
+
 	menuStage=1
 
 	impactFont = love.graphics.newFont("Fonts/font.ttf",72)
@@ -98,16 +104,22 @@ function ui.menuY()
 		end
 	end
 	menuStage = ui[changer].y+1
-	if menuStage==3 and menu[2].options[menu[2].selected]=="ai" then ai.load(1,menu[3].options[menu[3].selected]) end
-	if menuStage==3 and menu[2].options[menu[2].selected]=="human" then
-		if oy == 2 then ui[changer].y = 3 end
-		if oy == 4 then ui[changer].y = 1 end
-	end
-	if menu[1].options[menu[1].selected]=="online" then
-		if ui[changer].y > 1 then ui[changer].y = 1 end
-		menu[2] = menu2Options[2]
-	else
-		menu[2] = menu2Options[1]
+	if gameState == "menu" then
+		if menuStage==3 and menu[2].options[menu[2].selected]=="human" then
+			if oy == 2 then ui[changer].y = 4-1 end
+			if oy == 4 then ui[changer].y = 2-1 end
+		end
+		if menu[1].options[menu[1].selected]=="online" then
+			if ui[changer].y > 1 then ui[changer].y = 1 end
+			menu[2] = menu2Options[2]
+		else
+			menu[2] = menu2Options[1]
+		end
+	elseif gameState == "controllerSelection" then
+		if menuStage==2 and menu[2].options[menu[2].selected]=="human" then
+			if oy == 1 then ui[changer].y = 3-1 end
+			if oy == 3 then ui[changer].y = 1-1 end
+		end
 	end
 end
 
@@ -129,11 +141,13 @@ function ui.update(dt)
 		ui.choose() 
 		if ui.gameStartCountdown<0.5 then startGame() end
 	end
-	if gameState == "menu" then ui.menuY() end
+	if gameState == "menu" or gameState == "controllerSelection" then ui.menuY() end
 	for playerSelecting=1,2 do
 		if ui[playerSelecting].y<0 then ui[playerSelecting].y=0 end
 		if ui[playerSelecting].y>4 then ui[playerSelecting].y=4 end
 	end
+	moveSet = {controller[3].selected,controller[4].selected}
+	if aiPlayer ~= nil then moveSet[aiPlayer] = 1 end
 end
 
 function ui.switch(d,playerSelecting)
@@ -148,6 +162,10 @@ function ui.switch(d,playerSelecting)
 		menu[menuStage].selected = menu[menuStage].selected+d
 		if menu[menuStage].selected > #menu[menuStage].options then menu[menuStage].selected = 1 end
 		if menu[menuStage].selected < 1 then menu[menuStage].selected = #menu[menuStage].options end
+	elseif gameState=="controllerSelection" then
+		controller[menuStage].selected = controller[menuStage].selected+d
+		if controller[menuStage].selected > #controller[menuStage].options then controller[menuStage].selected = 1 end
+		if controller[menuStage].selected < 1 then controller[menuStage].selected = #controller[menuStage].options end
 	elseif gameState=="characterSelection" and selectionMethod=="choice" then
 		if ui[playerSelecting].y==0 then
 			players[playerSelecting].char = players[playerSelecting].char + d
@@ -187,11 +205,20 @@ function ui.start()
 				onlineClient = true 
 			end
 		else
-			gameState = "characterSelection"
+			gameState = "controllerSelection"
 			selectionMethod = menu[4].options[menu[4].selected]
 			ui[1].y = 0
 			ui[2].y = 0
 		end
+	elseif gameState=="controllerSelection" then
+		if menu[2].options[menu[2].selected]=="ai" then
+			humanPlayer = controller[2].selected
+			if humanPlayer == 1 then aiPlayer = 2 else aiPlayer = 1 end
+			moveSet[aiPlayer] = 1
+		end
+		gameState = "characterSelection"
+		ui[1].y = 0
+		ui[2].y = 0
 	elseif gameState=="characterSelection" then
 		if ui[1].y == 4 and ui[2].y == 4 then
 			startGame() --<--SHOULD CHANGE AT SOME POINT SO STARTING IS MORE FAIR
@@ -254,16 +281,33 @@ function ui.draw()
 	if gameState == "menu" then
 		love.graphics.setFont(menuFont)
 		love.graphics.draw(menuScreen,0,0,0,love.graphics.getWidth()/menuScreen:getWidth(),love.graphics.getHeight()/menuScreen:getHeight())
-		love.graphics.printf("Avatar Arena",-30,20,700,"center",0,2.8,2.8)
+		love.graphics.printf("Avatar Arena",0,20,700,"center",0,2.7,2.7)
 		rgb(200,200,200,flashingAlpha*255)
-		love.graphics.print("Press ENTER to start",1360,1000,0,0.7,0.7)
-		love.graphics.print("Press ; to\nread the wiki",1640,40,0,0.5,0.5)
+		love.graphics.print("Press ENTER to continue",1260,1000,0,0.7,0.7)
+		love.graphics.print("Press ; to read the wiki",1410,25,0,0.58,0.58)
 		for i=1,#menu do
 			if not(i == 3 and menu[2].options[menu[2].selected] == "human") and not(i ~= 1 and i ~= 2 and menu[1].options[menu[1].selected] == "online") then
 				if menuStage == i then rgb(209, 63, 37) else rgb(150,150,150) end
 				love.graphics.printf(menu[i].name,55,150*i+100,500,"right",0,1.8,1.8)
 				love.graphics.setColor(255,255,255)
 				love.graphics.printf(menu[i].options[menu[i].selected],1000,150*i+100,500,"left",0,1.8,1.8)
+			end
+		end
+	end
+
+	if gameState == "controllerSelection" then
+		love.graphics.setFont(menuFont)
+		love.graphics.draw(menuScreen,0,0,0,love.graphics.getWidth()/menuScreen:getWidth(),love.graphics.getHeight()/menuScreen:getHeight())
+		love.graphics.printf("Select Controller",10,20,700,"center",0,2.7,2.7)
+		rgb(200,200,200,flashingAlpha*255)
+		love.graphics.print("Press ENTER to start",1360,1000,0,0.7,0.7)
+		love.graphics.print("Press ; to read the wiki",1410,25,0,0.58,0.58)
+		for i=1,#controller do
+			if not(i == 2 and menu[2].options[menu[2].selected] == "human") then
+				if menuStage == i then rgb(209, 63, 37) else rgb(150,150,150) end
+				love.graphics.printf(controller[i].name,55,150*i+100,500,"right",0,1.8,1.8)
+				love.graphics.setColor(255,255,255)
+				love.graphics.printf(controller[i].options[controller[i].selected],1000,150*i+100,500,"left",0,1.8,1.8)
 			end
 		end
 	end

@@ -32,7 +32,7 @@ function love.load()
     projectilesToRemove = {}
     showDescription = 1
 
-    moveSet = {0,0}
+    moveSet = {1,1}
 
     gameEndFade=false
 
@@ -61,7 +61,7 @@ function love.update(dt)
 		end
 
 		if gameState=="game" then
-			if players[2].controller=="ai" then ai.update(dt) end
+			if aiPlayer ~= nil then ai.update(dt) end
 			players.update(dt)
 			moves.update(dt)
 			animate.update(dt)
@@ -149,21 +149,18 @@ function startGame()
 		players[i].power = ui[i][3]
 	end
 
-	players[1].hp = characters[players[1].char].hp
-	players[2].hp = characters[players[2].char].hp
-
-	players[1].maxHp = characters[players[1].char].hp
-	players[2].maxHp = characters[players[2].char].hp
-
-	players[1].chiRegen = characters[players[1].char].chiRegen
-	players[2].chiRegen = characters[players[2].char].chiRegen
+	for i=1,2 do
+		players[i].hp = characters[players[i].char].hp
+		players[i].maxHp = characters[players[i].char].hp
+		players[i].chiRegen = characters[players[i].char].chiRegen
+	end
 
 	arenaType = characters[players[1].char].bends[1]
 	sound.play("roundIntro")
 	if menu[2].options[menu[2].selected]=="ai" then 
-		ai.load(1,menu[3].options[menu[3].selected]) 
-		players[1].controller = "human"  
-		players[2].controller = "ai"
+		ai.load(aiPlayer,menu[3].options[menu[3].selected]) 
+		players[humanPlayer].controller = "human"  
+		players[aiPlayer].controller = "ai"
 	else
 		players[1].controller = "human"  
 		players[2].controller = "human" 
