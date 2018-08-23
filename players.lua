@@ -234,7 +234,7 @@ end
 			for j=1,#projectiles do
 				if not(logic.inList(projectilesToRemove,i) or players[i].flying~=false) then
 					if projectiles[j].damage>0 and projectiles[j].rx==players[i].x and projectiles[j].ry==players[i].y and players[i].invulnerability==0 and players[i].deflecting == false and players[i].hp > 0 then
-						if not(projectiles[j].name=="seed" and projectiles[j].caster==i) and not(projectiles[j].damagesCaster == false and projectiles[j].caster==i) then
+						if not(projectiles[j].name=="sprout" and projectiles[j].caster==i) and not(projectiles[j].damagesCaster == false and projectiles[j].caster==i) then
 							players[i].hp=players[i].hp-projectiles[j].damage
 							players[i].invulnerability = 10
 						end
