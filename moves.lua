@@ -280,7 +280,7 @@ end
 		if p.name == "ice shard" then
 			local collidingShards = 0
 			for i=1,#projectiles do
-				if projectiles[i].rx == p.rx and projectiles[i].ry == p.ry and projectiles[i].name ~= "ice shard" and projectiles[i].damages ~= 0 then
+				if projectiles[i].rx == p.rx and projectiles[i].ry == p.ry and projectiles[i].name ~= "ice shard" and projectiles[i].damage ~= 0 then
 					if p.splits <= 5 then
 						for j=-1,1,2 do
 							if p.d == 0 or p.d == 2 then projectiles[#projectiles+1] = {splits=p.splits+1,name=p.name,damage=logic.round(10/(p.splits+2)),image=iceShardImg,x=p.x+j,y=p.y,d=p.d,speed = 5,rx=0,ry=0}
