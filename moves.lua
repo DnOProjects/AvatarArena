@@ -10,6 +10,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="heal",type="water",cost=24,desc="Healing is a special ability possessed by some waterbenders that enables them to heal those who have been wounded, including themselves."},
 {name="wall",type="earth",cost=5,desc="The ground rises up to shield you from harm!"},
 {name="earth wave",type="earth",cost=10,desc="You charge forwards on rolling earth!"},
+{name="seizmic sence",type="earth",cost=5,desc="Use seizmic waves to sence your opponent's position."},
 {name="terraform",type="earth",cost=7,desc="Shape the world to your will!"},
 {name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
 {name="fire jet",type="fire",cost=12,desc="You use sizzling blue flame to propell yourself above the arena, singeing those who pass under you!"},
@@ -384,6 +385,20 @@ function moves.cast(typeNum,num,pn)
 			local refund=false
 			p.chi=p.chi-moves[typeNum][num].cost
 			local name = moves[typeNum][num].name
+
+			if name == "seizmic sence" then
+				local op=players[1]
+				if pn==1 then op=players[2] end
+				local newD = nil
+				local xDiff=math.abs(p.x-op.x)
+				local yDiff=math.abs(p.y-op.y)
+				if xDiff>=yDiff then
+					if p.x>op.x then newD=3 else newD=1 end
+				else
+					if p.y>op.y then newD=0 else newD=2 end
+				end
+				if p.d~=newD then p.d=newD else refund=true end
+			end
 
 			if name == "gale" then
 				refund=true
