@@ -34,6 +34,7 @@ function players.load()
 end
 
 function players.loadParicles()
+
 	particleImg=love.graphics.newImage("images/abilities/particle.png")
 
 	fireParticles = love.graphics.newParticleSystem(particleImg, 10000)
@@ -65,6 +66,7 @@ function players.loadParicles()
 	blinkParticles:setSpread(2)
 	blinkParticles:setSizes(4,2,1)
 	blinkParticles:setSpin(10)
+	
 end
 
 function players.update(dt)
