@@ -26,8 +26,8 @@ function players.load()
 
 	p1 = players[1]
 	p2 = players[2]
-	players[1] = {flameTrail=false,flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p1.char,x=1,y=1,d=0,vd=0,timer=0,slideTimer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
-	players[2] = {flameTrail=false,flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p2.char,x=16,y=8,d=0,vd=0,timer=0,slideTimer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
+	players[1] = {machineGunning=false,flameTrail=false,flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p1.char,x=1,y=1,d=0,vd=0,timer=0,slideTimer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
+	players[2] = {machineGunning=false,flameTrail=false,flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p2.char,x=16,y=8,d=0,vd=0,timer=0,slideTimer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
 	
 	players.loadParicles()
 
@@ -66,10 +66,21 @@ function players.update(dt)
 	players.checkForLineOfSight()
 	players.poolChi(dt)
 	players.fall()
+	players.machineGun(dt)
 	players.die()
 	fireParticles:update(dt)
 	fireBreathParticles:update(dt)
 end
+
+	function players.machineGun(dt)
+		for i=1,2 do
+			local p=players[i]
+			if p.machineGunning~= false and math.random(1,7)==1 then
+				projectiles[#projectiles+1] = {meltable=true,name=name,damage=20,image=bulletImg,x=p.x,y=p.y,d=p.d,speed = 15,rx=0,ry=0}
+				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+			end
+		end
+	end
 
 	function players.fall()
 		for i=1,2 do
@@ -163,6 +174,8 @@ end
 		for i=1,2 do
 			p = players[i]
 			p.timer = p.timer - dt
+			if p.machineGunning~= false then p.machineGunning = p.machineGunning - dt end
+			if p.machineGunning~= false and p.machineGunning<0 then p.machineGunning=false end
 			p.slideTimer = p.slideTimer - dt
 			p.invulnerability = p.invulnerability - dt*10
 			if p.flying~=false then p.flying=p.flying-dt end

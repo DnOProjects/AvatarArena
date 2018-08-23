@@ -298,10 +298,6 @@ end
 				p.spawnedThisTick=false
 			end
 		end
-		if p.name == "machine gun" then
-			projectiles[#projectiles+1] = {meltable=true,name="bullet",damage=20,image=bulletImg,x=players[p.caster].x,y=players[p.caster].y,d=players[p.caster].d,speed = 15,rx=0,ry=0}
-			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
-		end
 	end
 
 	function moves.despawn(dt)
@@ -660,8 +656,7 @@ function moves.cast(typeNum,num,pn)
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "machine gun" then
-				projectiles[#projectiles+1] = {caster=pn,name=name,damage=0,despawn=3,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
-				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+				p.machineGunning=5
 			end
 			if name == "flame wall" then
 				for i=1,3 do
