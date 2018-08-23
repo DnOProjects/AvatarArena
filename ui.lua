@@ -28,7 +28,7 @@ function ui.load()
 	controller = {{name="Input Device",selected=1,options={"keyboard","controller"}},
 	{name="Player",selected=1,options={"1 (left)","2 (right)"}},
 	{name="Move Set 1",selected=1,options={"RDFG + ` 1 2","WASD + 4 5 6"}},
-	{name="Move Set 2",selected=1,options={"Arrow keys + , . /"}}}
+	{name="Move Set 2",selected=1,options={"Arrow + , . /"}}}
 
 	menuStage=1
 
@@ -116,6 +116,7 @@ function ui.menuY()
 			menu[2] = menu2Options[1]
 		end
 	elseif gameState == "controllerSelection" then
+		if ui[changer].y > 3 then ui[changer].y = 3 end
 		if menuStage==2 and menu[2].options[menu[2].selected]=="human" then
 			if oy == 1 then ui[changer].y = 3-1 end
 			if oy == 3 then ui[changer].y = 1-1 end
