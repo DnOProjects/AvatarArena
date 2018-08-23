@@ -29,17 +29,32 @@ function players.load()
 	players[1] = {flameTrail=false,flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p1.char,x=1,y=1,d=0,vd=0,timer=0,slideTimer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
 	players[2] = {flameTrail=false,flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p2.char,x=16,y=8,d=0,vd=0,timer=0,slideTimer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
 	
-	img=love.graphics.newImage("images/abilities/particle.png")
-	fireParicles = love.graphics.newParticleSystem(img, 10000)
-	fireParicles:setParticleLifetime(1, 1.5)
-	fireParicles:setEmissionRate(1000)
-	fireParicles:setSizeVariation(1)
-	fireParicles:setLinearAcceleration(-30, 6, 30, 120)
-	fireParicles:setColors(0, 0.34, 0.85, 255, 0, 0.018, 0.065, 100)
-	fireParicles:setSpread(2)
-	fireParicles:setSizes(4,2,1)
-	fireParicles:setSpin(10)
+	players.loadParicles()
 
+end
+
+function players.loadParicles()
+	particleImg=love.graphics.newImage("images/abilities/particle.png")
+
+	fireParticles = love.graphics.newParticleSystem(particleImg, 10000)
+	fireParticles:setParticleLifetime(1, 1.5)
+	fireParticles:setEmissionRate(1000)
+	fireParticles:setSizeVariation(1)
+	fireParticles:setLinearAcceleration(-30, 6, 30, 120)
+	fireParticles:setColors(0, 0.34, 0.85, 255, 0, 0.018, 0.065, 100)
+	fireParticles:setSpread(2)
+	fireParticles:setSizes(4,2,1)
+	fireParticles:setSpin(10)
+
+	fireBreathParticles = love.graphics.newParticleSystem(particleImg, 10000)
+	fireBreathParticles:setParticleLifetime(1, 1.5)
+	fireBreathParticles:setEmissionRate(1000)
+	fireBreathParticles:setSizeVariation(1)
+	fireBreathParticles:setLinearAcceleration(-30, 6, 30, 400)
+	fireBreathParticles:setColors(0.73, 0.14, 0, 255, 0, 0, 0, 100)
+	fireBreathParticles:setSpread(2)
+	fireBreathParticles:setSizes(4,2,1)
+	fireBreathParticles:setSpin(10)
 end
 
 function players.update(dt)
@@ -52,7 +67,8 @@ function players.update(dt)
 	players.poolChi(dt)
 	players.fall()
 	players.die()
-	fireParicles:update(dt)
+	fireParticles:update(dt)
+	fireBreathParticles:update(dt)
 end
 
 	function players.fall()
@@ -262,7 +278,7 @@ function players.draw()
 	if players[2].flying~=false then drawOrder[2]=2 else drawOrder[1]=2 end
 
 	for i=1,2 do
-		p = players[drawOrder[i]]
+		local p = players[drawOrder[i]]
 		love.graphics.setColor(255,255,255)
 		if p.invulnerability>0 then
 			rgb(255,255,255,(math.sin(p.invulnerability)+1)*100)
@@ -272,8 +288,13 @@ function players.draw()
 			yOffset=-50
 			local flameYOffset=0 --so when iroh is looking down it doesn't look like he is breathing fire
 			if p.d==2 then flameYOffset=-10 end 
-			if p.fireJet then love.graphics.draw(fireParicles, p.x*120-60,p.y*120+60+yOffset+flameYOffset) end
+			if p.fireJet then love.graphics.draw(fireParticles, p.x*120-60,p.y*120+60+yOffset+flameYOffset) end
 		end
+
+		breathingFire=false
+		for j=1,#projectiles do if projectiles[j].name == "fire breath" and projectiles[j].caster==drawOrder[i] then breathingFire=true end end
+		if breathingFire then love.graphics.draw(fireBreathParticles, p.x*120-60,p.y*120+60+yOffset,(p.d+2)*0.5*math.pi) end		
+		
 		if logic.round(p.vd) == 0 then
 			love.graphics.draw(characters[p.char].img,p.x*120-60,p.y*120+60+yOffset,math.pi*p.d/2,1,1,60,60)
 		else

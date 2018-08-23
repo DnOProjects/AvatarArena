@@ -78,6 +78,15 @@ end
 	end
 
 	function moves.updateProjectile(p,dt,pn)
+		if p.name == "fire breath" then
+			p.rx=players[p.caster].x
+			p.ry=players[p.caster].y
+			local playerDirection=players[p.caster].d
+			if playerDirection==0 then p.ry=p.ry-p.posNum end
+			if playerDirection==1 then p.rx=p.rx+p.posNum end
+			if playerDirection==2 then p.ry=p.ry+p.posNum end
+			if playerDirection==3 then p.rx=p.rx-p.posNum end
+		end
 		if p.name == "boomerang" then
 			if p.rx==1 and p.d==3 then p.d,p.bounces=0,p.bounces+1 end
 			if p.ry==1 and p.d==0 then p.d,p.bounces=1,p.bounces+1 end
@@ -364,34 +373,66 @@ function moves.draw()
 
 	for i=1,#projectiles do
 		p=projectiles[i]
-		if (not p.despawn) or p.despawn > 0.5 then love.graphics.setColor(255,255,255)
-		else love.graphics.setColor(255,255,255,p.despawn/0.5*255) end
+
+		if (not p.despawn) or p.despawn > 0.5 then 
+			love.graphics.setColor(255,255,255)
+		else 
+			love.graphics.setColor(255,255,255,p.despawn/0.5*255) 
+		end
 
 		if not(p.image == nil)then
+
 			if p.percent then
 				local r = math.pi*p.d/2
 				if not(p.vd==nil) then r=math.pi*p.vd/2 end
 				animate.draw(p.image,p.rx*120-60,p.ry*120+60,p.percent,r,p.spriteLength,p.continuous,p.horisontal)
 			else
-				local splits = 1
-				if p.splits ~= nil and p.splits ~= 0 then splits = (p.splits+1)/1.5 end
 				if p.rotate==false then
-					love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,0,1/splits,1/splits,60,60)
+						love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,0,1,1,60,60)
 				else
-					if p.rotateAmount == nil then
-						if p.vd == nil then --vd=visual direction
-							love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.d/2,1/splits,1/splits,60,60)
-						else
-							love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.vd/2,1/splits,1/splits,60,60)
-						end
+				if p.rotateAmount == nil then
+					if p.vd == nil then --vd=visual direction
+						love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.d/2,1,1,60,60)
 					else
-						love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,p.rotateAmount,1/splits,1/splits,60,60)
+						love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.vd/2,1,1,60,60)
 					end
+				else
+					love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,p.rotateAmount,1,1,60,60)
+				end
+			end
+
+			if (not p.despawn) or p.despawn > 0.5 then 
+				love.graphics.setColor(255,255,255)
+			else 
+				love.graphics.setColor(255,255,255,p.despawn/0.5*255) 
+			end
+
+			if not(p.image == nil)then
+				if p.percent then
+					local r = math.pi*p.d/2
+					if not(p.vd==nil) then r=math.pi*p.vd/2 end
+						animate.draw(p.image,p.rx*120-60,p.ry*120+60,p.percent,r,p.spriteLength,p.continuous,p.horisontal)
+					else
+						local splits = 1
+						if p.splits ~= nil and p.splits ~= 0 then splits = (p.splits+1)/1.5 end
+						if p.rotate==false then
+							love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,0,1/splits,1/splits,60,60)
+						else
+							if p.rotateAmount == nil then
+								if p.vd == nil then --vd=visual direction
+									love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.d/2,1/splits,1/splits,60,60)
+								else
+									love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.vd/2,1/splits,1/splits,60,60)
+								end
+							else
+								love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,p.rotateAmount,1/splits,1/splits,60,60)
+							end
+						end
+					end
+					love.graphics.setColor(255,255,255)
 				end
 			end
 		end
-
-		love.graphics.setColor(255,255,255)
 	end
 end
 
@@ -595,7 +636,10 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 			if name == "fire breath" then
-				
+				for i=1,3 do
+					projectiles[#projectiles+1] = {posNum=i,caster=pn,damagesCaster=false,removesOnHit=false,despawn=3,name=name,damage=10,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+					projectiles[#projectiles] = moves.moveProj(#projectiles,i)
+				end
 			end
 			if name == "boulder" then
 				projectiles[#projectiles+1] = {meltable=true,name=name,damage=20,image=earthOrbImg,x=p.x,y=p.y,d=p.d,speed = 6,rx=0,ry=0}
