@@ -55,6 +55,16 @@ function players.loadParicles()
 	fireBreathParticles:setSpread(2)
 	fireBreathParticles:setSizes(4,2,1)
 	fireBreathParticles:setSpin(10)
+
+	blinkParticles = love.graphics.newParticleSystem(particleImg, 10000)
+	blinkParticles:setParticleLifetime(1, 0.1)
+	blinkParticles:setEmissionRate(1000)
+	blinkParticles:setSizeVariation(1)
+	blinkParticles:setLinearAcceleration(-30, 6, 30, 400)
+	blinkParticles:setColors(1, 1, 1, 255, 0.47, 0.47, 0.47, 100)
+	blinkParticles:setSpread(2)
+	blinkParticles:setSizes(4,2,1)
+	blinkParticles:setSpin(10)
 end
 
 function players.update(dt)
@@ -70,6 +80,7 @@ function players.update(dt)
 	players.die()
 	fireParticles:update(dt)
 	fireBreathParticles:update(dt)
+	blinkParticles:update(dt)
 end
 
 	function players.machineGun(dt)
@@ -308,7 +319,8 @@ function players.draw()
 
 		breathingFire=false
 		for j=1,#projectiles do if projectiles[j].name == "fire breath" and projectiles[j].caster==drawOrder[i] then breathingFire=true end end
-		if breathingFire then love.graphics.draw(fireBreathParticles, p.x*120-60,p.y*120+60+yOffset,(p.d+2)*0.5*math.pi) end		
+		if breathingFire then love.graphics.draw(fireBreathParticles, p.x*120-60,p.y*120+60+yOffset,(p.d+2)*0.5*math.pi) end
+		if players[drawOrder[i]].blinking ~= false then love.graphics.draw(blinkParticles, p.x*120-60,p.y*120+60+yOffset,(p.d)*0.5*math.pi) end
 		
 		if logic.round(p.vd) == 0 then
 			love.graphics.draw(characters[p.char].img,p.x*120-60,p.y*120+60+yOffset,math.pi*p.d/2,1,1,60,60)
