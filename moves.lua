@@ -273,9 +273,9 @@ end
 			for i=1,#projectiles do
 				if projectiles[i].rx == p.rx and projectiles[i].ry == p.ry and projectiles[i].name ~= "ice shard" and projectiles[i].damages ~= 0 then
 					if p.splits <= 10 then
-						for i=-1,1,2 do
-							if p.d == 0 or p.d == 2 then projectiles[#projectiles+1] = {splits=p.splits+1,name=p.name,damage=10,image=iceShardImg,x=p.x+i,y=p.y,d=p.d,speed = 5,rx=0,ry=0}
-							else projectiles[#projectiles+1] = {splits=p.splits+1,name=p.name,damage=10,image=iceShardImg,x=p.x,y=p.y+i,d=p.d,speed = 5,rx=0,ry=0} end
+						for j=-1,1,2 do
+							if p.d == 0 or p.d == 2 then projectiles[#projectiles+1] = {splits=p.splits+1,name=p.name,damage=logic.round(10/splits),image=iceShardImg,x=p.x+j,y=p.y,d=p.d,speed = 5,rx=0,ry=0}
+							else projectiles[#projectiles+1] = {splits=p.splits+1,name=p.name,damage=logic.round(10/splits),image=iceShardImg,x=p.x,y=p.y+j,d=p.d,speed = 5,rx=0,ry=0} end
 						end
 					end
 					projectilesToRemove[#projectilesToRemove+1] = pn
@@ -373,17 +373,19 @@ function moves.draw()
 				if not(p.vd==nil) then r=math.pi*p.vd/2 end
 				animate.draw(p.image,p.rx*120-60,p.ry*120+60,p.percent,r,p.spriteLength,p.continuous,p.horisontal)
 			else
+				local splits = 1
+				if p.splits ~= nil and p.splits ~= 0 then splits = (p.splits+1)/1.5 end
 				if p.rotate==false then
-					love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,0,1,1,60,60)
+					love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,0,1/splits,1/splits,60,60)
 				else
 					if p.rotateAmount == nil then
 						if p.vd == nil then --vd=visual direction
-							love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.d/2,1,1,60,60)
+							love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.d/2,1/splits,1/splits,60,60)
 						else
-							love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.vd/2,1,1,60,60)
+							love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,math.pi*p.vd/2,1/splits,1/splits,60,60)
 						end
 					else
-						love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,p.rotateAmount,1,1,60,60)
+						love.graphics.draw(p.image,p.rx*120-60,p.ry*120+60,p.rotateAmount,1/splits,1/splits,60,60)
 					end
 				end
 			end
