@@ -41,6 +41,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="crystalise",type="water",cost=35,desc="A snowflake of razor sharp ice spikes"},
 {name="shockwave",type="earth",cost=30,desc="You send seismic waves rippling through the earth, letting it rise up around you!"},
 {name="melt",type="earth",cost=30,desc="Melt all rocks on the map into flowing lava!"},
+{name="machine gun",type="earth",cost=30,desc="Use metalbending to launch a spray of bullets into your opponent!"},
 {name="lightning",type="fire",cost=60,desc="\"The energy is both yin and yang, you can separate these energies, creating an imbalance. The energy wants to restore balance and in a moment the positive and negative energy come crashing back together. You provide release and guidance, creating lightning.\""},
 {name="combustion",type="fire",cost=40,desc="SPARKY SPARKY BOOM"},
 {name="flame trail",type="fire",cost=70,desc="Don't touch your tail!"},
@@ -292,6 +293,10 @@ end
 				if projectiles[i].rx == p.rx and projectiles[i].ry == p.ry and projectiles[i].name == "ice shard" then collidingShards = collidingShards + 1 end
 			end
 			if collidingShards >= 3 then projectilesToRemove[#projectilesToRemove+1] = pn end
+		end
+		if p.name == "machine gun" then
+			projectiles[#projectiles+1] = {meltable=true,name="bullet",damage=20,image=bulletImg,x=players[p.caster].x,y=players[p.caster].y,d=players[p.caster].d,speed = 15,rx=0,ry=0}
+			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 		end
 	end
 
@@ -648,6 +653,10 @@ function moves.cast(typeNum,num,pn)
 			end
 			if name == "bullet" then
 				projectiles[#projectiles+1] = {meltable=true,name=name,damage=20,image=bulletImg,x=p.x,y=p.y,d=p.d,speed = 15,rx=0,ry=0}
+				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
+			end
+			if name == "machine gun" then
+				projectiles[#projectiles+1] = {caster=pn,name=name,damage=0,despawn=3,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "flame wall" then
