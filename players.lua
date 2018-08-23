@@ -230,7 +230,7 @@ end
 
 	function players.removeOnHit(pr,n1,n2)
 		if pr.removesOnHit == nil or pr.removesOnHit==true then
-			if pr.removesOnHitCaster == nil or (pr.removesOnHitCaster == false and pr.caster ~= n2) or (pr.removesOnHitCaster == true and pr.caster == n2a) then
+			if pr.removesOnHitCaster == nil or (pr.removesOnHitCaster == false and pr.caster ~= n2) or (pr.removesOnHitCaster == true and pr.caster == n2) then
 				projectilesToRemove[#projectilesToRemove+1] = n1
 			end
 		end
