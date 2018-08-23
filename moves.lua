@@ -125,9 +125,9 @@ end
 				end
 			end
 		end
-		if p.name == "ice spike" and p.despawn < 1.7 and p.spawned==false then
+		if p.name == "ice spike" and p.despawn < 2.8 and p.spawned==false then
 			p.spawned=true
-			projectiles[#projectiles+1] = {spawned=false,rotate=false,name="ice spike",despawn=2,damage=14,image=iceSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}			
+			projectiles[#projectiles+1] = {despawn=3,removesOnHitCaster=false,caster=p.caster,damagesCaster=false,spawned=false,rotate=false,name="ice spike",damage=14,image=iceSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}			
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 		end
 		if p.name == "spike" and p.despawn < 1.44 and p.spawned==false then
@@ -318,6 +318,11 @@ end
 	function moves.removeReduntantProjectiles()
 		for i=1,#projectiles do
 			p=projectiles[i]
+
+			if p.removesOnHitCaster then
+				if p.rx==players[p.caster].x and p.ry==players[p.caster].y then
+					projectilesToRemove[#projectilesToRemove+1]=i
+			end
 			if not(p.name == "sword flurry") then
 				if p.rx<1 or p.rx>16 or p.ry<1 or p.ry > 8 then
 					projectilesToRemove[#projectilesToRemove+1]=i
@@ -607,7 +612,7 @@ function moves.cast(typeNum,num,pn)
 			if name=="crystalise" then
 				for i=1,8 do
 					local d=i-1
-					projectiles[#projectiles+1] = {spawned=false,rotate=false,name="ice spike",despawn=2,damage=14,image=iceSpikeImg,x=p.x,y=p.y,d=d,speed = 0,rx=0,ry=0}
+					projectiles[#projectiles+1] = {removesOnHitCaster=false,caster=pn,damagesCaster=false,spawned=false,rotate=false,name="ice spike",despawn=3,damage=14,image=iceSpikeImg,x=p.x,y=p.y,d=d,speed = 0,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
