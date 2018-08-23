@@ -322,6 +322,7 @@ end
 			if p.removesOnHitCaster then
 				if p.rx==players[p.caster].x and p.ry==players[p.caster].y then
 					projectilesToRemove[#projectilesToRemove+1]=i
+				end
 			end
 			if not(p.name == "sword flurry") then
 				if p.rx<1 or p.rx>16 or p.ry<1 or p.ry > 8 then
