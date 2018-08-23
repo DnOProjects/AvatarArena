@@ -23,9 +23,10 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="air flurry",type="air",cost=15,desc="Release strands of air to trap your opponent!"},
 {name="spurt",type="water",cost=16,desc="A writhing spray of water, ready to force itself down your enemy's throat and drown their very lungs!"},
 {name="spout",type="water",cost=9,desc="Shoot a line of well-placed water out in front of you, blocking your enemy's path."},
+{name="ice shard",type="water",cost=12,desc="Send a shard of ice at your opponent that splits on contact with anything."},
 {name="boulder",type="earth",cost=5,desc="A giant rolling boulder - it's a little slow but deals a lot of damage."},
-{name="bullet",type="earth",cost=15,desc="You bend the metal in the bullet to propell it to very high speeds."},
 {name="spike",type="earth",cost=10,desc="Huge spikes of earth emerge from the ground in a line."},
+{name="bullet",type="earth",cost=15,desc="You bend the metal in the bullet to propell it to very high speeds."},
 {name="blast",type="fire",cost=10,desc="Two glowing embers shoot sideways from each hand."},
 {name="sear",type="fire",cost=13,desc="Four balls of fire radiate inaccurately from your body."},
 {name="fire breath",type="fire",cost=13,desc="Breath out fire, searing any enemies in front of you!"},
@@ -37,12 +38,12 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="tornado",type="air",cost=30,desc="Pull your enemies to the centre of a tornado and attack them while they cannot move!"},
 {name="flood",type="water",cost=60,desc="The waters rise up to drown your enemies!"},
 {name="seed",type="water",cost=40,desc="A huge thorny plant begins to grow with you, unharmed at its center."},
+{name="crystalise",type="water",cost=35,desc="A snowflake of razor sharp ice spikes"},
 {name="shockwave",type="earth",cost=30,desc="You send seismic waves rippling through the earth, letting it rise up around you!"},
 {name="melt",type="earth",cost=30,desc="Melt all rocks on the map into flowing lava!"},
 {name="lightning",type="fire",cost=60,desc="\"The energy is both yin and yang, you can separate these energies, creating an imbalance. The energy wants to restore balance and in a moment the positive and negative energy come crashing back together. You provide release and guidance, creating lightning.\""},
 {name="combustion",type="fire",cost=40,desc="SPARKY SPARKY BOOM"},
 {name="flame trail",type="fire",cost=70,desc="Don't touch your tail!"},
-{name="crystalise",type="water",cost=35,desc="A snowflake of razor sharp ice spikes"},
 {name="sword flurry",type="sokka",cost=60,desc="Swing your sword around you to impale nearby enemies!"}}
 
 }
@@ -267,6 +268,22 @@ end
 				players[p.caster].vd=players[p.caster].vd+10*dt
 			end
 		end
+		if p.name == "ice shard" then
+			local collidingShards = 0
+			for i=1,#projectiles do
+				if projectiles[i].rx == p.rx and projectiles[i].ry == p.ry and projectiles[i].name ~= "ice shard" then
+					if p.splits <= 10 then
+						for i=-1,1,2 do
+							if p.d == 0 or p.d == 2 then projectiles[#projectiles+1] = {splits=p.splits+1,name=p.name,damage=10,image=iceSpikeImg,x=p.x+i,y=p.y,d=p.d,speed = 5,rx=0,ry=0}
+							else projectiles[#projectiles+1] = {splits=p.splits+1,name=p.name,damage=10,image=iceSpikeImg,x=p.x,y=p.y+i,d=p.d,speed = 5,rx=0,ry=0} end
+						end
+					end
+					projectilesToRemove[#projectilesToRemove+1] = pn
+				end
+				if projectiles[i].rx == p.rx and projectiles[i].ry == p.ry and projectiles[i].name == "ice shard" then collidingShards = collidingShards + 1 end
+			end
+			if collidingShards >= 3 then projectilesToRemove[#projectilesToRemove+1] = pn end
+		end
 	end
 
 	function moves.despawn(dt)
@@ -487,6 +504,10 @@ function moves.cast(typeNum,num,pn)
 					projectiles[#projectiles+1] = {freezes=true,name=name,damage=7,image=waterOrbImg,x=p.x,y=p.y,d=p.d,speed = 4,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,i)
 				end
+			end
+			if name == "ice shard" then
+				projectiles[#projectiles+1] = {splits=0,name=name,damage=10,image=iceSpikeImg,x=p.x,y=p.y,d=p.d,speed = 5,rx=0,ry=0}
+				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "gust" then
 				projectiles[#projectiles+1] = {percent=0,spriteLength=6,aSpeed=2,name=name,damage=15,image=airOrbImg,x=p.x,y=p.y,d=p.d,speed = 8,rx=0,ry=0}
