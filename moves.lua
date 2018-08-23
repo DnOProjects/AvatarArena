@@ -337,7 +337,7 @@ end
 						end
 						if (not(op.blocker=="diagonal" or op.blocker=="fragileField")) then projectilesToRemove[#projectilesToRemove+1]=i end
 						if (op.blocker=="fragile" or op.blocker=="fragileField" or op.blocker=="fragileForceField") then projectilesToRemove[#projectilesToRemove+1]=j end
-						if op.blocker=="diagonal" and not(p.name=="lightning") then
+						if op.blocker=="diagonal" and not(p.name=="lightning") and not(p.name=="fire breath") then
 							if p.caster	~= nil and op.caster~=nil then p.caster = op.caster end
 							p.d=op.d+5
 							p.despawn=0.7
