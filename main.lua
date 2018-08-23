@@ -45,7 +45,6 @@ function love.update(dt)
 		fadeGameEnd(dt)
 
 		if gameEvent=="time warp" then dt=dt*dtMultiplier end
-
 		if onlineGame then
 			if startServer then
 				startServer = false

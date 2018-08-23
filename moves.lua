@@ -29,7 +29,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="bullet",type="earth",cost=15,desc="You bend the metal in the bullet to propell it to very high speeds."},
 {name="blast",type="fire",cost=10,desc="Two glowing embers shoot sideways from each hand."},
 {name="sear",type="fire",cost=13,desc="Four balls of fire radiate inaccurately from your body."},
-{name="fire breath",type="fire",cost=13,desc="Breath out fire, searing any enemies in front of you!"},
+{name="fire breath",type="fire",cost=20,desc="Breath out fire, searing any enemies in front of you!"},
 {name="boomerang",type="sokka",cost=11,desc="The boomerang whirls around the edge of the arena before returning to your hand."}},
 
 --Power
@@ -37,7 +37,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="gale",type="air",cost=30,desc="Blow away incoming projectiles!"},
 {name="tornado",type="air",cost=30,desc="Pull your enemies to the centre of a tornado and attack them while they cannot move!"},
 {name="flood",type="water",cost=60,desc="The waters rise up to drown your enemies!"},
-{name="seed",type="water",cost=40,desc="A huge thorny plant begins to grow with you, unharmed at its center."},
+{name="sprout",type="water",cost=40,desc="A huge thorny plant begins to grow with you, unharmed at its center."},
 {name="crystalise",type="water",cost=35,desc="A snowflake of razor sharp ice spikes"},
 {name="shockwave",type="earth",cost=30,desc="You send seismic waves rippling through the earth, letting it rise up around you!"},
 {name="melt",type="earth",cost=30,desc="Melt all rocks on the map into flowing lava!"},
@@ -101,14 +101,14 @@ end
 				end
 			end
 		end
-		if p.name == "seed" then
+		if p.name == "sprout" then
 			if math.random(1,150) == 1 then
 				projectiles[#projectiles+1] = {despawn=10,blocker="fragileField",caster=p.caster,rotate=false,name=p.name,damage=10,image=thornsImg,x=p.x,y=p.y,d=p.d+math.random(-1,1),speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				shouldRemove = (projectiles[#projectiles].x == players[p.caster].x) and (projectiles[#projectiles].y == players[p.caster].y)
 				for i=1,#projectiles-1 do
 					op = projectiles[i]
-					if op.name=="seed" and op.x==projectiles[#projectiles].x and op.y==projectiles[#projectiles].y then shouldRemove = true end
+					if op.name=="sprout" and op.x==projectiles[#projectiles].x and op.y==projectiles[#projectiles].y then shouldRemove = true end
 				end
 				if shouldRemove then
 					projectilesToRemove[#projectilesToRemove+1]=#projectiles
@@ -278,20 +278,24 @@ end
 			end
 		end
 		if p.name == "ice shard" then
-			local collidingShards = 0
-			for i=1,#projectiles do
-				if projectiles[i].rx == p.rx and projectiles[i].ry == p.ry and projectiles[i].name ~= "ice shard" and projectiles[i].damage ~= 0 then
-					if p.splits <= 5 then
-						for j=-1,1,2 do
-							if p.d == 0 or p.d == 2 then projectiles[#projectiles+1] = {splits=p.splits+1,name=p.name,damage=logic.round(10/(p.splits+2)),image=iceShardImg,x=p.x+j,y=p.y,d=p.d,speed = 5,rx=0,ry=0}
-							else projectiles[#projectiles+1] = {splits=p.splits+1,name=p.name,damage=logic.round(10/(p.splits+2)),image=iceShardImg,x=p.x,y=p.y+j,d=p.d,speed = 5,rx=0,ry=0} end
+			if p.spawnedThisTick~=true then
+				local collidingShards = 0
+				for i=1,#projectiles do
+					if projectiles[i].rx == p.rx and projectiles[i].ry == p.ry and projectiles[i].blocker==nil and projectiles[i].name ~= "ice shard" and projectiles[i].damage ~= 0 then
+						if p.splits <= 5 then
+							for j=-1,1,2 do
+								if p.d == 0 or p.d == 2 then projectiles[#projectiles+1] = {spawnedThisTick=true,splits=p.splits+1,name=p.name,damage=logic.round(10/(p.splits+2)),image=iceShardImg,x=p.x+j,y=p.y,d=p.d,speed = 5,rx=0,ry=0}
+								else projectiles[#projectiles+1] = {spawnedThisTick=true,splits=p.splits+1,name=p.name,damage=logic.round(10/(p.splits+2)),image=iceShardImg,x=p.x,y=p.y+j,d=p.d,speed = 5,rx=0,ry=0} end
+							end
+							projectilesToRemove[#projectilesToRemove+1] = pn
 						end
 					end
-					projectilesToRemove[#projectilesToRemove+1] = pn
+					if projectiles[i].rx == p.rx and projectiles[i].ry == p.ry and projectiles[i].name == "ice shard" then collidingShards = collidingShards + 1 end
 				end
-				if projectiles[i].rx == p.rx and projectiles[i].ry == p.ry and projectiles[i].name == "ice shard" then collidingShards = collidingShards + 1 end
+				if collidingShards >= 3 then projectilesToRemove[#projectilesToRemove+1] = pn end
+			else
+				p.spawnedThisTick=false
 			end
-			if collidingShards >= 3 then projectilesToRemove[#projectilesToRemove+1] = pn end
 		end
 	end
 
@@ -513,7 +517,7 @@ function moves.cast(typeNum,num,pn)
 					end
 				end
 			end
-			if name == "seed" then
+			if name == "sprout" then
 				for i=0,3 do
 					projectiles[#projectiles+1] = {despawn=10,blocker="fragileField",caster=pn,rotate=false,name=name,damage=10,image=thornsImg,x=p.x,y=p.y,d=i,speed = 0,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
