@@ -58,12 +58,12 @@ function players.loadParicles()
 
 	blinkParticles = love.graphics.newParticleSystem(particleImg, 10000)
 	blinkParticles:setParticleLifetime(1, 0.1)
-	blinkParticles:setEmissionRate(1000)
+	blinkParticles:setEmissionRate(100)
 	blinkParticles:setSizeVariation(1)
 	blinkParticles:setLinearAcceleration(-30, 6, 30, 400)
 	blinkParticles:setColors(1, 1, 1, 255, 0.47, 0.47, 0.47, 100)
 	blinkParticles:setSpread(2)
-	blinkParticles:setSizes(4,2,1)
+	blinkParticles:setSizes(1,4,8)
 	blinkParticles:setSpin(10)
 end
 
