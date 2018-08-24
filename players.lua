@@ -26,8 +26,8 @@ function players.load()
 
 	p1 = players[1]
 	p2 = players[2]
-	players[1] = {blinking=false,machineGunning=false,flameTrail=false,flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p1.char,x=1,y=1,d=0,vd=0,timer=0,slideTimer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
-	players[2] = {blinking=false,machineGunning=false,flameTrail=false,flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p2.char,x=16,y=8,d=0,vd=0,timer=0,slideTimer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
+	players[1] = {blinking=false,machineGunning=false,flameTrail=false,flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p1.char,x=1,y=1,d=0,vd=false,timer=0,slideTimer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p1.utility,attack=p1.attack,power=p1.power}
+	players[2] = {blinking=false,machineGunning=false,flameTrail=false,flying=false,controller="human",lineOfSight={},deflecting=false,beenBlown=false,char=p2.char,x=16,y=8,d=0,vd=false,timer=0,slideTimer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=p2.utility,attack=p2.attack,power=p2.power}
 	
 	players.loadParicles()
 
@@ -325,7 +325,7 @@ function players.draw()
 		if breathingFire then love.graphics.draw(fireBreathParticles, p.x*120-60,p.y*120+60+yOffset,(p.d+2)*0.5*math.pi) end
 		if players[drawOrder[i]].blinking ~= false then love.graphics.draw(blinkParticles, p.x*120-60,p.y*120+60+yOffset,(p.d)*0.5*math.pi) end
 		
-		if p.vd == false or p.vd == nil or logic.round(p.vd) == 0 then
+		if p.vd == false or p.vd == nil then
 			love.graphics.draw(characters[p.char].img,p.x*120-60,p.y*120+60+yOffset,math.pi*p.d/2,1,1,60,60)
 		else
 			love.graphics.draw(characters[p.char].img,p.x*120-60,p.y*120+60+yOffset,math.pi*p.vd/2,1,1,60,60)

@@ -274,7 +274,9 @@ end
 		end
 		if p.name == "sword flurry" or p.name == "swinging sword" then
 			p.d = players[p.caster].d
-			if p.name == "swinging sword" then
+			local swingSword = true
+			for i=1,#projectilesToRemove do if pn == projectilesToRemove[i] then swingSword = false end end
+			if p.name == "swinging sword" and swingSword == true then
 				p.vd=p.vd+10*dt
 				players[p.caster].vd=p.vd
 			end
@@ -308,9 +310,7 @@ end
 				p.despawn = p.despawn - dt
 				if p.despawn < 0 then
 					projectilesToRemove[#projectilesToRemove+1]=i
-					if p.name == "swinging sword" then
-						players[p.caster].vd = false
-					end
+					if p.name == "swinging sword" then players[p.caster].vd = false	end
 				end
 			end
 		end
