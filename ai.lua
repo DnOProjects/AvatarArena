@@ -100,10 +100,21 @@ function ai.perfect2(p,op)
 
 	else
 
-		if ai.mode=="dodge" then
+		for i=1,#projectiles do--checking for special projectile behaviors
+			local pr=projectiles[i]
+			if pr.name == "flood" and p.y>2 then
+				ai.destination.y=2
+				return keys[1]
+			end
+			if (pr.name == "fire breath" or pr.name == "swinging sword") and pr.caster == aiPlayer then
+				ai.destination={x=op.x,y=op.y}
+			end
+		end	
+
+		if ai.mode=="dodge" then --NOT 100% HAPPY WITH ATM (TO POST-CORNWALL DANNY)
 
 			--if moves[1][p.utility].defensive and math.random(1,2)==1 then
-			
+
 			local moveOptions={true,true,true,true}
 			for i=1,#projectiles do
 				local pr=moves.moveProj(i,1)
