@@ -134,6 +134,7 @@ end
 function ui.update(dt)
 	ui.flashAlpha(dt/1.2)
 	if gameState == "characterSelection" then 
+		dtMultiplier = 1
 		if ui[1].y == 4 and ui[2].y == 4 then
 			ui.gameStartCountdown=ui.gameStartCountdown-dt
 		else
@@ -142,7 +143,7 @@ function ui.update(dt)
 		ui.choose() 
 		if ui.gameStartCountdown<0.5 then startGame() end
 	end
-	if gameState == "menu" or gameState == "controllerSelection" then ui.menuY() end
+	if gameState == "menu" or gameState == "controllerSelection" then ui.menuY(); dtMultiplier = 1 end
 	for playerSelecting=1,2 do
 		if ui[playerSelecting].y<0 then ui[playerSelecting].y=0 end
 		if ui[playerSelecting].y>4 then ui[playerSelecting].y=4 end
