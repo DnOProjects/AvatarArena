@@ -177,7 +177,7 @@ function ai.perfect(p,op)
 	end
 
 	local key=nil
-	if (not((p.x==op.x) or (p.y==op.y)) then -- Decides if to move onto the same line as the enemy
+	if not(p.x==op.x or p.y==op.y) then -- Decides if to move onto the same line as the enemy
 		if math.abs(p.x-op.x)<math.abs(p.y-op.y) and playerDanger.x == false then
 			if p.x>op.x then key=keys[3] else key=keys[4] end
 		elseif math.abs(p.x-op.x)>math.abs(p.y-op.y) and playerDanger.y == false then
