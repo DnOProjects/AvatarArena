@@ -9,6 +9,7 @@ function ai.load(aiPlayer,diff)
 	ai.mode="ramble"
 	ai.destination={x=8,y=4}
 	ai.currentPriority = 0
+	ai.sillTimer=0
 end
 
 function ai.update(dt)
@@ -45,7 +46,7 @@ function ai.update(dt)
 
 			if ai.diff=="expert" then
 				--key=ai.perfect(p,op,true)
-				key=ai.perfect2(p,op)
+				key=ai.perfect2(p,op,dt)
 				ai.reactionTimer=0.1
 			end
 		end
@@ -75,7 +76,10 @@ function ai.changeMode()
 	end
 end
 
-function ai.perfect2(p,op)
+function ai.perfect2(p,op,dt)
+
+	if p.x==ai.destination.x and p.y==ai.destination.y then ai.sillTimer = ai.sillTimer + dt else ai.sillTimer = 0 end
+	if ai.sillTimer>2 then ai.destination={x=math.random(2,15),y=math.random(2,7)} end
 
 	if (ai.destination.x==1 and op.x~=1) or (ai.destination.x==16 and op.x~=16) then ai.destination.x=math.random(2,15) end
 	if (ai.destination.y==1 and op.y~=1) or (ai.destination.y==8 and op.y~=8) then ai.destination.y=math.random(2,7) end
@@ -84,7 +88,7 @@ function ai.perfect2(p,op)
 		local pr = moves.moveProj(i,1)
 		pr.rx = logic.round(pr.x,0)
 		pr.ry = logic.round(pr.y,0)
-		if pr.rx==p.x and pr.ry==p.y and pr.caster~=aiPlayer then
+		if pr.damage>0 and pr.rx==p.x and pr.ry==p.y and pr.caster~=aiPlayer then
 			ai.mode="dodge"
 		end
 		local pr = moves.moveProj(i,-1)
@@ -101,15 +105,32 @@ function ai.perfect2(p,op)
 
 	else
 
-		if ai.mode=="dodge" then
+		for i=1,#projectiles do--checking for special projectile behaviors
+			local pr=projectiles[i]
+			if pr.name == "flood" then
+				return keys[1]
+			end
+			if (pr.name == "fire breath" or pr.name == "swinging sword") and pr.caster == aiPlayer then
+				ai.destination={x=op.x,y=op.y}
+			end
+			if pr.name=="heal" then ai.destination={x=pr.rx,y=pr.ry} end
+		end	
+
+
+		if ai.mode=="dodge" then --NOT 100% HAPPY WITH ATM (TO POST-CORNWALL DANNY)
+
+			--if moves[1][p.utility].defensive and math.random(1,2)==1 then
+
 			local moveOptions={true,true,true,true}
 			for i=1,#projectiles do
 				local pr=moves.moveProj(i,1)
-				if pr.rx==p.x+1 and pr.ry==p.y then table.remove(moveOptions,4) end
-				if pr.rx==p.x-1 and pr.ry==p.y then table.remove(moveOptions,3) end
-				if pr.rx==p.x and pr.ry==p.y+1 then table.remove(moveOptions,2) end
-				if pr.rx==p.x and pr.ry==p.y-1 then table.remove(moveOptions,1) end
-				local pr = moves.moveProj(i,-1)
+				if pr.damage>0 and pr.caster~=aiPlayer then
+					if pr.rx==p.x+1 and pr.ry==p.y then table.remove(moveOptions,4) end
+					if pr.rx==p.x-1 and pr.ry==p.y then table.remove(moveOptions,3) end
+					if pr.rx==p.x and pr.ry==p.y+1 then table.remove(moveOptions,2) end
+					if pr.rx==p.x and pr.ry==p.y-1 then table.remove(moveOptions,1) end
+					local pr = moves.moveProj(i,-1)
+				end
 			end
 			local keyMoveOptions={}
 			for i=1,4 do
