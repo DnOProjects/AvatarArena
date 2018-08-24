@@ -337,7 +337,7 @@ end
 						end
 						if (not(op.blocker=="diagonal" or op.blocker=="fragileField")) then projectilesToRemove[#projectilesToRemove+1]=i end
 						if (op.blocker=="fragile" or op.blocker=="fragileField" or op.blocker=="fragileForceField") then projectilesToRemove[#projectilesToRemove+1]=j end
-						if op.blocker=="diagonal" and not(p.name=="lightning") and not(p.name=="fire breath") then
+						if op.blocker=="diagonal" and (p.deflectable == nil or p.deflectable == true) then
 							if p.caster	~= nil and op.caster~=nil then p.caster = op.caster end
 							p.d=op.d+5
 							p.despawn=0.7
@@ -648,7 +648,7 @@ function moves.cast(typeNum,num,pn)
 			end
 			if name == "fire breath" then
 				for i=1,3 do
-					projectiles[#projectiles+1] = {posNum=i,caster=pn,damagesCaster=false,removesOnHit=false,despawn=3,name=name,damage=10,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+					projectiles[#projectiles+1] = {deflectable=false,posNum=i,caster=pn,damagesCaster=false,removesOnHit=false,despawn=3,name=name,damage=10,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,i)
 				end
 			end
@@ -671,7 +671,7 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 			if name == "lightning" then
-				projectiles[#projectiles+1] = {turns=0,branched=false,despawn=0.5,name=name,damage=50,image=lightningImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {deflectable=false,turns=0,branched=false,despawn=0.5,name=name,damage=50,image=lightningImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)	
 			end
 			if name == "combustion" then
