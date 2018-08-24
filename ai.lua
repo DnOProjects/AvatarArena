@@ -8,6 +8,7 @@ function ai.load(aiPlayer,diff)
 	ai.dodgeTimer=0
 	ai.mode="ramble"
 	ai.destination={x=8,y=4}
+	ai.currentPriority = 0
 end
 
 function ai.update(dt)
@@ -176,8 +177,8 @@ function ai.perfect(p,op)
 			if pr.d==1 and pr.y==p.y and pr.x<p.x then avoidKey,danger=keys[math.random(1,2)],p.x-pr.x end -- Key 1 = up, Key 2 = down
 			if pr.d==2 and pr.x==p.x and pr.y<p.y then avoidKey,danger=keys[math.random(3,4)],p.y-pr.y end
 			if pr.d==3 and pr.y==p.y and pr.x>p.x then avoidKey,danger=keys[math.random(1,2)],pr.x-p.x end
-			if op.x == pr.x then playerDanger.x = true end
-			if op.y == pr.y then playerDanger.y = true end
+			if op.x == pr.x and op.d ~= pr.d then playerDanger.x = true end
+			if op.y == pr.y and op.d ~= pr.d then playerDanger.y = true end
 		end
 		if not(p.x==op.x or p.y==op.y) then -- Decides if to move onto the same line as the enemy
 			if math.abs(p.x-op.x)<math.abs(p.y-op.y) and playerDanger.x == false then
@@ -220,17 +221,30 @@ end
 
 function ai.moveSpecific(p,op)
 
+	local topPriorityActive = false
 	local key = false
 	for i=1,#projectiles do
 		pr = projectiles[i]
-		if (pr.name == "fire breath" or pr.name == "swinging sword") and pr.caster == aiPlayer then
+		if (pr.name == "fire breath" or pr.name == "swinging sword") and pr.caster == aiPlayer and ai.currentPriority < 1 then ai.currentPriority = 1 end
+		if (pr.name == "fire breath" or pr.name == "swinging sword") and pr.caster == aiPlayer and ai.currentPriority == 1 then
+			topPriorityActive = true
 			if math.abs(p.x-op.x)>math.abs(p.y-op.y) then
 				if p.x>op.x then key=keys[3] else key=keys[4] end
 			else
 				if p.y>op.y then key=keys[1] else key=keys[2] end
 			end
 		end
+		if pr.name == "heal" and p.hp < p.maxHp and ai.currentPriority < 2 then ai.currentPriority = 2 end
+		if pr.name == "heal" and p.hp < p.maxHp and ai.currentPriority == 2 then
+			topPriorityActive = true
+			if math.abs(projectiles[i].x-op.x)>math.abs(projectiles[i].y-op.y) then
+				if pr.x<op.x then key=keys[3] else key=keys[4] end
+			else
+				if pr.y<op.y then key=keys[1] else key=keys[2] end
+			end
+		end
 	end
+	if topPriorityActive == false then ai.currentPriority = 0 end
 	return key
 
 end
