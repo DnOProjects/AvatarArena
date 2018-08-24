@@ -80,13 +80,13 @@ function ai.perfect2(p,op)
 	if (ai.destination.y==1 and op.y~=1) or (ai.destination.y==8 and op.y~=8) then ai.destination.y=math.random(2,7) end
 
 	for i=1,#projectiles do
-		local pr = projectiles[i]
 		local pr = moves.moveProj(i,1)
 		pr.rx = logic.round(pr.x,0)
 		pr.ry = logic.round(pr.y,0)
 		if pr.rx==p.x and pr.ry==p.y and pr.caster~=aiPlayer then
 			ai.mode="dodge"
 		end
+		local pr = moves.moveProj(i,-1)
 	end
 
 	--modes: attack,power,dodge,ramble
@@ -108,6 +108,7 @@ function ai.perfect2(p,op)
 				if pr.rx==p.x-1 and pr.ry==p.y then table.remove(moveOptions,3) end
 				if pr.rx==p.x and pr.ry==p.y+1 then table.remove(moveOptions,2) end
 				if pr.rx==p.x and pr.ry==p.y-1 then table.remove(moveOptions,1) end
+				local pr = moves.moveProj(i,-1)
 			end
 			local keyMoveOptions={}
 			for i=1,4 do
