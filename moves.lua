@@ -1,20 +1,20 @@
 moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 
 --Utility
-{{name="shield",type="normal",cost=5,desc="Equip a shield to block any attack!"},
+{{defensive,name="shield",type="normal",cost=5,desc="Equip a shield to block any attack!"},
 {name="blow",type="air",cost=8,desc="A funnel of air to propel you forwards or push your opponent back!"},
-{name="fly",type="air",cost=25,desc="You use the air currents around you to hover just above the ground!"},
+{defensive,name="fly",type="air",cost=25,desc="You use the air currents around you to hover just above the ground!"},
 {name="shift",type="air",cost=18,desc="You shift the battle into the spirit-world, rendering all bending ineffective!"},
 {name="freeze",type="water",cost=1,desc="All water in the arena turns to solid ice!"},
-{name="aurora borealis",type="water",cost=8,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
+{defensive,name="aurora borealis",type="water",cost=8,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
 {name="heal",type="water",cost=24,desc="Healing is a special ability possessed by some waterbenders that enables them to heal those who have been wounded, including themselves."},
 {name="earth wave",type="earth",cost=10,desc="You charge forwards on rolling earth!"},
 {name="seismic sense",type="earth",cost=5,desc="Use seismic waves to sense your opponent's position."},
 {name="terraform",type="earth",cost=7,desc="Shape the world to your will!"},
-{name="flame wall",type="fire",cost=5,desc="Flames rise up to shield you from harm."},
-{name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
-{name="fire jet",type="fire",cost=12,desc="You use sizzling blue flame to propell yourself above the arena, singeing those who pass under you!"},
-{name="sword block",type="sokka",cost=5,desc="You deflect an enemy's attack, sending it flying away to the side.\n\n"}},
+{defensive,name="flame wall",type="fire",cost=5,desc="Flames rise up to shield you from harm."},
+{defensive,name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
+{defensive,name="fire jet",type="fire",cost=12,desc="You use sizzling blue flame to propell yourself above the arena, singeing those who pass under you!"},
+{defensive,name="sword block",type="sokka",cost=5,desc="You deflect an enemy's attack, sending it flying away to the side.\n\n"}},
 
 --Attack
 {{name="arrow",type="normal",cost=5,desc="A well-placed arrow can be as effective as any pillar of fire or column of rock!"},
@@ -491,7 +491,7 @@ function moves.cast(typeNum,num,pn)
 				elseif p.d==1 then x=x+1
 				elseif p.d==2 then y=y+1
 				else x=x-1 end
-				if not players.playerOnTile(x,y) then 
+				if (not players.playerOnTile(x,y)) and x>0 and x<17 and y>0 and y<9 then 
 					map[x][y]=map[x][y]+1 
 					if map[x][y]==2 then map[x][y]=0 end
 				else refund=true end

@@ -101,6 +101,9 @@ function ai.perfect2(p,op)
 	else
 
 		if ai.mode=="dodge" then
+
+			--if moves[1][p.utility].defensive and math.random(1,2)==1 then
+			
 			local moveOptions={true,true,true,true}
 			for i=1,#projectiles do
 				local pr=moves.moveProj(i,1)
