@@ -772,3 +772,7 @@ function moves.playMoveSound(type)
 		sound.play(type.."Effect")
 	end
 end
+
+function moves.getProjectiles()
+	return projectiles
+end

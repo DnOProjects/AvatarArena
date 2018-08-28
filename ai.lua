@@ -244,28 +244,30 @@ function ai.moveSpecific(p,op)
 
 	local topPriorityActive = false
 	local key = false
-	for i=1,#projectiles do
-		pr = projectiles[i]
+	for i=1,#moves.getProjectiles() do
+		pr = moves.getProjectiles()[i]
 		if (pr.name == "fire breath" or pr.name == "swinging sword") and pr.caster == aiPlayer and ai.currentPriority < 1 then ai.currentPriority = 1 end
 		if (pr.name == "fire breath" or pr.name == "swinging sword") and pr.caster == aiPlayer and ai.currentPriority == 1 then
 			topPriorityActive = true
-			if math.abs(p.x-op.x)>math.abs(p.y-op.y) then
-				if p.x>op.x then key=keys[3] else key=keys[4] end
-			else
-				if p.y>op.y then key=keys[1] else key=keys[2] end
-			end
+			key=ai.follow(p,op)
 		end
 		if pr.name == "heal" and p.hp < p.maxHp and ai.currentPriority < 2 then ai.currentPriority = 2 end
 		if pr.name == "heal" and p.hp < p.maxHp and ai.currentPriority == 2 then
 			topPriorityActive = true
-			if math.abs(projectiles[i].x-op.x)>math.abs(projectiles[i].y-op.y) then
-				if pr.x<op.x then key=keys[3] else key=keys[4] end
-			else
-				if pr.y<op.y then key=keys[1] else key=keys[2] end
-			end
+			key=ai.follow(p,pr)
 		end
 	end
 	if topPriorityActive == false then ai.currentPriority = 0 end
 	return key
 
+end
+
+function ai.follow(p,followID)
+	local key = false
+	if math.abs(p.x-followID.x)>math.abs(p.y-followID.y) and p.x ~= followID.x then
+		if p.x>followID.x then key=keys[3] else key=keys[4] end
+	elseif p.y ~= followID.y then
+		if p.y>followID.y then key=keys[1] else key=keys[2] end
+	end
+	return key
 end
