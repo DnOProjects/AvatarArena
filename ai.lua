@@ -264,6 +264,11 @@ function ai.moveSpecific(p,op,inputType)
 				topPriorityActive = true
 				key=ai.follow(p,pr)
 			end
+			if pr.name == "flood" and ai.currentPriority < 3 then ai.currentPriority = 3 end
+			if pr.name == "flood" and p.y > 2 and ai.currentPriority == 3 then
+				topPriorityActive = true
+				key=keys[1]
+			end
 		end
 		if topPriorityActive == false then ai.currentPriority = 0 end
 	elseif inputType == "attack" then
