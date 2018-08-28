@@ -10,6 +10,7 @@ function ai.load(aiPlayer,diff)
 	ai.destination={x=8,y=4}
 	ai.currentPriority = 0
 	ai.sillTimer=0
+	ai.attackStage=1
 end
 
 function ai.update(dt)
@@ -31,16 +32,16 @@ function ai.update(dt)
 
 		if ai.reactionTimer<0 then
 			if ai.diff=="medium" then
-				if math.random(1,15) == 1 then
+				if math.random(1,9) == 1 then
 					key=keys[math.random(1,5)]
 				else 
-					key=ai.perfect(p,op,false)
+					key=ai.perfect(p,op)
 				end
 				ai.reactionTimer=0.3
 			end
 
 			if ai.diff=="hard" then
-				key=ai.perfect(p,op,true)
+				key=ai.perfect(p,op)
 				ai.reactionTimer=0.1
 			end
 
@@ -181,7 +182,7 @@ function ai.perfect2(p,op,dt)
 end
 
 
-function ai.perfect(p,op,hard)
+function ai.perfect(p,op)
 
 	-- p = AI
 	-- op = Player
@@ -190,10 +191,6 @@ function ai.perfect(p,op,hard)
 	local moveSpecific = ai.moveSpecific(p,op,"move")
 	local attackSpecific = ai.moveSpecific(p,op,"attack")
 	if ai.saving then attackSpecific = false end
-	if hard == false then
-		moveSpecific = false
-		attackSpecific = false
-	end
 	if moveSpecific == false then
 		danger=false
 		avoidKey=nil
@@ -207,28 +204,28 @@ function ai.perfect(p,op,hard)
 			if op.x == pr.x and op.d ~= pr.d then playerDanger.x = true end
 			if op.y == pr.y and op.d ~= pr.d then playerDanger.y = true end
 		end
-		if not(p.x==op.x or p.y==op.y) and attackSpecific == false then -- Decides if to move onto the same line as the enemy
+		if not(p.x==op.x or p.y==op.y) and (attackSpecific == false or attackSpecific ~= "sear") then -- Decides if to move onto the same line as the enemy
 			if math.abs(p.x-op.x)<math.abs(p.y-op.y) and playerDanger.x == false then
 				if p.x>op.x then key=keys[3] else key=keys[4] end
 			elseif math.abs(p.x-op.x)>math.abs(p.y-op.y) and playerDanger.y == false then
 				if p.y<op.y then key=keys[2] else key=keys[1] end
 			end
-		elseif attackSpecific ~= "onPoint" and attackSpecific ~= false then -- If attackSpecific is a key
+		elseif attackSpecific ~= "sear" and attackSpecific ~= "blast" and attackSpecific ~= false then -- If attackSpecific is a key
 			key = attackSpecific
 		else
-			if not ai.facing(p,op) and attackSpecific ~= "onPoint" then -- Change direction to face opponent
+			if not ai.facing(p,op) and attackSpecific == false then -- Change direction to face opponent
 				if p.x==op.x then
 					if p.d==0 then key=keys[2] else key=keys[1] end
 				else
 					if p.d==1 then key=keys[3] else key=keys[4] end
 				end
 			else
-				if danger~=false then -- Cast utility if the AI is in danger of an attack
+				if danger~=false then -- Cast utility or dodge if the AI is in danger of an attack
 					if danger<2 and math.random(1,5)==1 then key=keys[5] else key=avoidKey end
 				else
 					if not ai.saving then
 						if p.chi>moves[2][p.attack].cost then -- Cast attack if the AI has enough chi AND they're not saving up chi
-							if attackSpecific == "onPoint" or attackSpecific == false then
+							if attackSpecific == "sear" or attackSpecific == "blast" or attackSpecific == false then
 								key=keys[6]
 								if math.random(1,4)==1 then ai.saving=true end -- 1/4 chance for the AI to start saving chi
 							end
@@ -286,7 +283,24 @@ function ai.moveSpecific(p,op,inputType)
 			if closestTarget.x+closestTarget.y ~= 0 then
 				key = ai.follow(p,closestTarget)
 			else
-				key = "onPoint"
+				key = moves[2][p.attack].name
+			end
+		end
+		if moves[2][p.attack].name == "blast" then
+			if p.x == op.x then
+				if p.d ~= 0 and p.d ~= 2 then
+					if ai.attackStage == 1 then key = keys[3]; ai.attackStage = 2
+					elseif ai.attackStage == 2 then key = keys[4]; ai.attackStage = 3
+					elseif ai.attackStage == 3 then key = moves[2][p.attack].name; ai.attackStage = 1 end
+				end
+			elseif p.y == op.y then
+				if p.d ~= 1 and p.d ~= 3 then
+					if ai.attackStage == 1 then key = keys[1]; ai.attackStage = 2
+					elseif ai.attackStage == 2 then key = keys[2]; ai.attackStage = 3
+					elseif ai.attackStage == 3 then key = moves[2][p.attack].name; ai.attackStage = 1 end
+				end
+			else
+				key = moves[2][p.attack].name
 			end
 		end
 	end
