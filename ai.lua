@@ -201,8 +201,8 @@ function ai.perfect(p,op)
 			if pr.d==1 and pr.y==p.y and pr.x<p.x then avoidKey,danger=keys[math.random(1,2)],p.x-pr.x end -- Key 1 = up, Key 2 = down
 			if pr.d==2 and pr.x==p.x and pr.y<p.y then avoidKey,danger=keys[math.random(3,4)],p.y-pr.y end
 			if pr.d==3 and pr.y==p.y and pr.x>p.x then avoidKey,danger=keys[math.random(1,2)],pr.x-p.x end
-			if op.x == pr.x and op.d ~= pr.d then playerDanger.x = true end
-			if op.y == pr.y and op.d ~= pr.d then playerDanger.y = true end
+			if op.x == pr.x and op.d ~= pr.d and pr.defensive == nil then playerDanger.x = true end
+			if op.y == pr.y and op.d ~= pr.d and pr.defensive == nil then playerDanger.y = true end
 		end
 		if not(p.x==op.x or p.y==op.y) and (attackSpecific == false or attackSpecific ~= "sear") then -- Decides if to move onto the same line as the enemy
 			if math.abs(p.x-op.x)<math.abs(p.y-op.y) and playerDanger.x == false then
@@ -264,8 +264,18 @@ function ai.moveSpecific(p,op,inputType)
 				topPriorityActive = true
 				key=ai.follow(p,pr)
 			end
-			if pr.name == "flood" and p.y > 2 and ai.currentPriority < 3 then ai.currentPriority = 3 end
-			if pr.name == "flood" and p.y > 2 and ai.currentPriority == 3 then
+			if p.flameTrail ~= false and ai.currentPriority < 3 then ai.currentPriority = 3 end
+			if p.flameTrail ~= false and ai.currentPriority == 3 then
+				topPriorityActive = true
+				local op2 = {x=op.x,y=op.y}
+				if op.d == 0 then op2.y = op2.y + 1
+				elseif op.d == 1 then op2.x = op2.x - 1
+				elseif op.d == 2 then op2.y = op2.y - 1
+				elseif op.d == 3 then op2.x = op2.x + 1 end
+				key=ai.follow(p,op2)
+			end
+			if pr.name == "flood" and p.y > 2 and ai.currentPriority < 4 then ai.currentPriority = 4 end
+			if pr.name == "flood" and p.y > 2 and ai.currentPriority == 4 then
 				topPriorityActive = true
 				key=keys[1]
 			end
