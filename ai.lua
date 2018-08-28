@@ -31,16 +31,16 @@ function ai.update(dt)
 
 		if ai.reactionTimer<0 then
 			if ai.diff=="medium" then
-				if math.random(1,10) == 1 then
+				if math.random(1,15) == 1 then
 					key=keys[math.random(1,5)]
 				else 
-					key=ai.perfect(p,op)
+					key=ai.perfect(p,op,false)
 				end
 				ai.reactionTimer=0.3
 			end
 
 			if ai.diff=="hard" then
-				key=ai.perfect(p,op)
+				key=ai.perfect(p,op,true)
 				ai.reactionTimer=0.1
 			end
 
@@ -181,7 +181,7 @@ function ai.perfect2(p,op,dt)
 end
 
 
-function ai.perfect(p,op)
+function ai.perfect(p,op,hard)
 
 	-- p = AI
 	-- op = Player
@@ -189,6 +189,11 @@ function ai.perfect(p,op)
 	local key=nil
 	local moveSpecific = ai.moveSpecific(p,op,"move")
 	local attackSpecific = ai.moveSpecific(p,op,"attack")
+	if ai.saving then attackSpecific = false end
+	if hard == false then
+		moveSpecific = false
+		attackSpecific = false
+	end
 	if moveSpecific == false then
 		danger=false
 		avoidKey=nil
