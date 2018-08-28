@@ -17,6 +17,13 @@ function logic.inList(list,item)
 	return false
 end
 
+function logic.inBorders(p,addOnX,addOnY)
+  if addOnX == nil then addOnX = 0 end
+  if addOnY == nil then addOnY = 0 end
+  if p.x + addOnX > 0 and p.x + addOnX < 16 and p.y + addOnY > 0 and p.y + addOnY < 8 then return true
+  else return false end
+end
+
 function logic.copyTable(obj)
   if type(obj) ~= 'table' then return obj end
   local s = {}

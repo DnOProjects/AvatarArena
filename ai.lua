@@ -187,7 +187,8 @@ function ai.perfect(p,op)
 	-- op = Player
 
 	local key=nil
-	moveSpecific = ai.moveSpecific(p,op)
+	local moveSpecific = ai.moveSpecific(p,op,"move")
+	local attackSpecific = ai.moveSpecific(p,op,"attack")
 	if moveSpecific == false then
 		danger=false
 		avoidKey=nil
@@ -201,27 +202,31 @@ function ai.perfect(p,op)
 			if op.x == pr.x and op.d ~= pr.d then playerDanger.x = true end
 			if op.y == pr.y and op.d ~= pr.d then playerDanger.y = true end
 		end
-		if not(p.x==op.x or p.y==op.y) then -- Decides if to move onto the same line as the enemy
+		if not(p.x==op.x or p.y==op.y) and attackSpecific == false then -- Decides if to move onto the same line as the enemy
 			if math.abs(p.x-op.x)<math.abs(p.y-op.y) and playerDanger.x == false then
 				if p.x>op.x then key=keys[3] else key=keys[4] end
 			elseif math.abs(p.x-op.x)>math.abs(p.y-op.y) and playerDanger.y == false then
 				if p.y<op.y then key=keys[2] else key=keys[1] end
 			end
+		elseif attackSpecific ~= "onPoint" and attackSpecific ~= false then -- If attackSpecific is a key
+			key = attackSpecific
 		else
-			if not ai.facing(p,op) then -- Change direction to face opponent
+			if not ai.facing(p,op) and attackSpecific ~= "onPoint" then -- Change direction to face opponent
 				if p.x==op.x then
 					if p.d==0 then key=keys[2] else key=keys[1] end
 				else
 					if p.d==1 then key=keys[3] else key=keys[4] end
 				end
 			else
-				if danger~=false then -- Cast utility if the AI is in danger of an attack AND playing on expert
+				if danger~=false then -- Cast utility if the AI is in danger of an attack
 					if danger<2 and math.random(1,5)==1 then key=keys[5] else key=avoidKey end
 				else
 					if not ai.saving then
 						if p.chi>moves[2][p.attack].cost then -- Cast attack if the AI has enough chi AND they're not saving up chi
-							key=keys[6]
-							if math.random(1,4)==1 then ai.saving=true end -- 1/4 chance for the AI to start saving chi
+							if attackSpecific == "onPoint" or attackSpecific == false then
+								key=keys[6]
+								if math.random(1,4)==1 then ai.saving=true end -- 1/4 chance for the AI to start saving chi
+							end
 						end
 					else
 						if p.chi>moves[3][p.power].cost then -- Cast power if the AI has enough chi AND they're saving up chi
@@ -240,24 +245,46 @@ function ai.perfect(p,op)
 
 end
 
-function ai.moveSpecific(p,op)
+function ai.moveSpecific(p,op,inputType)
 
-	local topPriorityActive = false
 	local key = false
-	for i=1,#moves.getProjectiles() do
-		pr = moves.getProjectiles()[i]
-		if (pr.name == "fire breath" or pr.name == "swinging sword") and pr.caster == aiPlayer and ai.currentPriority < 1 then ai.currentPriority = 1 end
-		if (pr.name == "fire breath" or pr.name == "swinging sword") and pr.caster == aiPlayer and ai.currentPriority == 1 then
-			topPriorityActive = true
-			key=ai.follow(p,op)
+	if inputType == "move" then
+		local topPriorityActive = false
+		for i=1,#moves.getProjectiles() do
+			pr = moves.getProjectiles()[i]
+			if (pr.name == "fire breath" or pr.name == "swinging sword") and pr.caster == aiPlayer and ai.currentPriority < 1 then ai.currentPriority = 1 end
+			if (pr.name == "fire breath" or pr.name == "swinging sword") and pr.caster == aiPlayer and ai.currentPriority == 1 then
+				topPriorityActive = true
+				key=ai.follow(p,op)
+			end
+			if pr.name == "heal" and p.hp < p.maxHp and ai.currentPriority < 2 then ai.currentPriority = 2 end
+			if pr.name == "heal" and p.hp < p.maxHp and ai.currentPriority == 2 then
+				topPriorityActive = true
+				key=ai.follow(p,pr)
+			end
 		end
-		if pr.name == "heal" and p.hp < p.maxHp and ai.currentPriority < 2 then ai.currentPriority = 2 end
-		if pr.name == "heal" and p.hp < p.maxHp and ai.currentPriority == 2 then
-			topPriorityActive = true
-			key=ai.follow(p,pr)
+		if topPriorityActive == false then ai.currentPriority = 0 end
+	elseif inputType == "attack" then
+		if moves[2][p.attack].name == "sear" then
+			local closestTarget = {x=100,y=100}
+			for plx=-7,7 do
+				for ply=-7,7  do
+					if math.abs(plx) == math.abs(ply) and logic.inBorders(op,plx,ply) then
+						if p.x == op.x + plx and p.y == op.y + ply then closestTarget.x,closestTarget.y = 0,0 else
+							if math.abs(p.x-(op.x + plx))+math.abs(p.y-(op.y + ply)) < closestTarget.x+closestTarget.y then
+								closestTarget.x,closestTarget.y = op.x + plx,op.y + ply
+							end
+						end
+					end
+				end
+			end
+			if closestTarget.x+closestTarget.y ~= 0 then
+				key = ai.follow(p,closestTarget)
+			else
+				key = "onPoint"
+			end
 		end
 	end
-	if topPriorityActive == false then ai.currentPriority = 0 end
 	return key
 
 end
