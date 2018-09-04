@@ -283,7 +283,6 @@ end
 
 	function players.die()
 		if gameEndFade==false then
-			dtMultiplier=1
 			for i=1,2 do
 				local op=players[1]
 				local p=players[i]
