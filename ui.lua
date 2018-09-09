@@ -25,10 +25,10 @@ function ui.load()
 	{name="Events",selected=1,options={"none","night","sea of chi","power cycle","instablitiy","time warp"}}}
 	menu2Options = {{name="Oppenent",selected=1,options={"human","ai"}},{name="Role",selected=1,options={"client","server"}}}
 
-	controller = {{name="Input Device",selected=1,options={"keyboard","controller"}},
+	controller = {{name="Input Device",selected=1,options={"keys/mouse","controller"}},
 	{name="Player",selected=1,options={"1 (left)","2 (right)"}},
-	{name="Move Set 1",selected=1,options={"RDFG + ` 1 2","WASD + 4 5 6"}},
-	{name="Move Set 2",selected=1,options={"Arrow + , . /"}}}
+	{name="Move Set 1",selected=1,options={"RDFG+` 1 2","WASD+4 5 6","WASD+Mouse"}},
+	{name="Move Set 2",selected=1,options={"Arrow+, . /"}}}
 
 	menuStage=1
 

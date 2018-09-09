@@ -52,7 +52,7 @@ function ai.update(dt)
 			end
 		end
 
-		input.keyInput(key,"ai")	
+		input.keyInput("keyboard",key,"ai")	
 
 	end
 

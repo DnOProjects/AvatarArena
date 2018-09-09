@@ -14,7 +14,11 @@ function server.load()
 
 	server:addProcessOnServer('p',function(self,peer,arg,storage)
 	  	user = self:getUser(peer)
-	  	input.keyInput(arg.key)
+	  	if type(arg.key) == "string" then
+	  		input.keyInput("keyboard",arg.key)
+	  	elseif type(arg.key) == "number" then
+	  		input.keyInput("mouse",arg.key)
+	  	end
 	end)
 
 end

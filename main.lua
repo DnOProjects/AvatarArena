@@ -80,7 +80,7 @@ function love.load()
     gameEndFade=false
 
     lights = {}
-    normalBrightness=0 --50%
+    normalBrightness=0.01 --50%
 
 end
 
@@ -262,7 +262,15 @@ function love.keypressed(key)
 			if debugMode then ambientMusic:play() else ambientMusic:pause() end
 			debugMode=not debugMode 
 		end
-		if not onlineGame then input.keyInput(key) end
+		input.keyInput("keyboard",key)
+	else
+		client.keyInput(key)
+	end
+end
+
+function love.mousepressed(x,y,key)
+	if onlineClient == false then
+		input.keyInput("mouse",key)
 	else
 		client.keyInput(key)
 	end
