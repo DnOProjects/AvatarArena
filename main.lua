@@ -9,7 +9,50 @@ require "animate"
 require "Images/images"
 require "Sounds/sound"
 
+local shader_code = [[
+#define NUM_LIGHTS 32
+
+struct Light {
+    vec2 position;
+    vec3 diffuse;
+    float power;
+};
+
+extern Light lights[NUM_LIGHTS];
+extern int num_lights;
+
+extern vec2 screen;
+
+const float constant = 1.0;
+const float linear = 0.09;
+const float quadratic = 0.032;
+
+vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords){
+    vec4 pixel = Texel(image, uvs);
+
+    vec2 norm_screen = screen_coords / screen;
+    vec3 diffuse = vec3(0);
+
+    for (int i = 0; i < num_lights; i++) {
+        Light light = lights[i];
+        vec2 norm_pos = light.position / screen;
+
+        float distance = length(norm_pos - norm_screen) * light.power;
+        float attenuation = 1.0 / (constant + linear * distance + quadratic * (distance * distance));
+
+        diffuse += light.diffuse * attenuation;
+    }
+
+    diffuse = clamp(diffuse, 0.0, 1.0);
+    return pixel * vec4(diffuse, 1.0) * color;
+}
+]]
+
+local shader = nil
+
 function love.load()
+
+    shader = love.graphics.newShader(shader_code)
 
 	startServer = true
 
@@ -35,6 +78,9 @@ function love.load()
     moveSet = {1,1}
 
     gameEndFade=false
+
+    lights = {}
+    normalBrightness=0.01 --50%
 
 end
 
@@ -104,9 +150,40 @@ function addToDrawCanvas()
 
 	if onlineClient == false and onlineGame == false then
 		if gameState=="game" then
+
+			if gameEvent=="night" then
+
+				love.graphics.setShader(shader)
+			    shader:send("screen", {
+			        love.graphics.getWidth(),
+			        love.graphics.getHeight()
+			    })
+			    shader:send("num_lights", 3)    
+
+			    shader:send("lights[0].position", {
+			        players[1].x*120-60,
+			        players[1].y*120+60
+			    })
+			    shader:send("lights[0].diffuse", { --light color
+			        normalBrightness, normalBrightness, normalBrightness
+			    })
+			    shader:send("lights[0].power", 1)
+
+			    shader:send("lights[1].position", {players[1].x*120-60,players[1].y*120+60}) --postition
+			    shader:send("lights[1].diffuse", {1, 1, 1}) --color
+			    shader:send("lights[1].power", 64)
+
+			    shader:send("lights[2].position", {players[2].x*120-60,players[2].y*120+60}) --postition
+			    shader:send("lights[2].diffuse", {1, 1, 1}) --color
+			    shader:send("lights[2].power", 64)
+
+			end
+
 			map.draw()
 			moves.draw()
 			players.draw()
+
+			love.graphics.setShader()
 		end
 
 		ui.draw()

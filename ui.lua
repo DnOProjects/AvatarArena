@@ -22,7 +22,7 @@ function ui.load()
 	{name="Oppenent",selected=1,options={"human","ai"}},
 	{name="Difficulty",selected=2,options={"easy","medium","hard","expert"}},
 	{name="Selection",selected=1,options={"choice","random","random duel","blind","blind duel"}},
-	{name="Events",selected=1,options={"none","sea of chi","power cycle","instablitiy","time warp"}}}
+	{name="Events",selected=1,options={"none","night","sea of chi","power cycle","instablitiy","time warp"}}}
 	menu2Options = {{name="Oppenent",selected=1,options={"human","ai"}},{name="Role",selected=1,options={"client","server"}}}
 
 	controller = {{name="Input Device",selected=1,options={"keyboard","controller"}},
