@@ -80,6 +80,10 @@ end
 	end
 
 	function moves.updateProjectile(p,dt,pn)
+		if p.name == "aurora borealis" then
+			local t = p.despawn*5
+			p.glowColor={(math.sin(t+127.5)+1)*127.5,(math.sin(t)+1)*127.5,(math.cos(t)+1)*127.5}
+		end
 		if p.name == "fire breath" then
 			p.rx=players[p.caster].x
 			p.ry=players[p.caster].y
@@ -158,7 +162,7 @@ end
 							local op=projectiles[j]
 							if op.x==p.x+x and op.y==p.y+y and op.name=="lava" then shouldPlace = false end
 						end
-						if shouldPlace then projectiles[#projectiles+1] = {meltable=true,removesOnHit=false,hasSpread=true,rotate=false,despawn=5,name="lava",damage=20,image=lavaImg,x=p.rx+x,y=p.ry+y,d=p.d,speed = 0,rx=0,ry=0} end
+						if shouldPlace then projectiles[#projectiles+1] = {glows=true,glowColor={79, 2, 0},meltable=true,removesOnHit=false,hasSpread=true,rotate=false,despawn=5,name="lava",damage=20,image=lavaImg,x=p.rx+x,y=p.ry+y,d=p.d,speed = 0,rx=0,ry=0} end
 					end
 				end
 			end
@@ -203,7 +207,7 @@ end
 				for i=1,multi do
 					local d=p.d-1+i
 					if d==4 then d=0 end
-					projectiles[#projectiles+1] = {turns=p.turns,branched = false,despawn=0.5,name=p.name,damage=50,image=lightningImg,x=x,y=y,d=d,speed = 0,rx=0,ry=0}
+					projectiles[#projectiles+1] = {glowPower=5,glows=true,glowColor={255,255,255},turns=p.turns,branched = false,despawn=0.5,name=p.name,damage=50,image=lightningImg,x=x,y=y,d=d,speed = 0,rx=0,ry=0}
 				end
 			end
 		end
@@ -222,7 +226,7 @@ end
 				if p.ry==8 and p.d==2 then explode = true end
 				if explode == true then
 					if p.name == "combustion" then
-						projectiles[#projectiles+1] = {expanded=false,rotate=false,despawn=1,name="combustionExplosion",damage=20,image=explosion,x=p.x,y=p.y,d=0,speed = 0,rx=0,ry=0}
+						projectiles[#projectiles+1] = {glows=true,glowColor={114, 59, 0},expanded=false,rotate=false,despawn=1,name="combustionExplosion",damage=20,image=explosion,x=p.x,y=p.y,d=0,speed = 0,rx=0,ry=0}
 					end
 					projectilesToRemove[#projectilesToRemove+1]=i
 				else
@@ -232,7 +236,7 @@ end
 					if p.d==1 then x=x+1 end
 					if p.d==2 then y=y+1 end
 					if p.d==3 then x=x-1 end
-					projectiles[#projectiles+1] = {expanded=false,despawn=0.5,name=p.name,damage=0,image=combustionBlastImg,x=x,y=y,d=p.d,speed = 0,rx=0,ry=0}
+					projectiles[#projectiles+1] = {glows=true,glowColor={255, 255, 255},glowPower=10000,expanded=false,despawn=0.5,name=p.name,damage=0,image=combustionBlastImg,x=x,y=y,d=p.d,speed = 0,rx=0,ry=0}
 				end
 			end
 		end
@@ -241,7 +245,7 @@ end
 			for x=-2,2 do
 				for y=-2,2 do
 					if not((x==2 and y==2) or (x==2 and y==-2) or (x==-2 and y==2) or (x==-2 and y==-2)) then
-						projectiles[#projectiles+1] = {expanded=true,despawn=1,name="combustionExplosion",damage=20,image=explosionImg,x=p.x+x,y=p.y+y,d=p.d,speed = 0,rx=0,ry=0}
+						projectiles[#projectiles+1] = {glows=true,glowColor={114, 59, 0},expanded=true,despawn=1,name="combustionExplosion",damage=20,image=explosionImg,x=p.x+x,y=p.y+y,d=p.d,speed = 0,rx=0,ry=0}
 					end
 				end
 			end
@@ -530,7 +534,7 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 			if name == "heal" then
-				projectiles[#projectiles+1] = {freezes=true,name=name,damage=-10,image=healOrbImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {glows=true,glowColor={66, 206, 244},freezes=true,name=name,damage=-10,image=healOrbImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,3)
 			end
 			if name == "shift" then
@@ -541,7 +545,7 @@ function moves.cast(typeNum,num,pn)
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name=="redirect" then
-				projectiles[#projectiles+1] = {caster=pn,despawn=2,name=name,damage=0,image=redirectIcon,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {glows=true,glowColor={181, 255, 248},glowPower=2,caster=pn,despawn=2,name=name,damage=0,image=redirectIcon,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "spurt" then
@@ -624,7 +628,7 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 			if name == "aurora borealis" then
-				projectiles[#projectiles+1] = {spriteLength=6,continuous=true,blocker="forceField",despawn=5,percent=0,aSpeed=1,name=name,damage=0,image=auroraImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {glows=true,glowColor={0,0,255},spriteLength=6,continuous=true,blocker="forceField",despawn=5,percent=0,aSpeed=1,name=name,damage=0,image=auroraImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 			end
 			if name == "blow" then
 				for i=1,4 do
@@ -634,7 +638,7 @@ function moves.cast(typeNum,num,pn)
 			end
 			if name == "sear" then
 				for i=4,7 do
-					projectiles[#projectiles+1] = {aRepeats=false,vd=p.d,redirectable=true,percent=0,spriteLength=4,aSpeed=1,name=name,damage=20,image=fireOrbImg,x=p.x,y=p.y,d=i,speed = 3,rx=0,ry=0}
+					projectiles[#projectiles+1] = {glows=true,glowColor={255,0,0},aRepeats=false,vd=p.d,redirectable=true,percent=0,spriteLength=4,aSpeed=1,name=name,damage=20,image=fireOrbImg,x=p.x,y=p.y,d=i,speed = 3,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
@@ -642,13 +646,13 @@ function moves.cast(typeNum,num,pn)
 				for i=0,1 do
 					local d = p.d+1+(i*2)
 					if d>3 then d=d-4 end
-					projectiles[#projectiles+1] = {aRepeats=false,redirectable=true,percent=0,spriteLength=4,aSpeed=1,name=name,damage=10,image=fireOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
+					projectiles[#projectiles+1] = {glows=true,glowColor={255,0,0},aRepeats=false,redirectable=true,percent=0,spriteLength=4,aSpeed=1,name=name,damage=10,image=fireOrbImg,x=p.x,y=p.y,d=d,speed = 4,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
 			if name == "fire breath" then
 				for i=1,3 do
-					projectiles[#projectiles+1] = {deflectable=false,posNum=i,caster=pn,damagesCaster=false,removesOnHit=false,despawn=3,name=name,damage=10,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+					projectiles[#projectiles+1] = {glows=true,glowColor={255,0,0},deflectable=false,posNum=i,caster=pn,damagesCaster=false,removesOnHit=false,despawn=3,name=name,damage=10,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,i)
 				end
 			end
@@ -665,24 +669,24 @@ function moves.cast(typeNum,num,pn)
 			end
 			if name == "flame wall" then
 				for i=1,3 do
-					if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {caster=pn,removesOnHitCaster=false,damagesCaster=false,percent=0,spriteLength=4,aSpeed=4,name=name,despawn=1,blocker="fragileForceField",damage=4,image=stillFlameImg,x=p.x-2+i,y=p.y,vd=0,d=p.d,speed = 0,rx=0,ry=0}
-					else projectiles[#projectiles+1] = {caster=pn,removesOnHitCaster=false,damagesCaster=false,percent=0,spriteLength=4,aSpeed=4,name=name,despawn=1,blocker="fragileForceField",damage=4,image=stillFlameImg,x=p.x,y=p.y-2+i,vd=0,d=p.d,speed = 0,rx=0,ry=0} end
+					if p.d==0 or p.d==2 then projectiles[#projectiles+1] = {glows=true,glowColor={255,0,0},caster=pn,removesOnHitCaster=false,damagesCaster=false,percent=0,spriteLength=4,aSpeed=4,name=name,despawn=1,blocker="fragileForceField",damage=4,image=stillFlameImg,x=p.x-2+i,y=p.y,vd=0,d=p.d,speed = 0,rx=0,ry=0}
+					else projectiles[#projectiles+1] = {glows=true,glowColor={255,0,0},caster=pn,removesOnHitCaster=false,damagesCaster=false,percent=0,spriteLength=4,aSpeed=4,name=name,despawn=1,blocker="fragileForceField",damage=4,image=stillFlameImg,x=p.x,y=p.y-2+i,vd=0,d=p.d,speed = 0,rx=0,ry=0} end
 					projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 				end
 			end
 			if name == "lightning" then
-				projectiles[#projectiles+1] = {deflectable=false,turns=0,branched=false,despawn=0.5,name=name,damage=50,image=lightningImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {glows=true,glowColor={255,255,255},glowPower=5,deflectable=false,turns=0,branched=false,despawn=0.5,name=name,damage=50,image=lightningImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)	
 			end
 			if name == "combustion" then
-				projectiles[#projectiles+1] = {expanded=false,despawn=0.5,name=name,damage=0,image=combustionBlastImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {glows=true,glowColor={114, 59, 0},expanded=false,despawn=0.5,name=name,damage=0,image=combustionBlastImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 			end
 			if name == "flood" then
 				for x=1,16 do
 					willSpawn=false
 					if x==1 then willSpawn=true end
-					projectiles[#projectiles+1] = {removesOnHit=false,freezes=true,rotate=false,willSpawn=willSpawn,layer=8,despawn=1.3^9,name=name,damage=50,image=floodTopImg,x=x,y=8,d=0,speed = 0,rx=0,ry=0}
+					projectiles[#projectiles+1] = {glows=true,glowColor={0, 19, 79},removesOnHit=false,freezes=true,rotate=false,willSpawn=willSpawn,layer=8,despawn=1.3^9,name=name,damage=50,image=floodTopImg,x=x,y=8,d=0,speed = 0,rx=0,ry=0}
 				end
 			end
 			if name == "spike" then
@@ -701,7 +705,7 @@ function moves.cast(typeNum,num,pn)
 					if p.meltable ~= nil then
 						refund = false
 						projectilesToRemove[#projectilesToRemove+1]=i
-						projectiles[#projectiles+1] = {removesOnHit=false,hasSpread=false,rotate=false,despawn=8,name="lava",damage=20,image=lavaImg,x=p.rx,y=p.ry,d=p.d,speed = 0,rx=0,ry=0}
+						projectiles[#projectiles+1] = {glows=true,glowColor={79, 2, 0},removesOnHit=false,hasSpread=false,rotate=false,despawn=8,name="lava",damage=20,image=lavaImg,x=p.rx,y=p.ry,d=p.d,speed = 0,rx=0,ry=0}
 					end
 				end
 			end

@@ -10,7 +10,7 @@ require "Images/images"
 require "Sounds/sound"
 
 local shader_code = [[
-#define NUM_LIGHTS 32
+#define NUM_LIGHTS 100
 
 struct Light {
     vec2 position;
@@ -80,7 +80,7 @@ function love.load()
     gameEndFade=false
 
     lights = {}
-    normalBrightness=0.01 --50%
+    normalBrightness=0 --50%
 
 end
 
@@ -158,7 +158,7 @@ function addToDrawCanvas()
 			        love.graphics.getWidth(),
 			        love.graphics.getHeight()
 			    })
-			    shader:send("num_lights", 3)    
+			    shader:send("num_lights", #projectiles+3)    
 
 			    shader:send("lights[0].position", {
 			        players[1].x*120-60,
@@ -176,6 +176,18 @@ function addToDrawCanvas()
 			    shader:send("lights[2].position", {players[2].x*120-60,players[2].y*120+60}) --postition
 			    shader:send("lights[2].diffuse", {1, 1, 1}) --color
 			    shader:send("lights[2].power", 64)
+
+			    for i=1,#projectiles do
+			    	local p= projectiles[i]
+			    	if p.glows then
+				    	local shaderNum=tostring(2+i)
+				    	local c = p.glowColor
+				    	local power = p.glowPower or 100
+					    shader:send("lights["..shaderNum.."].position", {p.rx*120-60,p.ry*120+60}) --postition
+					    shader:send("lights["..shaderNum.."].diffuse", {c[1]/255, c[2]/255, c[3]/255}) --color
+					    shader:send("lights["..shaderNum.."].power", 100) --power is inverted for some reason
+					end
+			    end
 
 			end
 
