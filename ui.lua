@@ -523,7 +523,15 @@ function ui.addAccount(string)
 			typingName=false
 		end
 	else
-		SAVED.accounts[#SAVED.accounts+1] =  bitser.loads(love.data.decode("string","base64",string))
+		local newAccount = bitser.loads(love.data.decode("string","base64",string))
+		if not (ui.accountAlreadyExists(newAccount.name)) then
+			SAVED.accounts[#SAVED.accounts+1] =  newAccount
+		else
+			for i=1,#SAVED.accounts do
+				local a = SAVED.accounts[i]
+				if a.name==newAccount.name then SAVED.accounts[i]=newAccount end
+			end			
+		end
 	end
 end
 
