@@ -6,7 +6,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {defensive,name="fly",type="air",cost=25,desc="You use the air currents around you to hover just above the ground!"},
 {name="shift",type="air",cost=18,desc="You shift the battle into the spirit-world, rendering all bending ineffective!"},
 {name="freeze",type="water",cost=1,desc="All water in the arena turns to solid ice!"},
-{defensive,name="aurora borealis",type="water",cost=8,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
+{defensive,name="aurora borealis",type="water",cost=12,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
 {name="heal",type="water",cost=24,desc="Healing is a special ability possessed by some waterbenders that enables them to heal those who have been wounded, including themselves."},
 {name="earth wave",type="earth",cost=10,desc="You charge forwards on rolling earth!"},
 {name="seismic sense",type="earth",cost=5,desc="Use seismic waves to sense your opponent's position."},
@@ -29,7 +29,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="bullet",type="earth",cost=15,desc="You bend the metal in the bullet to propell it to very high speeds."},
 {name="blast",type="fire",cost=10,desc="Two glowing embers shoot sideways from each hand."},
 {name="sear",type="fire",cost=13,desc="Four balls of fire radiate inaccurately from your body."},
-{name="fire breath",type="fire",cost=20,desc="Breath out fire, searing any enemies in front of you!"},
+{name="fire breath",type="fire",cost=18,desc="Breath out fire, searing any enemies in front of you!"},
 {name="boomerang",type="sokka",cost=11,desc="The boomerang whirls around the edge of the arena before returning to your hand."}},
 
 --Power
@@ -132,7 +132,7 @@ end
 		end
 		if p.name == "ice spike" and p.despawn < 1.7 and p.spawned==false then
 			p.spawned=true
-			projectiles[#projectiles+1] = {caster=p.pn,damagesCaster=false,spawned=false,rotate=false,name="ice spike",despawn=2,damage=14,image=iceSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}			
+			projectiles[#projectiles+1] = {caster=p.caster,damagesCaster=false,spawned=false,rotate=false,name="ice spike",despawn=2,damage=14,image=iceSpikeImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}			
 			projectiles[#projectiles] = moves.moveProj(#projectiles,1)
 		end
 		if p.name == "spike" and p.despawn < 1.44 and p.spawned==false then
@@ -628,7 +628,7 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 			if name == "aurora borealis" then
-				projectiles[#projectiles+1] = {glows=true,glowColor={0,0,255},spriteLength=6,continuous=true,blocker="forceField",despawn=5,percent=0,aSpeed=1,name=name,damage=0,image=auroraImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {glows=true,glowColor={0,0,255},spriteLength=6,continuous=true,blocker="forceField",despawn=3,percent=0,aSpeed=1,name=name,damage=0,image=auroraImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 			end
 			if name == "blow" then
 				for i=1,4 do
@@ -652,7 +652,7 @@ function moves.cast(typeNum,num,pn)
 			end
 			if name == "fire breath" then
 				for i=1,3 do
-					projectiles[#projectiles+1] = {glows=true,glowColor={255,0,0},deflectable=false,posNum=i,caster=pn,damagesCaster=false,removesOnHit=false,despawn=3,name=name,damage=10,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+					projectiles[#projectiles+1] = {glows=true,glowColor={255,0,0},deflectable=false,posNum=i,caster=pn,damagesCaster=false,removesOnHit=false,despawn=1,name=name,damage=10,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 					projectiles[#projectiles] = moves.moveProj(#projectiles,i)
 				end
 			end
