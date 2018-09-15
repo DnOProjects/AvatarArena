@@ -60,7 +60,7 @@ function input.keyInput(inputSource,key,source)
 		end
 	end
 
-	if gameState=="characterSelection" or gameState=="menu" or gameState=="controllerSelection" or gameState=="paused" or gameState=="winScreen" then
+	if gameMode=="unset" or gameState=="characterSelection" or gameState=="menu" or gameState=="controllerSelection" or gameState=="paused" or gameState=="winScreen" then
 		if key=="escape" and (gameState=="controllerSelection" or gameState=="characterSelection") then 
 			gameState="menu"
 		end
@@ -91,6 +91,10 @@ function input.keyInput(inputSource,key,source)
 
 	if key=="escape" and gameState=="winScreen"then
 		gameState="menu"
+	end
+	if key=="escape" and gameState=="menu"then
+		gameMode="unset"
+		gameState="unset"
 	end
 
 	if key==";" and (gameState=="menu" or gameState=="controllerSelection") then love.system.openURL("https://github.com/DnOProjects/AvatarArena/wiki") end

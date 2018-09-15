@@ -4,6 +4,8 @@ ui = {{y=0},{y=0}}
 
 function ui.load()
 
+	gameMode="unset"
+
 	gameEvent = "unset"
 
 	selectionMethod = "choice"
@@ -16,6 +18,8 @@ function ui.load()
 
 	flashingAlpha = 1
 	flashDirection = "falling"
+
+	gameModes={"Classic","Competitive","Campaign"}
 	
 	--onlineGame, opponentType, numOpponents, selectionMethod,gameEvents
 	menu = {{name="Connection",selected=1,options={"local","online"}},
@@ -153,6 +157,11 @@ function ui.update(dt)
 end
 
 function ui.switch(d,playerSelecting)
+	if gameMode=="unset" then
+		selectedGameMode=selectedGameMode+d
+		if selectedGameMode>#gameModes then selectedGameMode=1 end
+		if selectedGameMode<1 then selectedGameMode = #gameModes end
+	end
 	if gameState=="paused" or gameState=="winScreen" then
 		local maxOpt=3
 		if gameState=="winScreen" then maxOpt=2 end
@@ -242,6 +251,11 @@ function ui.start()
 			gameState="game"
 		end
 	end
+	if gameMode == "unset" then 
+		gameMode = gameModes[selectedGameMode] 
+		if gameMode=="Classic" then gameState="menu" end
+		if gameMode=="Competitive" then gameState="loadAccount" end
+	end
 end
 
 function ui.draw()
@@ -280,21 +294,27 @@ function ui.draw()
 		love.graphics.setColor(255,255,255)
 	end
 
-	if gameState == "menu" then
+	if gameState == "menu" or gameMode=="unset" then
 		love.graphics.setFont(menuFont)
 		love.graphics.draw(menuScreen,0,0,0,love.graphics.getWidth()/menuScreen:getWidth(),love.graphics.getHeight()/menuScreen:getHeight())
 		love.graphics.printf("Avatar Arena",0,20,700,"center",0,2.7,2.7)
-		rgb(200,200,200,flashingAlpha*255)
-		love.graphics.print("Press ENTER to continue",1260,1000,0,0.7,0.7)
-		love.graphics.print("Press ; to read the wiki",1410,25,0,0.58,0.58)
-		for i=1,#menu do
-			if not(i == 3 and menu[2].options[menu[2].selected] == "human") and not(i ~= 1 and i ~= 2 and menu[1].options[menu[1].selected] == "online") then
-				if menuStage == i then rgb(209, 63, 37) else rgb(150,150,150) end
-				love.graphics.printf(menu[i].name,55,150*i+100,500,"right",0,1.8,1.8)
-				love.graphics.setColor(255,255,255)
-				love.graphics.printf(menu[i].options[menu[i].selected],1000,150*i+100,500,"left",0,1.8,1.8)
+		if gameState == "menu" then
+			rgb(200,200,200,flashingAlpha*255)
+			love.graphics.print("Press ENTER to continue",1260,1000,0,0.7,0.7)
+			love.graphics.print("Press ; to read the wiki",1410,25,0,0.58,0.58)
+			for i=1,#menu do
+				if not(i == 3 and menu[2].options[menu[2].selected] == "human") and not(i ~= 1 and i ~= 2 and menu[1].options[menu[1].selected] == "online") then
+					if menuStage == i then rgb(209, 63, 37) else rgb(150,150,150) end
+					love.graphics.printf(menu[i].name,55,150*i+100,500,"right",0,1.8,1.8)
+					love.graphics.setColor(255,255,255)
+					love.graphics.printf(menu[i].options[menu[i].selected],1000,150*i+100,500,"left",0,1.8,1.8)
+				end
 			end
 		end
+	end
+
+	if gameMode=="unset" then
+		love.graphics.printf(gameModes[selectedGameMode],200,550,800,"center",0,2,2)
 	end
 
 	if gameState == "controllerSelection" then
