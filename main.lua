@@ -8,7 +8,7 @@ require "ai"
 require "animate"
 require "Images/images"
 require "Sounds/sound"
-bitser = require "bitser"
+bitser = require "Online/bitser"
 
 local shader_code = [[
 #define NUM_LIGHTS 100
