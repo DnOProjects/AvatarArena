@@ -165,6 +165,8 @@ function ui.switch(x,playerSelecting,y)
 		if selectedAccount<1 then selectedAccount=9 end
 		if selectedAccount>9 then selectedAccount=1 end
 		ui[playerSelecting].y=ui[playerSelecting].y+y
+		if ui[playerSelecting].y<0 then ui[playerSelecting].y=4 end
+		if ui[playerSelecting].y>4 then ui[playerSelecting].y=0 end
 	end
 	if gameState=="loadAccount" and x==1 then
 		love.system.setClipboardText(bitser.dumps(SAVED.accounts[selectedAccount-2]))
@@ -534,7 +536,9 @@ function ui.accountAlreadyExists(name)
 end
 
 function love.textinput(t)
-	if newAccountName:len()<12 then
-    	newAccountName = newAccountName .. t
-    end
+	if gameState=="loadAccount" then
+		if newAccountName:len()<12 then
+	    	newAccountName = newAccountName .. t
+	    end
+	end
 end
