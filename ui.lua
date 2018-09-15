@@ -169,7 +169,7 @@ function ui.switch(x,playerSelecting,y)
 		if ui[playerSelecting].y>4 then ui[playerSelecting].y=0 end
 	end
 	if gameState=="loadAccount" and x==1 then
-		love.system.setClipboardText(bitser.dumps(SAVED.accounts[selectedAccount-2]))
+		love.system.setClipboardText(love.data.encode("string","base64",bitser.dumps(SAVED.accounts[selectedAccount-2])))
 	end
 	if gameMode=="unset" then
 		selectedGameMode=selectedGameMode+x
@@ -523,7 +523,7 @@ function ui.addAccount(string)
 			typingName=false
 		end
 	else
-		SAVED.accounts[#SAVED.accounts+1] =  bitser.loads(string)
+		SAVED.accounts[#SAVED.accounts+1] =  bitser.loads(love.data.decode("string","base64",string))
 	end
 end
 
