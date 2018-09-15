@@ -339,6 +339,29 @@ function ui.draw()
 		rgb(132, 75, 0)
 		love.graphics.printf("Create new",50,10,800,"center",0,1,1)
 		love.graphics.printf("Load from string",50,130,800,"center",0,1,1)
+		rgb(0,0,0)
+
+		if selectedAccount>2 and SAVED.accounts[selectedAccount-2] ~= nil then
+			local a =  SAVED.accounts[selectedAccount-2]
+			love.graphics.print("Name: "..a.name,1000,50,0,1,1)
+			love.graphics.print("Trophies: "..a.trophies,1000,150,0,1,1)
+			love.graphics.print("Level: "..a.level.."/42",1000,250,0,1,1)
+			love.graphics.print("Xp: "..a.xp.."/"..logic.getNumXP(a.level),1000,350,0,1,1)
+			love.graphics.rectangle("fill",1000,500,800,75,20,20)
+			local segmentWidth = 800/((logic.getNumXP(a.level)*3)+1)
+			for i=1,logic.getNumXP(a.level)*3 do
+				if i%3~=0 then
+					if math.ceil(i/3) <= a.xp then rgb(0,0,255) else rgb(255,255,255) end
+					love.graphics.rectangle("fill",1000+(segmentWidth*i),512.5,segmentWidth,50)
+				end
+			end
+			rgb(50,50,50,200)
+			love.graphics.rectangle("fill",1000,600,800,460)
+			rgb(109, 84, 0, 200)
+			for i=1,3 do
+				love.graphics.rectangle("fill",1035+((i-1)*250),630,225,400)
+			end
+		end
 		rgb(255,255,255)
 	end
 
@@ -545,7 +568,7 @@ end
 
 function love.textinput(t)
 	if gameState=="loadAccount" then
-		if newAccountName:len()<12 then
+		if newAccountName:len()<11 then
 	    	newAccountName = newAccountName .. t
 	    end
 	end

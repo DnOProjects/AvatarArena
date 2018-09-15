@@ -33,20 +33,8 @@ function logic.copyTable(obj)
   return res
 end
 
-function logic.encrypt(string,key)--WIP
-  local result = ""
-    if key==1 then
-      for i = 1, #string do
-          local c = string:sub(i,i)
-          result=result..c..string.char(math.random(1,255))
-      end
-    else
-      for i = 1, #string do
-          local c = string:sub(i,i)
-          if i%2~=0 then
-            result=result..c
-          end
-      end        
-    end
-  return result
+function logic.getNumXP(level)
+    local b = -0.1297212*level
+    local c = 0.01508714*(level^2)
+    return logic.round(10.0575+b+c,0)
 end
