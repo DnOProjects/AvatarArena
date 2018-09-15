@@ -32,3 +32,21 @@ function logic.copyTable(obj)
   for k, v in pairs(obj) do res[logic.copyTable(k, s)] = logic.copyTable(v, s) end
   return res
 end
+
+function logic.encrypt(string,key)--WIP
+  local result = ""
+    if key==1 then
+      for i = 1, #string do
+          local c = string:sub(i,i)
+          result=result..c..string.char(math.random(1,255))
+      end
+    else
+      for i = 1, #string do
+          local c = string:sub(i,i)
+          if i%2~=0 then
+            result=result..c
+          end
+      end        
+    end
+  return result
+end

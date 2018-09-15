@@ -56,7 +56,6 @@ function save()
 end
 
 function love.load()
-	
 	if love.filesystem.getInfo("avatarArenaSaves.txt")~=nil then 
 		SAVED=bitser.loads(love.filesystem.read("avatarArenaSaves.txt")) 
 	else 
