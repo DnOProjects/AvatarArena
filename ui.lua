@@ -1,8 +1,11 @@
 require "Online/client"
+local utf8 = require("utf8")
 
 ui = {{y=0},{y=0}}
 
 function ui.load()
+
+	selectedAccount=1
 
 	gameMode="unset"
 
@@ -156,30 +159,36 @@ function ui.update(dt)
 	if aiPlayer ~= nil then moveSet[aiPlayer] = 1 end
 end
 
-function ui.switch(d,playerSelecting)
+function ui.switch(x,playerSelecting,y)
+	if y then
+		selectedAccount=selectedAccount+y
+		if selectedAccount<1 then selectedAccount=9 end
+		if selectedAccount>9 then selectedAccount=1 end
+		ui[playerSelecting].y=ui[playerSelecting].y+y
+	end
 	if gameMode=="unset" then
-		selectedGameMode=selectedGameMode+d
+		selectedGameMode=selectedGameMode+x
 		if selectedGameMode>#gameModes then selectedGameMode=1 end
 		if selectedGameMode<1 then selectedGameMode = #gameModes end
 	end
 	if gameState=="paused" or gameState=="winScreen" then
 		local maxOpt=3
 		if gameState=="winScreen" then maxOpt=2 end
-		pausedSelection = pausedSelection + d
+		pausedSelection = pausedSelection + x
 		if pausedSelection<1 then pausedSelection = maxOpt end
 		if pausedSelection>maxOpt then pausedSelection=1 end
 	end
 	if gameState=="menu" then
-		menu[menuStage].selected = menu[menuStage].selected+d
+		menu[menuStage].selected = menu[menuStage].selected+x
 		if menu[menuStage].selected > #menu[menuStage].options then menu[menuStage].selected = 1 end
 		if menu[menuStage].selected < 1 then menu[menuStage].selected = #menu[menuStage].options end
 	elseif gameState=="controllerSelection" then
-		controller[menuStage].selected = controller[menuStage].selected+d
+		controller[menuStage].selected = controller[menuStage].selected+x
 		if controller[menuStage].selected > #controller[menuStage].options then controller[menuStage].selected = 1 end
 		if controller[menuStage].selected < 1 then controller[menuStage].selected = #controller[menuStage].options end
 	elseif gameState=="characterSelection" and selectionMethod=="choice" then
 		if ui[playerSelecting].y==0 then
-			players[playerSelecting].char = players[playerSelecting].char + d
+			players[playerSelecting].char = players[playerSelecting].char + x
 			if players[playerSelecting].char > #characters then players[playerSelecting].char = 1 end
 			if players[playerSelecting].char < 1 then players[playerSelecting].char = #characters end
 			for i=1,3 do
@@ -194,7 +203,7 @@ function ui.switch(d,playerSelecting)
 		elseif not(ui[playerSelecting].y==4) then
 			canWield=false
 			while not canWield do
-				ui[playerSelecting][ui[playerSelecting].y]=ui[playerSelecting][ui[playerSelecting].y]+d
+				ui[playerSelecting][ui[playerSelecting].y]=ui[playerSelecting][ui[playerSelecting].y]+x
 				if ui[playerSelecting][ui[playerSelecting].y]==0 then ui[playerSelecting][ui[playerSelecting].y] = #moves[ui[playerSelecting].y] end
 				if ui[playerSelecting][ui[playerSelecting].y]>#moves[ui[playerSelecting].y] then ui[playerSelecting][ui[playerSelecting].y] = 1 end
 				char=characters[players[playerSelecting].char]
@@ -251,10 +260,17 @@ function ui.start()
 			gameState="game"
 		end
 	end
+	if gameState=="loadAccount" then
+		if selectedAccount==1 then ui.addAccount("new") end
+		if selectedAccount==2 then ui.addAccount(love.system.getClipboardText()) end
+	end
 	if gameMode == "unset" then 
 		gameMode = gameModes[selectedGameMode] 
 		if gameMode=="Classic" then gameState="menu" end
-		if gameMode=="Competitive" then gameState="loadAccount" end
+		if gameMode=="Competitive" then
+			typingName=false 
+			gameState="loadAccount" 
+		end
 	end
 end
 
@@ -292,6 +308,33 @@ function ui.draw()
 			love.graphics.draw(symbol,offset+540+i*200,580,0,0.7,0.7)
 		end
 		love.graphics.setColor(255,255,255)
+	end
+
+	if gameState=="loadAccount" then
+		rgb(255,255,255)
+		love.graphics.draw(winScreen, 0, 0, 0, 1920/winScreen:getWidth(), 1080/winScreen:getHeight())
+		if typingName then
+			love.graphics.setColor(flashingAlpha,flashingAlpha,flashingAlpha,flashingAlpha)
+			love.graphics.print("What is your name?",700,330,0,0.5,0.5)
+			rgb(50,50,50,200)
+			love.graphics.rectangle("fill",450,420,960,200)
+			rgb(255,255,255)
+			love.graphics.printf(newAccountName,450,420,533,"center",0,1.8,1.8)
+		end
+		for i=1,9 do
+			if i==selectedAccount then rgb(200,200,200,200) else rgb(50,50,50,100) end
+			love.graphics.rectangle("fill",50,i*120-115,800,110)
+			rgb(0,0,0)
+			if i>2 then
+				local toPrint="UNSET"
+				if SAVED.accounts[i-2] ~= nil then toPrint = SAVED.accounts[i-2].name end
+				love.graphics.printf(toPrint,50,(i-2)*120+130,800,"center",0,1,1)
+			end
+		end
+		rgb(132, 75, 0)
+		love.graphics.printf("Create new",50,10,800,"center",0,1,1)
+		love.graphics.printf("Load from string",50,130,800,"center",0,1,1)
+		rgb(255,255,255)
 	end
 
 	if gameState == "menu" or gameMode=="unset" then
@@ -463,3 +506,30 @@ function ui.draw()
 	end
 end
 
+function ui.addAccount(string)
+	if string=="new" then
+		if not typingName then
+			typingName=true
+			newAccountName=""
+		else
+			if not (ui.accountAlreadyExists(newAccountName)) then
+				SAVED.accounts[#SAVED.accounts+1] = {name=newAccountName}
+			end
+			typingName=false
+		end
+	end
+end
+
+function ui.accountAlreadyExists(name)
+	for i=1,#SAVED.accounts do
+		local a = SAVED.accounts[i]
+		if a.name==name then return true end
+	end
+	return false
+end
+
+function love.textinput(t)
+	if newAccountName:len()<12 then
+    	newAccountName = newAccountName .. t
+    end
+end

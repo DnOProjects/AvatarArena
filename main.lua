@@ -8,6 +8,7 @@ require "ai"
 require "animate"
 require "Images/images"
 require "Sounds/sound"
+bitser = require "bitser"
 
 local shader_code = [[
 #define NUM_LIGHTS 100
@@ -50,7 +51,17 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords){
 
 local shader = nil
 
+function save()
+	love.filesystem.write("avatarArenaSaves.txt", bitser.dumps(SAVED))
+end
+
 function love.load()
+	
+	if love.filesystem.getInfo("avatarArenaSaves.txt")~=nil then 
+		SAVED=bitser.loads(love.filesystem.read("avatarArenaSaves.txt")) 
+	else 
+		SAVED={accounts={}}
+	end
 
     shader = love.graphics.newShader(shader_code)
 
@@ -86,7 +97,7 @@ function love.load()
 end
 
 function love.update(dt)
-
+	save()
 	if onlineClient == false then
 
 		fadeGameEnd(dt)
