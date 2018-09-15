@@ -518,7 +518,7 @@ function ui.addAccount(string)
 			newAccountName=""
 		else
 			if not (ui.accountAlreadyExists(newAccountName)) then
-				SAVED.accounts[#SAVED.accounts+1] = {name=newAccountName}
+				SAVED.accounts[#SAVED.accounts+1] = {name=newAccountName,trophies=0,level=1,xp=0,quests={},unlocks={}}
 			end
 			typingName=false
 		end
