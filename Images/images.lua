@@ -24,6 +24,7 @@ fireSymbolImg = love.graphics.newImage("Images/Symbols/fireSymbol.png")
 backSymbolImg = love.graphics.newImage("Images/Symbols/backSymbol.png")
 restartSymbolImg = love.graphics.newImage("Images/Symbols/restartSymbol.png")
 playSymbolImg = love.graphics.newImage("Images/Symbols/playSymbol.png")
+lockedSymbolImg = love.graphics.newImage("Images/Symbols/lockedSymbol.png")
 
 -- Moves
 	---- Air

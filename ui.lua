@@ -6,6 +6,7 @@ ui = {{y=0},{y=0}}
 function ui.load()
 
 	selectedAccount=1
+	battlingAccounts={}
 
 	gameMode="unset"
 
@@ -139,10 +140,11 @@ function ui.flashAlpha(dt)
 end
 
 function ui.update(dt)
+
 	ui.flashAlpha(dt/1.2)
 	if gameState == "characterSelection" then 
 		dtMultiplier = 1
-		if ui[1].y == 4 and ui[2].y == 4 then
+		if ui[1].y == 4 and ui[2].y == 4 and gearIsUnlocked(1,players[1].char) and gearIsUnlocked(2,players[2].char) then
 			ui.gameStartCountdown=ui.gameStartCountdown-dt
 		else
 			ui.gameStartCountdown=3
@@ -191,7 +193,7 @@ function ui.switch(x,playerSelecting,y)
 		controller[menuStage].selected = controller[menuStage].selected+x
 		if controller[menuStage].selected > #controller[menuStage].options then controller[menuStage].selected = 1 end
 		if controller[menuStage].selected < 1 then controller[menuStage].selected = #controller[menuStage].options end
-	elseif gameState=="characterSelection" and selectionMethod=="choice" then
+	elseif gameState=="characterSelection" and selectionMethod=="choice" and x~=0 then
 		if ui[playerSelecting].y==0 then
 			players[playerSelecting].char = players[playerSelecting].char + x
 			if players[playerSelecting].char > #characters then players[playerSelecting].char = 1 end
@@ -245,8 +247,8 @@ function ui.start()
 		ui[1].y = 0
 		ui[2].y = 0
 	elseif gameState=="characterSelection" then
-		if ui[1].y == 4 and ui[2].y == 4 then
-			startGame() --<--SHOULD CHANGE AT SOME POINT SO STARTING IS MORE FAIR
+		if ui[1].y == 4 and ui[2].y == 4 and gameMode~="Competitive" then
+			startGame()
 		end
 	elseif (gameState=="winScreen" or gameState=="paused") then 
 		if pausedSelection==2 then
@@ -266,8 +268,16 @@ function ui.start()
 		end
 	end
 	if gameState=="loadAccount" then
-		if selectedAccount==1 then ui.addAccount("new") end
-		if selectedAccount==2 then ui.addAccount(love.system.getClipboardText()) end
+		if selectedAccount==1 then ui.addAccount("new")
+		elseif selectedAccount==2 then ui.addAccount(love.system.getClipboardText())
+		else
+			if #battlingAccounts<2 and (not logic.inList(battlingAccounts,SAVED.accounts[selectedAccount-2])) then 
+				battlingAccounts[#battlingAccounts+1] = SAVED.accounts[selectedAccount-2]  
+			end
+			if #battlingAccounts==2 then
+				gameState="characterSelection"
+			end
+		end
 	end
 	if gameMode == "unset" then 
 		gameMode = gameModes[selectedGameMode] 
@@ -275,6 +285,7 @@ function ui.start()
 		if gameMode=="Competitive" then
 			typingName=false 
 			gameState="loadAccount" 
+			battlingAccounts={}
 		end
 	end
 end
@@ -327,13 +338,20 @@ function ui.draw()
 			love.graphics.printf(newAccountName,450,420,533,"center",0,1.8,1.8)
 		end
 		for i=1,9 do
-			if i==selectedAccount then rgb(200,200,200,200) else rgb(50,50,50,100) end
+			rgb(50,50,50,100)
+			if logic.inList(battlingAccounts,SAVED.accounts[i-2]) then rgb(132, 75, 0, 200) end
+			if i==selectedAccount then rgb(200,200,200,200) end
+			if i==selectedAccount and logic.inList(battlingAccounts,SAVED.accounts[i-2]) then rgb(166,137.5,100,200) end
 			love.graphics.rectangle("fill",50,i*120-115,800,110)
 			rgb(0,0,0)
 			if i>2 then
 				local toPrint="UNSET"
 				if SAVED.accounts[i-2] ~= nil then toPrint = SAVED.accounts[i-2].name end
 				love.graphics.printf(toPrint,50,(i-2)*120+130,800,"center",0,1,1)
+				rgb(20, 82, 206,200)
+				if SAVED.accounts[i-2] ~= nil then
+					love.graphics.print(SAVED.accounts[i-2].trophies,80,(i-2)*120+130)
+				end
 			end
 		end
 		rgb(132, 75, 0)
@@ -355,6 +373,8 @@ function ui.draw()
 					love.graphics.rectangle("fill",1000+(segmentWidth*i),512.5,segmentWidth,50)
 				end
 			end
+			rgb(20, 82, 206,200)
+			love.graphics.print(a.level+1,1810,482)
 			rgb(50,50,50,200)
 			love.graphics.rectangle("fill",1000,600,800,460)
 			rgb(109, 84, 0, 200)
@@ -418,62 +438,79 @@ function ui.draw()
 				love.graphics.rectangle("line",700,40,500,1000)
 				if showDescription == i then
 					if ui[i].y==0 then -- Char description
-						c=characters[players[i].char]
-						love.graphics.print("Character:",780,70)
-						love.graphics.print("Hp: "..c.hp,720,200,0,0.8,0.8) 
-						love.graphics.print("Chi: "..c.chiRegen,720,300,0,0.8,0.8) 
-						if not(c.name=="Sokka") then love.graphics.print("Bends:",840,400) end
-						for j=1,#c.bends do
-							e=c.bends[j]
-							if not(e=="normal" or e=="energy" or e=="sokka") then
-								local y=0
-								if j>2 then y=1 end
-								love.graphics.draw(elementSymbols[e],j*230+490-(y*460),500+y*230)
+						if not(gameMode=="Competitive" and not logic.inList(battlingAccounts[i].chars,p.char)) then
+							c=characters[players[i].char]
+							love.graphics.print("Character:",780,70)
+							love.graphics.print("Hp: "..c.hp,720,200,0,0.8,0.8) 
+							love.graphics.print("Chi: "..c.chiRegen,720,300,0,0.8,0.8) 
+							if not(c.name=="Sokka") then love.graphics.print("Bends:",840,400) end
+							for j=1,#c.bends do
+								e=c.bends[j]
+								if not(e=="normal" or e=="energy" or e=="sokka") then
+									local y=0
+									if j>2 then y=1 end
+									love.graphics.draw(elementSymbols[e],j*230+490-(y*460),500+y*230)
+								end
 							end
+						else
+							love.graphics.draw(lockedSymbolImg,700,290)
 						end
 					else -- Moves description
-						move = moves[ui[i].y][ui[i][ui[i].y]]
-						love.graphics.printf(move.name..":",720,70,600,"center",0,0.8,0.8)
-						local textYOffset=0
-						if not(move.type=="normal" or move.type=="energy" or move.type=="sokka") then
-							love.graphics.draw(elementSymbols[move.type],840,200)
-							textYOffset=300 
+						if not(gameMode=="Competitive" and battlingAccounts[i].unlocks[ui[i].y][ui[i][ui[i].y]]==false) then
+							move = moves[ui[i].y][ui[i][ui[i].y]]
+							love.graphics.printf(move.name..":",720,70,600,"center",0,0.8,0.8)
+							local textYOffset=0
+							if not(move.type=="normal" or move.type=="energy" or move.type=="sokka") then
+								love.graphics.draw(elementSymbols[move.type],840,200)
+								textYOffset=300 
+							end
+							love.graphics.print("Chi Cost: "..move.cost,720,135+textYOffset,0,0.8,0.8) 
+							love.graphics.setFont(descriptionFont)
+							love.graphics.printf(move.desc,710,200+textYOffset,990,"left",0,0.5,0.5)
+							love.graphics.setFont(impactFont)
+						else
+							love.graphics.draw(lockedSymbolImg,700,290)
 						end
-						love.graphics.print("Chi Cost: "..move.cost,720,135+textYOffset,0,0.8,0.8) 
-						love.graphics.setFont(descriptionFont)
-						love.graphics.printf(move.desc,710,200+textYOffset,990,"left",0,0.5,0.5)
-						love.graphics.setFont(impactFont)
 					end
 				end
 			end
-
-			if i == 1 then
-				love.graphics.draw(char.portrait,10,100)
-				love.graphics.draw(char.img,410,215.6,0,2,2)
-				if ui[1].y==0 then love.graphics.rectangle("line",410,215.6,240,240) end
-				love.graphics.printf(char.name,410,100,240,"center")
-			elseif i == 2 then
-				love.graphics.setColor(255,255,255)
-				love.graphics.draw(char.portrait,1270,100)
-				love.graphics.draw(char.img,1670,215.6,0,2,2)
-				if ui[2].y==0 then love.graphics.rectangle("line",1670,215.6,240,240) end
-				love.graphics.printf(char.name,1670,100,240,"center")
+			if not(gameMode=="Competitive" and not logic.inList(battlingAccounts[i].chars,p.char)) then
+				if i == 1 then
+					love.graphics.draw(char.portrait,10,100)
+					love.graphics.draw(char.img,410,215.6,0,2,2)
+					if ui[1].y==0 then love.graphics.rectangle("line",410,215.6,240,240) end
+					love.graphics.printf(char.name,410,100,240,"center")
+				elseif i == 2 then
+					love.graphics.setColor(255,255,255)
+					love.graphics.draw(char.portrait,1270,100)
+					love.graphics.draw(char.img,1670,215.6,0,2,2)
+					if ui[2].y==0 then love.graphics.rectangle("line",1670,215.6,240,240) end
+					love.graphics.printf(char.name,1670,100,240,"center")
+				end
+			else
+				love.graphics.draw(lockedSymbolImg,150+(i*1300)-1300,50,0,0.5,0.5)
 			end
 
 			for j=1,3 do
-				if ui[i].y==j then love.graphics.setLineWidth(20) end
 				box=ui[i][j]
 				move = moves[j][box]
+				if ui[i].y==j then love.graphics.setLineWidth(20) end
 				love.graphics.rectangle("line",(i-1)*1260+10,j*130+400,500,100,5,5)
-				love.graphics.printf(move.name,(i-1)*1260-60,j*130+413,800,"center",0,0.8)
+				if not(gameMode=="Competitive" and battlingAccounts[i].unlocks[j][box]==false) then
+					love.graphics.printf(move.name,(i-1)*1260-60,j*130+413,800,"center",0,0.8)
+				else
+					love.graphics.printf("LOCKED",(i-1)*1260-60,j*130+413,800,"center",0,0.8)
+				end
 				love.graphics.setLineWidth(2)
 			end
 			if ui[i].y==4 then love.graphics.setLineWidth(20) end
+			if gearIsUnlocked(i,p.char) then rgb(255,255,255) else rgb(255,0,0) end
 			love.graphics.circle("line",(i-1)*1260+260,1000,50)
+			rgb(255,255,255)
 			love.graphics.setLineWidth(2)
 		end
 
-		if ui[1].y == 4 and ui[2].y == 4 then
+		if ui[1].y == 4 and ui[2].y == 4 and gearIsUnlocked(1,players[1].char) and gearIsUnlocked(2,players[2].char) then
 			love.graphics.setColor(1,0,0)
 			love.graphics.print(logic.round(ui.gameStartCountdown,0),850,350,0,4,4)
 			love.graphics.setColor(1,1,1)
@@ -541,7 +578,17 @@ function ui.addAccount(string)
 			newAccountName=""
 		else
 			if not (ui.accountAlreadyExists(newAccountName)) then
-				SAVED.accounts[#SAVED.accounts+1] = {name=newAccountName,trophies=0,level=1,xp=0,quests={},unlocks={}}
+				local unlocks={}
+				for i=1,3 do
+					unlocks[i]={}
+					for j=1,#moves[i] do
+						unlocks[i][j]=false
+					end
+				end
+				unlocks[1][1]=true
+				unlocks[2][1]=true
+				unlocks[3][1]=true
+				SAVED.accounts[#SAVED.accounts+1] = {name=newAccountName,trophies=0,level=1,xp=0,quests={},unlocks=unlocks,chars={2,3,4,5}}
 			end
 			typingName=false
 		end
@@ -572,4 +619,15 @@ function love.textinput(t)
 	    	newAccountName = newAccountName .. t
 	    end
 	end
+end
+
+function gearIsUnlocked(i,char)
+	if gameMode=="Competitive" then
+		local account = battlingAccounts[i]
+		if not logic.inList(account.chars,char) then return false end
+		for j=1,3 do
+			if battlingAccounts[i].unlocks[j][ui[i][j]]==false then return false end
+		end
+	end
+	return true
 end
