@@ -1,6 +1,6 @@
 players = {}
 
-local basePlayer={controller="human",beenBlown=false,char=1,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=1,attack=1,power=1}
+local basePlayer={controller="human",beenBlown=false,char=2,x=1,y=1,d=0,timer=0,invulnerability=0,hp=100,maxHp=100,chiRegen=4,chi=0,maxChi=100,utility=1,attack=1,power=1}
 for i=1,2 do
 	players[i]=logic.copyTable(basePlayer)
 end
@@ -291,10 +291,33 @@ end
 				    gameEndFade=4
 				    loser = i
 				    if loser==1 then winner=2 else winner=1 end
+				    if gameMode=="Competitive" then
+				    	gameResults = {winxp=2,losexp=1}
+				    	local w = battlingAccounts[winner]
+				    	local l = battlingAccounts[loser]
+				    	if w.trophies<=l.trophies then 
+				    		gameResults.wintrophies = 20 + math.random(-3,3) 
+				    		gameResults.losetrophies = - 8 + math.random(-3,3)
+				    	else
+				    		gameResults.wintrophies = 10 + math.random(-3,3)
+				    		gameResults.losetrophies = - 16 + math.random(-3,3)
+				    	end
+				    	w.trophies = w.trophies + gameResults.wintrophies
+				    	l.trophies = l.trophies + gameResults.losetrophies
+				    	w.xp = w.xp + 2
+				    	l.xp = l.xp + 1
+				    	if l.trophies<0 then l.trophies=0 end
+				    end
 				end
 				if p.hp <= 0 and op.hp <= 0 then
 					gameEndFade=4
 					loser="draw"
+					if gameMode=="Competitive" then
+						gameResults = {xp=1,trophies=0}
+						for i=1,2 do
+							battlingAccounts[i].xp=battlingAccounts[i].xp+1
+						end
+					end
 				end
 			end
 		end

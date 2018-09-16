@@ -7,6 +7,7 @@ function ui.load()
 
 	selectedAccount=1
 	battlingAccounts={}
+	firstSelectionMade=false
 
 	gameMode="unset"
 
@@ -144,7 +145,7 @@ function ui.update(dt)
 	ui.flashAlpha(dt/1.2)
 	if gameState == "characterSelection" then 
 		dtMultiplier = 1
-		if ui[1].y == 4 and ui[2].y == 4 and gearIsUnlocked(1,players[1].char) and gearIsUnlocked(2,players[2].char) then
+		if ui[1].y == 4 and ui[2].y == 4 and gearIsUnlocked(1,players[1].char) and gearIsUnlocked(2,players[2].char) and (gameMode~="Competitive" or firstSelectionMade) then
 			ui.gameStartCountdown=ui.gameStartCountdown-dt
 		else
 			ui.gameStartCountdown=3
@@ -162,13 +163,15 @@ function ui.update(dt)
 end
 
 function ui.switch(x,playerSelecting,y)
-	if y then
+	if y then 
 		selectedAccount=selectedAccount+y
 		if selectedAccount<1 then selectedAccount=9 end
 		if selectedAccount>9 then selectedAccount=1 end
-		ui[playerSelecting].y=ui[playerSelecting].y+y
-		if ui[playerSelecting].y<0 then ui[playerSelecting].y=4 end
-		if ui[playerSelecting].y>4 then ui[playerSelecting].y=0 end
+		if gameMode~="Competitive" or ((playerSelecting==1 and not firstSelectionMade) or (playerSelecting==2 and firstSelectionMade)) then
+			ui[playerSelecting].y=ui[playerSelecting].y+y
+			if ui[playerSelecting].y<0 then ui[playerSelecting].y=4 end
+			if ui[playerSelecting].y>4 then ui[playerSelecting].y=0 end
+		end
 	end
 	if gameState=="loadAccount" and x==1 then
 		love.system.setClipboardText(love.data.encode("string","base64",bitser.dumps(SAVED.accounts[selectedAccount-2])))
@@ -194,28 +197,30 @@ function ui.switch(x,playerSelecting,y)
 		if controller[menuStage].selected > #controller[menuStage].options then controller[menuStage].selected = 1 end
 		if controller[menuStage].selected < 1 then controller[menuStage].selected = #controller[menuStage].options end
 	elseif gameState=="characterSelection" and selectionMethod=="choice" and x~=0 then
-		if ui[playerSelecting].y==0 then
-			players[playerSelecting].char = players[playerSelecting].char + x
-			if players[playerSelecting].char > #characters then players[playerSelecting].char = 1 end
-			if players[playerSelecting].char < 1 then players[playerSelecting].char = #characters end
-			for i=1,3 do
-				j=1
-				moveTypeIsValid = false
-				while not moveTypeIsValid do
-					ui[playerSelecting][i] = j
-					if logic.inList(characters[players[playerSelecting].char].bends,moves[i][j].type) then moveTypeIsValid = true end
-					j=j+1
+		if gameMode~="Competitive" or ((playerSelecting==1 and not firstSelectionMade) or (playerSelecting==2 and firstSelectionMade)) then
+			if ui[playerSelecting].y==0 then
+				players[playerSelecting].char = players[playerSelecting].char + x
+				if players[playerSelecting].char > #characters then players[playerSelecting].char = 1 end
+				if players[playerSelecting].char < 1 then players[playerSelecting].char = #characters end
+				for i=1,3 do
+					j=1
+					moveTypeIsValid = false
+					while not moveTypeIsValid do
+						ui[playerSelecting][i] = j
+						if logic.inList(characters[players[playerSelecting].char].bends,moves[i][j].type) then moveTypeIsValid = true end
+						j=j+1
+					end
 				end
-			end
-		elseif not(ui[playerSelecting].y==4) then
-			canWield=false
-			while not canWield do
-				ui[playerSelecting][ui[playerSelecting].y]=ui[playerSelecting][ui[playerSelecting].y]+x
-				if ui[playerSelecting][ui[playerSelecting].y]==0 then ui[playerSelecting][ui[playerSelecting].y] = #moves[ui[playerSelecting].y] end
-				if ui[playerSelecting][ui[playerSelecting].y]>#moves[ui[playerSelecting].y] then ui[playerSelecting][ui[playerSelecting].y] = 1 end
-				char=characters[players[playerSelecting].char]
-				for i=1,#char.bends do
-					if char.bends[i]==moves[ui[playerSelecting].y][ui[playerSelecting][ui[playerSelecting].y]].type then canWield = true end
+			elseif not(ui[playerSelecting].y==4) then
+				canWield=false
+				while not canWield do
+					ui[playerSelecting][ui[playerSelecting].y]=ui[playerSelecting][ui[playerSelecting].y]+x
+					if ui[playerSelecting][ui[playerSelecting].y]==0 then ui[playerSelecting][ui[playerSelecting].y] = #moves[ui[playerSelecting].y] end
+					if ui[playerSelecting][ui[playerSelecting].y]>#moves[ui[playerSelecting].y] then ui[playerSelecting][ui[playerSelecting].y] = 1 end
+					char=characters[players[playerSelecting].char]
+					for i=1,#char.bends do
+						if char.bends[i]==moves[ui[playerSelecting].y][ui[playerSelecting][ui[playerSelecting].y]].type then canWield = true end
+					end
 				end
 			end
 		end
@@ -247,6 +252,9 @@ function ui.start()
 		ui[1].y = 0
 		ui[2].y = 0
 	elseif gameState=="characterSelection" then
+		if gameMode=="Competitive" and not firstSelectionMade and ui[1].y==4 and gearIsUnlocked(1,players[1].char) then
+			firstSelectionMade=true
+		end
 		if ui[1].y == 4 and ui[2].y == 4 and gameMode~="Competitive" then
 			startGame()
 		end
@@ -276,6 +284,7 @@ function ui.start()
 			end
 			if #battlingAccounts==2 then
 				gameState="characterSelection"
+				firstSelectionMade=false
 			end
 		end
 	end
@@ -303,8 +312,21 @@ function ui.draw()
 				love.graphics.setLineWidth(4)
 				love.graphics.rectangle("line",809,199,252,358,5,5)
 				love.graphics.rectangle("line",864,799,126,179,5,5)
-				love.graphics.print("Winner: Player "..winner,690,125)
-				love.graphics.print("Loser: Player "..loser,770,745,0,0.7)
+				if gameMode~="Competitive" then
+					love.graphics.print("Winner: Player "..winner,690,125)
+					love.graphics.print("Loser: Player "..loser,770,745,0,0.7)
+				end
+				if gameMode=="Competitive" then
+					love.graphics.print("Winner: "..battlingAccounts[winner].name,690,125)
+					love.graphics.print("Loser: "..battlingAccounts[loser].name,770,745,0,0.7)
+					rgb(153, 86, 0)
+					love.graphics.print("+"..gameResults.winxp.."xp".." ("..battlingAccounts[winner].xp..")",400,350,0,0.5,0.5)
+					love.graphics.print("+"..gameResults.wintrophies.." trophies".." ("..battlingAccounts[winner].trophies..")",400,400,0,0.5,0.5)
+					rgb(153, 43, 0)
+					love.graphics.print("+"..gameResults.losexp.."xp".." ("..battlingAccounts[loser].xp..")",400,800,0,0.5,0.5)
+					love.graphics.print("-"..math.abs(gameResults.losetrophies).." trophies".." ("..battlingAccounts[loser].trophies..")",400,850,0,0.5,0.5)
+					rgb(255,255,255)
+				end
 			else
 				love.graphics.setColor(0,0,0)
 				love.graphics.print("It's a draw!",600,300,0,2,2)
@@ -316,12 +338,14 @@ function ui.draw()
 		end
 		local offset=0
 		if gameState=="paused" then offset=-100 end
-		for i=1,maxOpt do
-			if pausedSelection==i then love.graphics.setColor(0,0,0) else rgb(100,100,100) end
-			local symbol=backSymbolImg
-			if i==2 then symbol=restartSymbolImg end
-			if i==3 then symbol=playSymbolImg end
-			love.graphics.draw(symbol,offset+540+i*200,580,0,0.7,0.7)
+		if not(gameMode=="Competitive" and gameState=="winScreen") then
+			for i=1,maxOpt do
+				if pausedSelection==i then love.graphics.setColor(0,0,0) else rgb(100,100,100) end
+				local symbol=backSymbolImg
+				if i==2 then symbol=restartSymbolImg end
+				if i==3 then symbol=playSymbolImg end
+				love.graphics.draw(symbol,offset+540+i*200,580,0,0.7,0.7)
+			end
 		end
 		love.graphics.setColor(255,255,255)
 	end
@@ -510,7 +534,7 @@ function ui.draw()
 			love.graphics.setLineWidth(2)
 		end
 
-		if ui[1].y == 4 and ui[2].y == 4 and gearIsUnlocked(1,players[1].char) and gearIsUnlocked(2,players[2].char) then
+		if ui[1].y == 4 and ui[2].y == 4 and gearIsUnlocked(1,players[1].char) and gearIsUnlocked(2,players[2].char) and (gameMode~="Competitive" or firstSelectionMade) then
 			love.graphics.setColor(1,0,0)
 			love.graphics.print(logic.round(ui.gameStartCountdown,0),850,350,0,4,4)
 			love.graphics.setColor(1,1,1)
