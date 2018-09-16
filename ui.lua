@@ -320,6 +320,9 @@ function ui.draw()
 					love.graphics.print("Winner: "..battlingAccounts[winner].name,690,125)
 					love.graphics.print("Loser: "..battlingAccounts[loser].name,770,745,0,0.7)
 					rgb(153, 86, 0)
+					if gameResults.questCompleted~=nil then
+						love.graphics.print("You gain additional xp for\ncompleting the quest:\n'Win a game using "..gameResults.questCompleted.."'",1300,250,0,0.5,0.5)
+					end
 					love.graphics.print("+"..gameResults.winxp.."xp".." ("..battlingAccounts[winner].xp..")",400,350,0,0.5,0.5)
 					love.graphics.print("+"..gameResults.wintrophies.." trophies".." ("..battlingAccounts[winner].trophies..")",400,400,0,0.5,0.5)
 					rgb(153, 43, 0)
@@ -401,9 +404,11 @@ function ui.draw()
 			love.graphics.print(a.level+1,1810,482)
 			rgb(50,50,50,200)
 			love.graphics.rectangle("fill",1000,600,800,460)
-			rgb(109, 84, 0, 200)
 			for i=1,3 do
+				rgb(109, 84, 0, 200)
 				love.graphics.rectangle("fill",1035+((i-1)*250),630,225,400)
+				rgb(255,255,255)
+				love.graphics.printf("Win a game using "..a.quests[i]..".",1030+((i-1)*250),750,550,"center",0,0.4,0.4)
 			end
 		end
 		rgb(255,255,255)
@@ -612,7 +617,7 @@ function ui.addAccount(string)
 				unlocks[1][1]=true
 				unlocks[2][1]=true
 				unlocks[3][1]=true
-				SAVED.accounts[#SAVED.accounts+1] = {name=newAccountName,trophies=0,level=1,xp=0,quests={},unlocks=unlocks,chars={2,3,4,5}}
+				SAVED.accounts[#SAVED.accounts+1] = {name=newAccountName,trophies=0,level=1,xp=0,quests={"shield","arrow","blink"},unlocks=unlocks,chars={2,3,4,5}}
 			end
 			typingName=false
 		end

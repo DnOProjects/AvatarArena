@@ -302,9 +302,29 @@ end
 				    		gameResults.wintrophies = 10 + math.random(-3,3)
 				    		gameResults.losetrophies = - 16 + math.random(-3,3)
 				    	end
+
+				    	local movesUsed={moves[1][players[winner].utility].name,moves[2][players[winner].attack].name,moves[3][players[winner].power].name}
+				    	local questUnlocked = false
+				    	for j=1,3 do
+				    		if not questUnlocked then
+					    		if logic.inList(movesUsed,w.quests[j]) then
+					    			questUnlocked = true
+					    			gameResults.questCompleted=w.quests[j]
+					    			gameResults.winxp=gameResults.winxp+8+math.random(-1,1)
+					    			local questFound=false
+					    			while not questFound do
+					    				local n= math.random(1,3)
+					    				local m= math.random(1,#moves[n])
+					    				w.quests[j]=moves[n][m].name
+					    				if w.unlocks[n][m]==true then questFound = true end
+					    			end
+					    		end
+					    	end
+				    	end
+
 				    	w.trophies = w.trophies + gameResults.wintrophies
 				    	l.trophies = l.trophies + gameResults.losetrophies
-				    	w.xp = w.xp + 2
+				    	w.xp = w.xp + gameResults.winxp
 				    	l.xp = l.xp + 1
 				    	if l.trophies<0 then l.trophies=0 end
 				    end
