@@ -142,6 +142,19 @@ end
 
 function ui.update(dt)
 
+	if gameMode=="Competitive" then
+		for i=1,7 do
+			if SAVED.accounts[i]~=nil then
+				local a = SAVED.accounts[i]
+				if a.xp >= logic.getNumXP(a.level) then
+					a.xp=a.xp-logic.getNumXP(a.level)
+					a.level=a.level+1
+					unlockMove(a)
+				end
+			end
+		end
+	end
+
 	ui.flashAlpha(dt/1.2)
 	if gameState == "characterSelection" then 
 		dtMultiplier = 1
@@ -283,6 +296,11 @@ function ui.start()
 				battlingAccounts[#battlingAccounts+1] = SAVED.accounts[selectedAccount-2]  
 			end
 			if #battlingAccounts==2 then
+				if battlingAccounts[1].trophies<battlingAccounts[2].trophies then
+					local temp = logic.copyTable(battlingAccounts[2])
+					battlingAccounts[2]=logic.copyTable(battlingAccounts[1])
+					battlingAccounts[1]=temp
+				end
 				gameState="characterSelection"
 				firstSelectionMade=false
 			end
@@ -462,7 +480,7 @@ function ui.draw()
 
 			love.graphics.setLineWidth(2)
 			love.graphics.setColor(255,255,255)
-			love.graphics.print(i,120+(1255*(i-1)),10)
+
 			if ui[i].y<4 then
 				love.graphics.rectangle("line",700,40,500,1000)
 				if showDescription == i then
@@ -519,6 +537,14 @@ function ui.draw()
 			else
 				love.graphics.draw(lockedSymbolImg,150+(i*1300)-1300,50,0,0.5,0.5)
 			end
+
+			if gameMode~="Competitive" then
+				love.graphics.print(i,120+(1255*(i-1)),10)
+			else
+				rgb(125,125,125)
+				love.graphics.print(battlingAccounts[i].name,(1255*(i-1)),10)
+			end
+			rgb(255,255,255)
 
 			for j=1,3 do
 				box=ui[i][j]
@@ -644,6 +670,7 @@ end
 
 function love.textinput(t)
 	if gameState=="loadAccount" then
+		if newAccountName==nil then newAccountName = "" end
 		if newAccountName:len()<11 then
 	    	newAccountName = newAccountName .. t
 	    end
@@ -659,4 +686,20 @@ function gearIsUnlocked(i,char)
 		end
 	end
 	return true
+end
+
+function unlockMove(a)
+	unlocked=false
+	while not unlocked do
+		local x = math.random(1,3)
+		local y = math.random(1,#moves[x])
+		local m = moves[x][y]
+		if not(a.unlocks[x][y]==true or (m.type=="sokka" and not logic.inList(a.chars,6)) 
+			or (m.name=="freeze" and not(a.unlocks[1][7] or a.unlocks[2][5] or a.unlocks[2][6] or a.unlocks[3][5]))
+			or (m.name=="melt" and not(a.unlocks[1][8] or a.unlocks[2][8] or a.unlocks[2][9] or a.unlocks[2][10] or a.unlocks[3][8] or a.unlocks[3][10])))
+		then 
+			unlocked=true 
+			a.unlocks[x][y]=true
+		end
+	end
 end
