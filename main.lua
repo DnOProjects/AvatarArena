@@ -152,7 +152,7 @@ function fadeGameEnd(dt)
 end
 
 function love.draw()
-
+	
 	addToDrawCanvas()
 
 end

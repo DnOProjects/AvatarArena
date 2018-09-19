@@ -19,7 +19,7 @@ function players.load()
 {name="Aang",chiRegen=4,img=aangImg,portrait=aangPortrait,moveTimer=0.1,hp=64,bends={"air","earth","fire","water","energy","normal"}},
 {name="Katara",chiRegen=4,img=kataraImg,portrait=kataraPortrait,moveTimer=0.15,hp=120,bends={"water","normal"}},
 {name="Iroh",chiRegen=8,img=irohImg,portrait=irohPortrait,moveTimer=0.15,hp=80,bends={"fire","normal"}},
-{name="Toph",chiRegen=4,img=tophImg,portrait=tophPortrait,moveTimer=0.15,hp=130,bends={"earth","normal"}},
+{name="Toph",chiRegen=4,img=tophImg,portrait=tophPortrait,moveTimer=0.15,hp=140,bends={"earth","normal"}},
 {name="Gyatso",chiRegen=6,img=gyatsoImg,portrait=gyatsoPortrait,moveTimer=0,hp=80,bends={"air","normal"}},
 {name="Sokka",chiRegen=4,img=sokkaImg,portrait=sokkaPortrait,moveTimer=0.15,hp=130,bends={"sokka","normal"}}
 }
@@ -287,6 +287,7 @@ end
 				local op=players[1]
 				local p=players[i]
 				if i==1 then op=players[2] end
+
 				if p.hp <= 0 and op.hp>0 then
 				    gameEndFade=4
 				    loser = i
@@ -310,32 +311,38 @@ end
 					    		if logic.inList(movesUsed,w.quests[j]) then
 					    			questUnlocked = true
 					    			gameResults.questCompleted=w.quests[j]
-					    			gameResults.winxp=gameResults.winxp+8+math.random(-1,1)
+					    			gameResults.winxp=gameResults.winxp+7+math.random(-1,1)
 					    			local questFound=false
 					    			while not questFound do
 					    				local n= math.random(1,3)
 					    				local m= math.random(1,#moves[n])
-					    				w.quests[j]=moves[n][m].name
-					    				if w.unlocks[n][m]==true then questFound = true end
+					    				if not(w.quests[j]==moves[n][m].name) then
+						    				if w.unlocks[n][m]==true then 
+						    					questFound = true 
+						    					SAVED.accounts[w.index].quests[j]=moves[n][m].name
+						    				end
+						    			end
 					    			end
 					    		end
 					    	end
 				    	end
 
-				    	w.trophies = w.trophies + gameResults.wintrophies
-				    	l.trophies = l.trophies + gameResults.losetrophies
-				    	w.xp = w.xp + gameResults.winxp
-				    	l.xp = l.xp + 1
+				    	SAVED.accounts[w.index].trophies=SAVED.accounts[w.index].trophies+gameResults.wintrophies
+				    	SAVED.accounts[l.index].trophies=SAVED.accounts[l.index].trophies+gameResults.losetrophies
+				    	SAVED.accounts[w.index].xp=SAVED.accounts[w.index].xp+gameResults.winxp
+				    	SAVED.accounts[l.index].xp=SAVED.accounts[l.index].xp+1			    	
+
 				    	if l.trophies<0 then l.trophies=0 end
 				    end
 				end
+
 				if p.hp <= 0 and op.hp <= 0 then
 					gameEndFade=4
 					loser="draw"
 					if gameMode=="Competitive" then
 						gameResults = {xp=1,trophies=0}
 						for i=1,2 do
-							battlingAccounts[i].xp=battlingAccounts[i].xp+1
+							battlingAccounts[i].xp=battlingAccounts[i].xp+1--draw condition for competitive is WIP
 						end
 					end
 				end

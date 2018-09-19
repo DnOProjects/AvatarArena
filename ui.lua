@@ -8,6 +8,7 @@ function ui.load()
 	selectedAccount=1
 	battlingAccounts={}
 	firstSelectionMade=false
+	popup=0
 
 	gameMode="unset"
 
@@ -25,6 +26,7 @@ function ui.load()
 	flashDirection = "falling"
 
 	gameModes={"Classic","Competitive","Campaign"}
+	moveTypes={"Utility","Attack","Power"}
 	
 	--onlineGame, opponentType, numOpponents, selectionMethod,gameEvents
 	menu = {{name="Connection",selected=1,options={"local","online"}},
@@ -142,6 +144,14 @@ end
 
 function ui.update(dt)
 
+	if popup>0 then popup=popup-dt end
+	if popup<0 then 
+		popup=0 
+		for i=1,7 do
+			if SAVED.accounts[i]~=nil then SAVED.accounts[i].justUnlocked=nil end
+		end
+	end
+
 	if gameMode=="Competitive" then
 		for i=1,7 do
 			if SAVED.accounts[i]~=nil then
@@ -149,7 +159,12 @@ function ui.update(dt)
 				if a.xp >= logic.getNumXP(a.level) then
 					a.xp=a.xp-logic.getNumXP(a.level)
 					a.level=a.level+1
-					unlockMove(a)
+					a.toUnlock=true
+				end
+				if a.toUnlock==true and selectedAccount==i+2 and gameMode=="Competitive" and gameState=="loadAccount" then
+					a.justUnlocked = unlockMove(a)
+					a.toUnlock=false
+					popup=5
 				end
 			end
 		end
@@ -248,7 +263,7 @@ function ui.start()
 				startGame()
 			else 
 				onlineClient = true 
-			end
+			end 
 		else
 			gameState = "controllerSelection"
 			selectionMethod = menu[4].options[menu[4].selected]
@@ -271,7 +286,7 @@ function ui.start()
 		if ui[1].y == 4 and ui[2].y == 4 and gameMode~="Competitive" then
 			startGame()
 		end
-	elseif (gameState=="winScreen" or gameState=="paused") then 
+	elseif ((gameState=="winScreen" and gameMode~="Competitive") or gameState=="paused") then 
 		if pausedSelection==2 then
 			gameState="characterSelection" 
 			map.load()
@@ -294,6 +309,7 @@ function ui.start()
 		else
 			if #battlingAccounts<2 and (not logic.inList(battlingAccounts,SAVED.accounts[selectedAccount-2])) then 
 				battlingAccounts[#battlingAccounts+1] = SAVED.accounts[selectedAccount-2]  
+				battlingAccounts[#battlingAccounts].index = selectedAccount-2
 			end
 			if #battlingAccounts==2 then
 				if battlingAccounts[1].trophies<battlingAccounts[2].trophies then
@@ -341,11 +357,11 @@ function ui.draw()
 					if gameResults.questCompleted~=nil then
 						love.graphics.print("You gain additional xp for\ncompleting the quest:\n'Win a game using "..gameResults.questCompleted.."'",1300,250,0,0.5,0.5)
 					end
-					love.graphics.print("+"..gameResults.winxp.."xp".." ("..battlingAccounts[winner].xp..")",400,350,0,0.5,0.5)
-					love.graphics.print("+"..gameResults.wintrophies.." trophies".." ("..battlingAccounts[winner].trophies..")",400,400,0,0.5,0.5)
+					love.graphics.print("+"..gameResults.winxp.."xp".." ("..SAVED.accounts[battlingAccounts[winner].index].xp..")",400,350,0,0.5,0.5)
+					love.graphics.print("+"..gameResults.wintrophies.." trophies".." ("..SAVED.accounts[battlingAccounts[winner].index].trophies..")",400,400,0,0.5,0.5)
 					rgb(153, 43, 0)
-					love.graphics.print("+"..gameResults.losexp.."xp".." ("..battlingAccounts[loser].xp..")",400,800,0,0.5,0.5)
-					love.graphics.print("-"..math.abs(gameResults.losetrophies).." trophies".." ("..battlingAccounts[loser].trophies..")",400,850,0,0.5,0.5)
+					love.graphics.print("+"..gameResults.losexp.."xp".." ("..SAVED.accounts[battlingAccounts[loser].index].xp..")",400,800,0,0.5,0.5)
+					love.graphics.print("-"..math.abs(gameResults.losetrophies).." trophies".." ("..SAVED.accounts[battlingAccounts[loser].index].trophies..")",400,850,0,0.5,0.5)
 					rgb(255,255,255)
 				end
 			else
@@ -428,6 +444,25 @@ function ui.draw()
 				rgb(255,255,255)
 				love.graphics.printf("Win a game using "..a.quests[i]..".",1030+((i-1)*250),750,550,"center",0,0.4,0.4)
 			end
+
+			if a.justUnlocked~=nil then
+				rgb(0,0,0)
+				love.graphics.rectangle("fill",384,216,1152,648)
+				rgb(132, 75, 0)
+				love.graphics.print("You have now reached level "..a.level.."\n and have unlocked a new move!",420,240,0,0.9,0.9)
+				rgb(255,255,255)
+				love.graphics.draw(elementSymbols[a.justUnlocked.type],420,500)
+				love.graphics.print(a.justUnlocked.name,700,500,0,1.5,1.5)
+				local movesTypeIndex="UNSET"
+				for x=1,3 do
+					for y=1,#moves[x] do
+						if moves[x][y].name == a.justUnlocked.name then movesTypeIndex=x end
+					end
+				end
+				rgb(100,100,100)
+				love.graphics.print(moveTypes[movesTypeIndex],700,640,0,0.5,0.5)
+			end
+
 		end
 		rgb(255,255,255)
 	end
@@ -700,6 +735,7 @@ function unlockMove(a)
 		then 
 			unlocked=true 
 			a.unlocks[x][y]=true
+			return moves[x][y]
 		end
 	end
 end
