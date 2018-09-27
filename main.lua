@@ -82,7 +82,6 @@ function love.load()
     sound.load()
 
     selectedGameMode=1
-    --gameState = "menu"
     projectilesToRemove = {}
     showDescription = 1
 
