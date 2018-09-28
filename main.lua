@@ -168,36 +168,31 @@ function addToDrawCanvas()
 			        love.graphics.getWidth(),
 			        love.graphics.getHeight()
 			    })
-			    shader:send("num_lights", #projectiles+3)    
 
-			    shader:send("lights[0].position", {
-			        players[1].x*120-60,
-			        players[1].y*120+60
-			    })
-			    shader:send("lights[0].diffuse", { --light color
-			        normalBrightness, normalBrightness, normalBrightness
-			    })
-			    shader:send("lights[0].power", 1)
+			    shader:send("lights[0].position", {players[1].x*120-60,players[1].y*120+60}) --postition
+			    shader:send("lights[0].diffuse", {1, 1, 1}) --color
+			    shader:send("lights[0].power", 64)
 
-			    shader:send("lights[1].position", {players[1].x*120-60,players[1].y*120+60}) --postition
+			    shader:send("lights[1].position", {players[2].x*120-60,players[2].y*120+60}) --postition
 			    shader:send("lights[1].diffuse", {1, 1, 1}) --color
 			    shader:send("lights[1].power", 64)
 
-			    shader:send("lights[2].position", {players[2].x*120-60,players[2].y*120+60}) --postition
-			    shader:send("lights[2].diffuse", {1, 1, 1}) --color
-			    shader:send("lights[2].power", 64)
+			    local numGlowingProjectiles=0
 
 			    for i=1,#projectiles do
-			    	local p= projectiles[i]
-			    	if p.glows then
-				    	local shaderNum=tostring(2+i)
+			    	local p=projectiles[i]
+			    	if p.glows==true then
+				    	local shaderNum=tostring(1+i)
 				    	local c = p.glowColor
 				    	local power = p.glowPower or 100
+				    	numGlowingProjectiles=numGlowingProjectiles+1
 					    shader:send("lights["..shaderNum.."].position", {p.rx*120-60,p.ry*120+60}) --postition
 					    shader:send("lights["..shaderNum.."].diffuse", {c[1]/255, c[2]/255, c[3]/255}) --color
 					    shader:send("lights["..shaderNum.."].power", 100) --power is inverted for some reason
 					end
 			    end
+
+			    shader:send("num_lights", numGlowingProjectiles+2) 
 
 			end
 
