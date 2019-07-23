@@ -125,6 +125,20 @@ end
 				if logic.inList(characters[p.char].bends,elements[e]) then players[i].chiRegen = characters[players[i].char].chiRegen*3 else  players[i].chiRegen = characters[players[i].char].chiRegen end
 			end
 		end
+		if gameEvent=="body swap" then
+			if eventTimer > bodySwapLength then 
+				eventTimer = 0
+				local temp = {char=players[1].char,utility=players[1].utility,attack=players[1].attack,power=players[1].power}
+				players[1].char = players[2].char
+				players[1].utility = players[2].utility
+				players[1].attack = players[2].attack
+				players[1].power = players[2].power
+				players[2].char = temp.char
+				players[2].utility = temp.utility
+				players[2].attack = temp.attack
+				players[2].power = temp.power
+			end
+		end
 		if gameEvent=="time warp" then
 			if eventTimer>100 then eventTimer=100 end
 			dtMultiplier=eventTimer/10

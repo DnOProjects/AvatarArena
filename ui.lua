@@ -32,8 +32,8 @@ function ui.load()
 	menu = {{name="Connection",selected=1,options={"local","online"}},
 	{name="Oppenent",selected=1,options={"human","ai"}},
 	{name="Difficulty",selected=2,options={"easy","medium","hard","expert"}},
-	{name="Selection",selected=1,options={"choice","random","random duel","blind","blind duel"}},
-	{name="Events",selected=1,options={"none","night","sea of chi","power cycle","instablitiy","time warp"}}}
+	{name="Selection",selected=1,options={"choice","random","random duel","blind","blind duel","draft"}},
+	{name="Events",selected=1,options={"none","night","sea of chi","power cycle","instablitiy","time warp","body swap"}}}
 	menu2Options = {{name="Oppenent",selected=1,options={"human","ai"}},{name="Role",selected=1,options={"client","server"}}}
 
 	controller = {{name="Input Device",selected=1,options={"keys/mouse","controller"}},
@@ -75,7 +75,7 @@ function ui.randomMove(type,player)
 	return mq --I am very sorry for using 2 meaningles letters - have an apology semicolon - (;) - there, much better
 end
 
-function ui.choose()
+function ui.choose() --Randomises players decks - is called every tick when on the character selection screen
 	if selectionMethod == "blind" or (selectionMethod == "random" and not ui.randomised)then
 		for i=1,2 do 
 			players[i].char=math.random(1,#characters)
@@ -98,6 +98,9 @@ function ui.choose()
 			end
 		end
 		ui.randomised=true
+	end
+	if selectionMethod == "draft" then
+
 	end
 end
 
@@ -190,7 +193,7 @@ function ui.update(dt)
 	if aiPlayer ~= nil then moveSet[aiPlayer] = 1 end
 end
 
-function ui.switch(x,playerSelecting,y)
+function ui.switch(x,playerSelecting,y) --Called when arrow keys / wasd etc. are used to go up/down/left/right on a menu
 	if y then 
 		selectedAccount=selectedAccount+y
 		if selectedAccount<1 then selectedAccount=9 end
@@ -255,7 +258,7 @@ function ui.switch(x,playerSelecting,y)
 	end
 end
 
-function ui.start()
+function ui.start() --When enter is pressed in a menu
 	if gameState=="menu" then
 		if menu[1].options[menu[1].selected]=="online" then
 			if menu[2].options[menu[2].selected]=="server" then 
@@ -653,7 +656,8 @@ function ui.draw()
 
 		rgb(163,120,4)
 		if gameEvent == "sea of chi" then love.graphics.print("X"..logic.round(((eventTimer+25)/50),1),900,10,0,0.9,0.9) end
-		if gameEvent == "time warp" then love.graphics.print("X"..logic.round(((eventTimer)/10),1),900,10,0,0.9,0.9) end		
+		if gameEvent == "time warp" then love.graphics.print("X"..logic.round(((eventTimer)/10),1),900,10,0,0.9,0.9) end
+		if gameEvent == "body swap" then love.graphics.print(logic.round(bodySwapLength-eventTimer,0),935,10,0,0.9,0.9) end		
 		love.graphics.setColor(255,255,255)
 		if gameEvent == "power cycle" then love.graphics.draw(elementSymbols[tostring(elements[math.floor(eventTimer/20)+1])],916,15,0,0.4,0.4)end
 

@@ -91,6 +91,7 @@ function love.load()
 
     lights = {}
     normalBrightness=0.01 --50%
+    bodySwapLength = 20
 
 end
 
