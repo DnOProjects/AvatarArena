@@ -48,6 +48,7 @@ function ui.load()
 	menuFont = love.graphics.newFont("Fonts/menuFont.ttf",72)
 
 	elementSymbols={water=waterSymbolImg,earth=earthSymbolImg,air=airSymbolImg,fire=fireSymbolImg}
+	moveTypeSymbols={utilitySymbolImg,attackSymbolImg,powerSymbolImg}
 
 	for i=1,2 do
 		ui[#ui+1] = {}
@@ -585,6 +586,7 @@ function ui.draw()
 			rgb(255,255,255)
 
 			for j=1,3 do
+				love.graphics.draw(moveTypeSymbols[j],(i-1)*1250+550,j*130+400,0,0.2,0.2)
 				box=ui[i][j]
 				move = moves[j][box]
 				if ui[i].y==j then love.graphics.setLineWidth(20) end
