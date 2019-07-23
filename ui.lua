@@ -585,6 +585,7 @@ function ui.draw()
 			end
 			rgb(255,255,255)
 
+			local meanMana = 0
 			for j=1,3 do
 				love.graphics.draw(moveTypeSymbols[j],(i-1)*1250+550,j*130+400,0,0.2,0.2)
 				box=ui[i][j]
@@ -597,7 +598,13 @@ function ui.draw()
 					love.graphics.printf("LOCKED",(i-1)*1260-60,j*130+413,800,"center",0,0.8)
 				end
 				love.graphics.setLineWidth(2)
+				meanMana = meanMana + move.cost
 			end
+			meanMana = logic.round(meanMana/3,1)
+			rgb(163,198,255)
+			love.graphics.printf("Cost: "..meanMana,(i-1)*1260+100,950,800,"center",0,1)
+			love.graphics.setColor(1,1,1)
+
 			if ui[i].y==4 then love.graphics.setLineWidth(20) end
 			if gearIsUnlocked(i,p.char) then rgb(255,255,255) else rgb(255,0,0) end
 			love.graphics.circle("line",(i-1)*1260+260,1000,50)
