@@ -9,7 +9,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {defensive,name="aurora borealis",type="water",cost=12,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
 {name="heal",type="water",cost=24,desc="Healing is a special ability possessed by some waterbenders that enables them to heal those who have been wounded, including themselves."},
 {name="earth wave",type="earth",cost=10,desc="You charge forwards on rolling earth!"},
-{name="seismic sense",type="earth",cost=5,desc="Use seismic waves to sense your opponent's position."},
+{name="seismic sense",type="earth",cost=10,desc="Use seismic waves to sense your opponent's position."},
 {name="terraform",type="earth",cost=7,desc="Shape the world to your will!"},
 {defensive,name="flame wall",type="fire",cost=5,desc="Flames rise up to shield you from harm."},
 {defensive,name="redirect",type="fire",cost=8,desc="\"If you let the energy in your own body flow, the lightning will follow through it...\"\n\n\"You must not let the lightning pass through your heart, or the damage could be deadly!\""},
@@ -466,23 +466,25 @@ function moves.cast(typeNum,num,pn)
 				local newD = nil
 				local xDiff=math.abs(p.x-op.x)
 				local yDiff=math.abs(p.y-op.y)
-				if xDiff>=yDiff then
-					if p.x>op.x then newD=3 else newD=1 end
-					if p.y>op.y then
-						players.move(pn,0,false)
-					elseif p.y<op.y then
-						players.move(pn,2,false) 
+				for i=1,2 do
+					if xDiff>=yDiff then
+						if p.x>op.x then newD=3 else newD=1 end
+						if p.y>op.y then
+							players.move(pn,0,true)
+						elseif p.y<op.y then
+							players.move(pn,2,true) 
+						else
+							didntMove = true
+						end
 					else
-						didntMove = true
-					end
-				else
-					if p.y>op.y then newD=0 else newD=2	end
-					if p.x>op.x then
-						players.move(pn,3,false)
-					elseif p.x<op.x then
-						players.move(pn,1,false) 
-					else
-						didntMove = true
+						if p.y>op.y then newD=0 else newD=2	end
+						if p.x>op.x then
+							players.move(pn,3,true)
+						elseif p.x<op.x then
+							players.move(pn,1,true) 
+						else
+							didntMove = true
+						end
 					end
 				end
 				if didntMove and p.d==newD then refund = true end
