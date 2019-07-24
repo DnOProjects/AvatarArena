@@ -172,6 +172,9 @@ function ui.update(dt)
 					a.toUnlock=false
 					popup=5
 				end
+				if a.trophies < 0 then
+					a.trophies=0
+				end
 			end
 		end
 	end

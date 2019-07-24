@@ -460,6 +460,7 @@ function moves.cast(typeNum,num,pn)
 			end
 
 			if name == "seismic sense" then
+				local didntMove = false
 				local op=players[1]
 				if pn==1 then op=players[2] end
 				local newD = nil
@@ -467,10 +468,25 @@ function moves.cast(typeNum,num,pn)
 				local yDiff=math.abs(p.y-op.y)
 				if xDiff>=yDiff then
 					if p.x>op.x then newD=3 else newD=1 end
+					if p.y>op.y then
+						players.move(pn,0,false)
+					elseif p.y<op.y then
+						players.move(pn,2,false) 
+					else
+						didntMove = true
+					end
 				else
-					if p.y>op.y then newD=0 else newD=2 end
+					if p.y>op.y then newD=0 else newD=2	end
+					if p.x>op.x then
+						players.move(pn,3,false)
+					elseif p.x<op.x then
+						players.move(pn,1,false) 
+					else
+						didntMove = true
+					end
 				end
-				if p.d~=newD then p.d=newD else refund=true end
+				if didntMove and p.d==newD then refund = true end
+				p.d=newD
 			end
 
 			if name == "gale" then
