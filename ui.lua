@@ -5,6 +5,8 @@ ui = {{y=0},{y=0}}
 
 function ui.load()
 
+	tipDisplaying = nil
+
 	selectedAccount=1
 	battlingAccounts={}
 	firstSelectionMade=false
@@ -610,6 +612,15 @@ function ui.draw()
 			love.graphics.circle("line",(i-1)*1260+260,1000,50)
 			rgb(255,255,255)
 			love.graphics.setLineWidth(2)
+		end
+
+		if tipDisplaying~=nil then
+			local x = (love.graphics.getWidth()-tipDisplaying:getWidth())/2
+			local y = (love.graphics.getHeight()-tipDisplaying:getHeight())/2
+			love.graphics.draw(tipDisplaying,x,y)
+			if not tipDisplaying:isPlaying() then
+				tipDisplaying = nil
+			end
 		end
 
 		if ui[1].y == 4 and ui[2].y == 4 and gearIsUnlocked(1,players[1].char) and gearIsUnlocked(2,players[2].char) and (gameMode~="Competitive" or firstSelectionMade) then
