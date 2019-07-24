@@ -197,6 +197,7 @@ function ui.update(dt)
 end
 
 function ui.switch(x,playerSelecting,y) --Called when arrow keys / wasd etc. are used to go up/down/left/right on a menu
+	tipDisplaying = nil
 	if y then 
 		selectedAccount=selectedAccount+y
 		if selectedAccount<1 then selectedAccount=9 end
@@ -617,8 +618,12 @@ function ui.draw()
 		if tipDisplaying~=nil then
 			local x = (love.graphics.getWidth()-tipDisplaying:getWidth())/2
 			local y = (love.graphics.getHeight()-tipDisplaying:getHeight())/2
+			rgb(191, 141, 40)
+			love.graphics.rectangle("fill",x-10,y-10,tipDisplaying:getWidth()+20,tipDisplaying:getHeight()+20)
+			rgb(255,255,255)
 			love.graphics.draw(tipDisplaying,x,y)
 			if not tipDisplaying:isPlaying() then
+				tipDisplaying:pause()
 				tipDisplaying = nil
 			end
 		end
