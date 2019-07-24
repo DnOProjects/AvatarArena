@@ -20,7 +20,7 @@ function players.load()
 {name="Katara",chiRegen=4,img=kataraImg,portrait=kataraPortrait,moveTimer=0.15,hp=120,bends={"water","normal"}},
 {name="Iroh",chiRegen=8,img=irohImg,portrait=irohPortrait,moveTimer=0.15,hp=80,bends={"fire","normal"}},
 {name="Toph",chiRegen=4,img=tophImg,portrait=tophPortrait,moveTimer=0.15,hp=140,bends={"earth","normal"}},
-{name="Gyatso",chiRegen=6,img=gyatsoImg,portrait=gyatsoPortrait,moveTimer=0,hp=80,bends={"air","normal"}},
+{name="Gyatso",chiRegen=6,img=gyatsoImg,portrait=gyatsoPortrait,moveTimer=0,hp=90,bends={"air","normal"}},
 {name="Sokka",chiRegen=4,img=sokkaImg,portrait=sokkaPortrait,moveTimer=0.15,hp=130,bends={"sokka","normal"}}
 }
 
@@ -200,7 +200,18 @@ end
 
 		for i=1,2 do
 			p = players[i]
-			p.timer = p.timer - dt
+			local onIce = false
+			for i=1,#projectiles do
+				local pr = projectiles[i]
+				if pr.x==p.x and pr.y==p.y and pr.name=="ice" then
+					onIce = true
+				end
+			end
+			if onIce then
+				p.timer = p.timer - (dt*0.2)
+			else
+				p.timer = p.timer - dt
+			end
 			if p.machineGunning~= false then p.machineGunning = p.machineGunning - dt end
 			if p.machineGunning~= false and p.machineGunning<0 then p.machineGunning=false end
 			if p.blinking~= false then p.blinking = p.blinking - dt end
@@ -409,7 +420,9 @@ function players.move(p,d,unconditional)
 		end
 	end
 	if (players[p].timer==0 or unconditional) then
-		if not unconditional then players[p].timer = characters[players[p].char].moveTimer end
+		if not unconditional then
+			players[p].timer = characters[players[p].char].moveTimer 
+		end
 		players[p].d = d
 		players[p].lineOfSight = {}
 		if players[p].deflecting == true then

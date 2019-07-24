@@ -5,7 +5,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="blow",type="air",cost=8,desc="A funnel of air to propel you forwards or push your opponent back!"},
 {defensive,name="fly",type="air",cost=25,desc="You use the air currents around you to hover just above the ground!"},
 {name="shift",type="air",cost=18,desc="You shift the battle into the spirit-world, rendering all bending ineffective!"},
-{name="freeze",type="water",cost=1,desc="All water in the arena turns to solid ice!"},
+{name="freeze",type="water",cost=1,desc="All water in the arena turns to solid ice, acting as a bridge that sticks to the feet!"},
 {defensive,name="aurora borealis",type="water",cost=12,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
 {name="heal",type="water",cost=24,desc="Healing is a special ability possessed by some waterbenders that enables them to heal those who have been wounded, including themselves."},
 {name="earth wave",type="earth",cost=10,desc="You charge forwards on rolling earth!"},
