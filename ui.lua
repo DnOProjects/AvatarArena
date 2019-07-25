@@ -619,12 +619,13 @@ function ui.draw()
 		end
 
 		if tipDisplaying~=nil then
-			local x = (love.graphics.getWidth()-tipDisplaying:getWidth())/2
-			local y = (love.graphics.getHeight()-tipDisplaying:getHeight())/2
+			local tipSize = 0.8
+			local x = (love.graphics.getWidth()-tipDisplaying:getWidth()*tipSize)/2
+			local y = (love.graphics.getHeight()-tipDisplaying:getHeight()*tipSize)/2
 			rgb(191, 141, 40)
-			love.graphics.rectangle("fill",x-10,y-10,tipDisplaying:getWidth()+20,tipDisplaying:getHeight()+20)
+			love.graphics.rectangle("fill",x-10,y-10,tipDisplaying:getWidth()*tipSize+20,tipDisplaying:getHeight()*tipSize+20)
 			rgb(255,255,255)
-			love.graphics.draw(tipDisplaying,x,y)
+			love.graphics.draw(tipDisplaying,x,y,0,tipSize,tipSize)
 			if not tipDisplaying:isPlaying() then
 				tipDisplaying = nil
 			end
