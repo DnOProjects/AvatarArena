@@ -626,7 +626,6 @@ function ui.draw()
 			rgb(255,255,255)
 			love.graphics.draw(tipDisplaying,x,y)
 			if not tipDisplaying:isPlaying() then
-				tipDisplaying:pause()
 				tipDisplaying = nil
 			end
 		end

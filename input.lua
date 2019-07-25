@@ -92,17 +92,9 @@ function input.keyInput(inputSource,key,source)
 
 			if gameState=="characterSelection" and key=="return" then
 				if ui[showDescription].y > 0 and ui[showDescription].y < 4 then
-					if videos.tips[moves[ui[showDescription].y][ui[showDescription][ui[showDescription].y]].name] ~= nil then
-
-						if tipDisplaying ~= nil then
-							tipDisplaying:pause()
-							tipDisplaying = nil
-						end
-
-						tipDisplaying = logic.copyTable(videos.tips[moves[ui[showDescription].y][ui[showDescription][ui[showDescription].y]].name])
-						tipDisplaying:rewind()
-						tipDisplaying:play()
-					end
+					tipDisplaying = love.graphics.newVideo("Videos/"..moves[ui[showDescription].y][ui[showDescription][ui[showDescription].y]].name..".ogv",{audio=false})
+					tipDisplaying:rewind()
+					tipDisplaying:play()
 				end
 			end
 
