@@ -692,6 +692,10 @@ function ui.draw()
 	end
 end
 
+function ui.getSelection(p)
+	return moves[ui[p].y][ui[p][ui[p].y]]
+end
+
 function ui.addAccount(string)
 	if string=="new" then
 		if not typingName then
