@@ -208,7 +208,7 @@ end
 				end
 			end
 			if onIce then
-				p.timer = p.timer - (dt*0.2)
+				p.timer = p.timer - (dt*10000)
 			else
 				p.timer = p.timer - dt
 			end
@@ -323,10 +323,10 @@ end
 				    	local l = battlingAccounts[loser]
 				    	if w.trophies<=l.trophies then 
 				    		gameResults.wintrophies = 20 + math.random(-3,3) 
-				    		gameResults.losetrophies = - 8 + math.random(-3,3)
+				    		gameResults.losetrophies = - 16 + math.random(-3,3)
 				    	else
 				    		gameResults.wintrophies = 10 + math.random(-3,3)
-				    		gameResults.losetrophies = - 16 + math.random(-3,3)
+				    		gameResults.losetrophies = - 8 + math.random(-3,3)
 				    	end
 
 				    	local movesUsed={moves[1][players[winner].utility].name,moves[2][players[winner].attack].name,moves[3][players[winner].power].name}
@@ -419,7 +419,7 @@ function players.move(p,d,unconditional)
 			pr.ox,pr.oy=pr.x,pr.y
 		end
 	end
-	if (players[p].timer==0 or unconditional) then
+	if (players[p].timer==0 or unconditional or players[p].flameTrail~=false) then
 		if not unconditional then
 			players[p].timer = characters[players[p].char].moveTimer 
 		end

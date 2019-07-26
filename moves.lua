@@ -7,7 +7,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="shift",type="air",cost=18,desc="You shift the battle into the spirit-world, rendering all bending ineffective!"},
 {name="freeze",type="water",cost=1,desc="All water in the arena turns to solid ice, acting as a bridge that sticks to the feet!"},
 {defensive,name="aurora borealis",type="water",cost=12,desc="Using spirit-bending, you summon the spirits of the aurora borealis to defend you."},
-{name="heal",type="water",cost=24,desc="Healing is a special ability possessed by some waterbenders that enables them to heal those who have been wounded, including themselves."},
+{name="heal",type="water",cost=28,desc="Healing is a special ability possessed by some waterbenders that enables them to heal those who have been wounded, including themselves."},
 {name="earth wave",type="earth",cost=10,desc="You charge forwards on rolling earth!"},
 {name="seismic sense",type="earth",cost=10,desc="Use seismic waves to sense your opponent's position."},
 {name="terraform",type="earth",cost=7,desc="Shape the world to your will!"},
@@ -45,7 +45,7 @@ moves = { --first moves must all be normal, then air, water, earth, fire, sokka
 {name="machine gun",type="earth",cost=30,desc="Use metalbending to launch a spray of bullets into your opponent!"},
 {name="lightning",type="fire",cost=60,desc="\"The energy is both yin and yang, you can separate these energies, creating an imbalance. The energy wants to restore balance and in a moment the positive and negative energy come crashing back together. You provide release and guidance, creating lightning.\""},
 {name="combustion",type="fire",cost=40,desc="SPARKY SPARKY BOOM"},
-{name="flame trail",type="fire",cost=70,desc="Don't touch your tail!"},
+{name="flame trail",type="fire",cost=55,desc="Don't touch your tail!"},
 {name="sword flurry",type="sokka",cost=60,desc="Swing your sword around you to impale nearby enemies!"}}
 
 }
@@ -503,7 +503,7 @@ function moves.cast(typeNum,num,pn)
 			end
 
 			if name == "flame trail" then
-				players[pn].flameTrail=10
+				players[pn].flameTrail=5
 			end
 
 			if name == "terraform" then
@@ -552,7 +552,7 @@ function moves.cast(typeNum,num,pn)
 				end
 			end
 			if name == "heal" then
-				projectiles[#projectiles+1] = {glows=true,glowColor={66, 206, 244},freezes=true,name=name,damage=-10,image=healOrbImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
+				projectiles[#projectiles+1] = {glows=true,glowColor={66, 206, 244},freezes=true,name=name,damage=-5,image=healOrbImg,x=p.x,y=p.y,d=p.d,speed = 0,rx=0,ry=0}
 				projectiles[#projectiles] = moves.moveProj(#projectiles,3)
 			end
 			if name == "shift" then
